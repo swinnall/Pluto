@@ -3,7 +3,6 @@
 import csv
 import glob, os
 import config
-import chemFormulationsMain
 
 def importSampleData(info):
 
@@ -95,8 +94,6 @@ def calc(nLipids, lipidMW, lipidType, lipidFrac, stockConc, wTotal, finConc):
 
 
 def output(nLipids, lipidType, stockConc, wTotal, finConc, volAdd, V_CHCl3, outputPath):
-
-    #outputPath = chemFormulationsMain.outputPath
 
     ## Write to file
     with open(outputPath, 'a', newline = '') as f:

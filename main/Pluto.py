@@ -6,6 +6,7 @@ import csv
 import shutil
 from shutil import copyfile
 
+import config
 import isoAnalysis
 import chemFormulations
 import sldAnalysis
@@ -45,14 +46,14 @@ def modSelection():
     # instructions file path
     source = "" + root + fname + ".txt"
 
-    return fname, source
+    return analysisType, fname, source
 
 
 
 def main():
 
     # get name of instructions file
-    fname, source = modSelection()
+    analysisType, fname, source = modSelection()
 
 
     # read instructions
@@ -60,28 +61,30 @@ def main():
         reader = csv.reader(f, delimiter=",")
         info = list(reader)
 
+    # filter out rows that start with '#'
+    info = [x for x in info if not x[0].startswith('#')]
 
     # gets title of the analysis
     title = info[0][0].split('=')[1]
 
 
     # create path for analysis
-    outputFolder = '../output/' + config.pathNames.get(analysisType)[1] + '/' + title + ''
+    outputPath = '../output/' + config.pathNames.get(analysisType)[1] + '/' + title + ''
 
 
     # delete folder if exists and create it again
     try:
-        shutil.rmtree(outputFolder)
-        os.mkdir(outputFolder)
+        shutil.rmtree(outputPath)
+        os.mkdir(outputPath)
     except FileNotFoundError:
-        os.mkdir(outputFolder)
+        os.mkdir(outputPath)
 
 
     # copy input analysis information to outputPath
     try:
-        shutil.copyfile(source, outputFolder + '/' + fname + '.txt')
-        old_name = outputFolder + '/' + fname + '.txt'
-        new_name = outputFolder + '/' + title + ' - ' + fname + '.txt'
+        shutil.copyfile(source, outputPath + '/' + fname + '.txt')
+        old_name = outputPath + '/' + fname + '.txt'
+        new_name = outputPath + '/' + title + ' - ' + fname + '.txt'
         os.rename(old_name, new_name)
 
 
@@ -100,10 +103,6 @@ def main():
     # other errors
     except:
         print("Instructions Copying Error:\n  Error occurred while copying file.")
-
-
-    global outputPath
-    outputPath = outputFolder + '/' + title + ' - ' + fname + '.txt'
 
 
     # calls analysis module
