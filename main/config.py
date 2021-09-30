@@ -128,9 +128,9 @@ lipidMolVol = {
 
 # dict of different instruction files for Pluto
 inputFileNames = {
-    "Isotherm": ('IAP - experimentInfo','00 - Isotherm Analysis'),
-    "chemFormulations": ('Chem - inputComponents','01 - Chem Formulations'),
-    "SLD": ('SLD - monolayerParameters','02 - SLD Analysis'),
+    "Isotherm": ('IAP - experimentInfo','Isotherm'),
+    "chemFormulations": ('Chem - inputComponents','Chem Formulations'),
+    "SLD": ('SLD - monolayerParameters','SLD'),
     }
 
 
