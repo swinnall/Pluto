@@ -1,14 +1,14 @@
-## IAP ##
+## Pluto ##
 Author: Samuel Winnall
 
 
 KEY POINTS
 
-1. Program requires sample data to be placed into path /input/data/00
+1. Program requires sample data to be placed into path /input/00
 
-2. With the experimentInfo.txt file correctly completed and placed into path /input/
+2. With the relevant information txt in /input/
 
-3. There must be only one info txt file in /input/ 
+3. The desired analysis type must be specified in config.py
 
 4. Generated figures will be outputted to /output/ with a folder created according to the inputted title
 

@@ -108,13 +108,13 @@ def main():
 
     # calls analysis module
     if config.doIsoAnalysis == True:
-        isoAnalysis.main(info, outputPath)
+        isoAnalysis.main(info, title, outputPath)
 
     if config.doChemFormulations == True:
         chemAnalysis.main(info, outputPath)
 
     if config.doSLDAnalysis == True:
-        sldAnalysis.main(info, outputPath)
+        sldAnalysis.main(info)
 
 
     return

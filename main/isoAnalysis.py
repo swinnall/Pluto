@@ -18,8 +18,11 @@ import genPlot
 
 def importSampleData(info):
 
+    # number of header rows 
+    nHeaders = 2
+
     # number of isotherms to plot
-    nFiles  = len(info)-2
+    nFiles  = len(info) - nHeaders
 
     # variable initialisations
     fileNames  = {init: 0 for init in range(nFiles)}
@@ -32,10 +35,10 @@ def importSampleData(info):
     l          = {init: 0 for init in range(nFiles)}
 
     # assign data
-    for i in range(2,len(info)):
+    for i in range(nHeaders,len(info)):
 
         # correct for indexing
-        j = i - 2
+        j = i - nHeaders
 
         fileNames[j]  = info[i][0]
         equip[j]      = info[i][1]
