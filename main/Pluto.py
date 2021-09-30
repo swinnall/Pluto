@@ -40,7 +40,7 @@ def modSelection():
     root = "../input/"
 
     # calls from config database
-    fname = config.inputFileNames.get(analysisType)[0]
+    fname = config.pathNames.get(analysisType)[0]
 
     # instructions file path
     source = "" + root + fname + ".txt"
@@ -66,7 +66,7 @@ def main():
 
 
     # create path for analysis
-    outputFolder = '../output/' + config.inputFileNames.get(analysisType)[1] + '/' + title + ''
+    outputFolder = '../output/' + config.pathNames.get(analysisType)[1] + '/' + title + ''
 
 
     # delete folder if exists and create it again
