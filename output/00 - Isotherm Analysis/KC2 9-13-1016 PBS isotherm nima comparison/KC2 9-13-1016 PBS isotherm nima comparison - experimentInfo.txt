@@ -1,0 +1,4 @@
+title=KC2 9-13-1016 PBS isotherm nima comparison
+filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
+KC2-PBS buffer 4 cycles - scaled,Nima,1,DLin-KC2-DMA,1,1,18.5E-6,Feb Data
+20ul KC2 - PBS - 4 cycles - repeat 14,Nima,1,DLin-KC2-DMA,1,0.2,20.0E-6,Repeat 14

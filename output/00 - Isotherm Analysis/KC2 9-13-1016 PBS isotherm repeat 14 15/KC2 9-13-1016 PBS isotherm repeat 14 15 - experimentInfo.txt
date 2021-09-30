@@ -1,0 +1,4 @@
+title=KC2 9-13-1016 PBS isotherm repeat 14 15
+filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
+20ul KC2 - PBS - 4 cycles - repeat 14,Nima,1,DLin-KC2-DMA,1,0.1892,20.0E-6,Repeat 14
+20ul KC2 - PBS - 4 cycles - repeat 15,Nima,1,DLin-KC2-DMA,1,0.1,20.0E-6,Repeat 15
