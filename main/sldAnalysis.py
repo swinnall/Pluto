@@ -68,7 +68,7 @@ class Membrane:
 
 
     # calculates the volume fractions (replacing input molar fractions)
-    def compVolFrac(self):
+    def calcVolFrac(self):
 
         global monolayerMolVol
 
@@ -124,7 +124,7 @@ class Membrane:
                             self.lipidSL[lipid][struct] += self.atomSL.get(ele[0])
 
 
-                    # multiply the total lipid scattering length of a given lipid's head/tail by the input ratio
+                    # multiply total lipid scattering length of a given lipid's head/tail by corresponding vol frac
                     self.avSL[struct] += self.volFrac[lipid][struct] * self.lipidSL[lipid][struct]
 
 
@@ -187,11 +187,11 @@ class Membrane:
             d1 = 15
             d2 = 10
 
-        # select SLD, row 2 is heads, which is element 0 of avSLD list of lists
+        # select SLD (1: tails, 2: heads)
         rho1 = self.avSLD.get("tails")
         rho2 = self.avSLD.get("head")
 
-        # select SL, row 2 is heads, which is element 0 of avSLD list of lists
+        # select SL (1: tails, 2: heads)
         SL1 = self.avSL.get("tails")
         SL2 = self.avSL.get("head")
 
@@ -199,6 +199,7 @@ class Membrane:
         self.headVolFrac = (rho1 * d1 * SL2 ) / ( rho2 * d2 * SL1)
 
         print("\nHead volume fraction: %f" %self.headVolFrac)
+
 
 
     # write output to file
@@ -278,7 +279,7 @@ def main(info, outputPath):
         m.totalVol()
 
         # convert molar fraction to component volume fraction
-        m.compVolFrac()
+        m.calcVolFrac()
 
         # calculate coherent scattering lengths
         m.calcSL()
@@ -300,9 +301,9 @@ def main(info, outputPath):
             lipids = ["Monolayer", "DLin-MC3-DMA"]
             ratios = [80, 20]
 
-            m = Membrane(lipids, ratios)
+            m = Membrane(lipids, ratios, outputPath)
             m.totalVol()
-            m.compVolFrac()
+            m.calcVolFrac()
             m.calcSL()
             m.calcSLD()
             m.calcHeadVolumeFraction()

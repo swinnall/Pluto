@@ -1,11 +1,11 @@
-" Pluto - S.Winnall "
+" Pluto "
+" Author: @S.Winnall "
 # Reads config input and prepares information for subsequent analysis
 
 import glob, os, sys
 import csv
 import shutil
 from shutil import copyfile
-
 import config
 import isoAnalysis
 import chemFormulations

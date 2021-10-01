@@ -6,7 +6,7 @@ KEY POINTS
 
 1. Program requires sample data to be placed into path /input/00
 
-2. With the relevant information txt in /input/
+2. With the relevant instructions txt in /input/
 
 3. The desired analysis type must be specified in config.py
 
