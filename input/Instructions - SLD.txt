@@ -1,0 +1,6 @@
+title=LNP membrane
+membranes,lipidRatios,label
+#DLin-MC3-DMA,1,h-single
+#d-DLin-MC3-DMA,1,d-single
+DLin-MC3-DMA:Cholesterol,75:25,h-lipids
+d-DLin-MC3-DMA:d-Cholesterol,75:25,d-lipids

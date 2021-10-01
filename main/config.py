@@ -5,9 +5,9 @@
 ###################
 
 # set intended analysis type to True
-doIsoAnalysis      = True
+doIsoAnalysis      = False
 doChemFormulations = False
-doSLDAnalysis      = False
+doSLDAnalysis      = True
 
 
 #############
@@ -15,7 +15,7 @@ doSLDAnalysis      = False
 ############
 
 # print extra info
-verbose      = False
+verbose      = True
 very_verbose = False
 
 
@@ -120,7 +120,9 @@ lipidMolVol = {
     "SM": (274,953),
     "LBPA": (208,624),
     "Cholesterol": (5,624),
+    "d-Cholesterol": (5,624),
     "DLin-MC3-DMA": (290,1000),
+    "d-DLin-MC3-DMA": (290,1000),
     "DSPC": (322,1000),
     "DMG-PEG-2000": (200,470),
     }
@@ -128,9 +130,9 @@ lipidMolVol = {
 
 # dict of different instruction files for Pluto
 pathNames = {
-    "Isotherm": ('isothermInfo','Isotherm'),
-    "chemFormulations": ('chemInfo','Chem Formulations'),
-    "SLD": ('sldInfo','SLD'),
+    "Isotherm": ('Instructions - Isotherm','Isotherm'),
+    "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),
+    "SLD": ('Instructions - SLD','SLD'),
     }
 
 

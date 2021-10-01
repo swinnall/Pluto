@@ -113,7 +113,7 @@ def main():
         chemAnalysis.main(info, outputPath)
 
     if config.doSLDAnalysis == True:
-        sldAnalysis.main(info)
+        sldAnalysis.main(info, new_name)
 
 
     return

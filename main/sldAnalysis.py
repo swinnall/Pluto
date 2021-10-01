@@ -8,7 +8,7 @@ import config
 
 class Membrane:
 
-    def __init__(self, lipidNames, molRatios):
+    def __init__(self, lipidNames, molRatios, outputPath):
         self.lipidNames = lipidNames
         self.molRatios  = molRatios
         self.nLipids    = len(self.lipidNames)
@@ -17,6 +17,9 @@ class Membrane:
         self.lipidStruct = config.lipidStruct
         self.atomSL      = config.atomSL
         self.lipidMolVol = config.lipidMolVol
+
+        # import filepath
+        self.outputPath = outputPath
 
         # initialise new variables
         self.headVolFrac   = 0
@@ -198,6 +201,17 @@ class Membrane:
         print("\nHead volume fraction: %f" %self.headVolFrac)
 
 
+    # write output to file
+    def appendFile(self):
+
+        ## Write to file
+        with open(self.outputPath, 'a', newline = '') as f:
+
+            f.write('\nCalculated Membrane: %s\n' %self.lipidNames)
+            f.write("Average SLD; Head = %.2f; Tail = %.2f\n" %(self.avSLD.get("head"),self.avSLD.get("tails")))
+            f.write("Head vol frac = %.2f\n" %self.headVolFrac)
+
+
 
 def importSampleData(info):
 
@@ -234,7 +248,7 @@ def hasNumbers(inputString):
 
 
 
-def main(info):
+def main(info, outputPath):
 
     # initialise global variables for averageAgain func
     global monolayerMolVol
@@ -258,7 +272,7 @@ def main(info):
         ratios = re.split(':',lipidRatios.get(i))
 
         # create class instance with input variables
-        m = Membrane(lipids, ratios)
+        m = Membrane(lipids, ratios, outputPath)
 
         # calculate the total volume of the lipid components
         m.totalVol()
@@ -275,6 +289,9 @@ def main(info):
         # calculate volume fraction of the headgroups
         m.calcHeadVolumeFraction()
 
+        # update copied input instructions with output
+        m.appendFile()
+
         # repeat for incorporating an injected lipid component into the membrane
         if config.addLipid == True:
 
@@ -289,6 +306,7 @@ def main(info):
             m.calcSL()
             m.calcSLD()
             m.calcHeadVolumeFraction()
+            m.appendFile()
 
 
     return
