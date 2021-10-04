@@ -6,8 +6,8 @@
 
 # set intended analysis type to True
 doIsoAnalysis      = False
-doChemFormulations = False
-doSLDAnalysis      = True
+doChemFormulations = True
+doSLDAnalysis      = False
 
 
 #############
@@ -128,7 +128,7 @@ lipidMolVol = {
     }
 
 
-# dict of different instruction files for Pluto
+# dict of input instructions names and output file names
 pathNames = {
     "Isotherm": ('Instructions - Isotherm','Isotherm'),
     "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),

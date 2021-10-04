@@ -110,7 +110,7 @@ def main():
         isoAnalysis.main(info, title, outputPath)
 
     if config.doChemFormulations == True:
-        chemAnalysis.main(info, outputPath)
+        chemFormulations.main(info, new_name)
 
     if config.doSLDAnalysis == True:
         sldAnalysis.main(info, new_name)
