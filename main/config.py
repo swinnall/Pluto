@@ -24,7 +24,7 @@ very_verbose = False
 ################
 
 # plot standard isotherm
-plotIsotherm = False
+plotIsotherm = True
 
 # run elasticity analysis & plot
 plotElasticity = False

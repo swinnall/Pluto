@@ -1,4 +1,4 @@
-title=9-13-1016 MC3 Citrate
+title=9-13-1016 MC3 all isotherms
 filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 #Sample 01 PBS D2O h-MC3,Nima,1,DLin-MC3-DMA,1,0.1,120.0E-6,PBS D2O h-MC3
 #Sample 02 PBS ACMW d-MC3,Nima,1,d-DLin-MC3-DMA,1,0.1,120.0E-6,PBS ACMW d-MC3
