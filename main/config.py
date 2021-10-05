@@ -5,8 +5,8 @@
 ###################
 
 # set intended analysis type to True
-doIsoAnalysis      = False
-doChemFormulations = True
+doIsoAnalysis      = True
+doChemFormulations = False
 doSLDAnalysis      = False
 
 
