@@ -115,7 +115,7 @@ def main():
         isoAnalysis.main(info, title, outputPath)
 
     if config.doEllipsAnalysis == True:
-        ellipsAnalysis.main(info, new_name)
+        ellipsAnalysis.main(info, title, outputPath)
 
     if config.doChemFormulations == True:
         chemFormulations.main(info, new_name)

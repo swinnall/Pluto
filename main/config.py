@@ -58,6 +58,17 @@ nPoly = 40
 nth = 50
 
 
+################
+# IAP Analysis #
+################
+
+# plot psi and delta against angle of incidence 
+plotAOI = False
+
+# plot psi and delta against time
+plotTime = False
+
+
 #################
 # SLD Analysis #
 ################
