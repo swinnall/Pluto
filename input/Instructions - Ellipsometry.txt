@@ -1,0 +1,6 @@
+title=
+ID,filename,tag,label
+1,X100ul_LEM_pH5_5_AOI_P15_epd,AOI,P = 15 mN/m
+2,X100ul_LEM_pH5_5_AOI_P30_epd,AOI,P = 30 mN/m
+3,X100ul_LEM_pH5_5_t_5May_epd,t,LEM
+4,bare_LEM_t_5_5_21__epd,ref,

@@ -8,6 +8,7 @@ import shutil
 from shutil import copyfile
 import config
 import isoAnalysis
+import ellipsAnalysis
 import chemFormulations
 import sldAnalysis
 
@@ -18,6 +19,10 @@ def modSelection():
 
     if config.doIsoAnalysis == True:
         analysisType = 'Isotherm'
+        count += 1
+
+    if config.doEllipsAnalysis == True:
+        analysisType = 'Ellipsometry'
         count += 1
 
     if config.doChemFormulations == True:
@@ -108,6 +113,9 @@ def main():
     # calls analysis module
     if config.doIsoAnalysis == True:
         isoAnalysis.main(info, title, outputPath)
+
+    if config.doEllipsAnalysis == True:
+        ellipsAnalysis.main(info, new_name)
 
     if config.doChemFormulations == True:
         chemFormulations.main(info, new_name)

@@ -6,6 +6,7 @@
 
 # set intended analysis type to True
 doIsoAnalysis      = True
+doEllipsAnalysis   = False
 doChemFormulations = False
 doSLDAnalysis      = False
 
@@ -131,6 +132,7 @@ lipidMolVol = {
 # dict of input instructions names and output file names
 pathNames = {
     "Isotherm": ('Instructions - Isotherm','Isotherm'),
+    "Ellipsometry": ('Instructions - Ellipsometry','Ellipsometry'),
     "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),
     "SLD": ('Instructions - SLD','SLD'),
     }
