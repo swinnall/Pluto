@@ -23,7 +23,7 @@ def importSampleData(info):
     uniqIDs = {"AOI": [], "t": [], "ref": [],}
 
     # assign data
-    for i in range(1,len(info)):
+    for i in range(nHeaders,len(info)):
 
         # correct for indexing
         j = i - 1
@@ -45,10 +45,11 @@ def importSampleData(info):
 
 
     # determine number of each types of files for plotting
-    nAOI = len(uniqIDs.get("AOI"))
-    nSys = len(uniqIDs.get("ref"))
+    nAOI  = len(uniqIDs.get("AOI"))
+    nTime = len(uniqIDs.get("t"))
+    nRef  = len(uniqIDs.get("ref"))
 
-    return nFiles, uniqIDs, tag, nAOI, nSys, info
+    return nFiles, uniqIDs, tag, nAOI, nTime, nRef, info
 
 
 def importAOI(uniqIDs, info, nAOI):
@@ -83,18 +84,17 @@ def importAOI(uniqIDs, info, nAOI):
     return AOI, psi_AOI, delta_AOI
 
 
-def importTime(uniqIDs, info, nSys):
+def importTime(uniqIDs, info, nTime, nRef):
 
     # initialise y axis variables for time plots
-    t         = {new_list: [] for new_list in range(nSys)}
-    psi_ref   = {new_list: [] for new_list in range(nSys)}
-    delta_ref = {new_list: [] for new_list in range(nSys)}
-    psi_t     = {new_list: [] for new_list in range(nSys)}
-    delta_t   = {new_list: [] for new_list in range(nSys)}
-
+    t         = {new_list: [] for new_list in range(nTime)}
+    psi_t     = {new_list: [] for new_list in range(nTime)}
+    delta_t   = {new_list: [] for new_list in range(nTime)}
+    psi_ref   = {new_list: [] for new_list in range(nRef)}
+    delta_ref = {new_list: [] for new_list in range(nRef)}
 
     # extract reference data
-    for i in range(nSys):
+    for i in range(nRef):
 
         # initialise data list for each file
         d_ref = []
@@ -116,18 +116,18 @@ def importTime(uniqIDs, info, nSys):
             delta_ref[i].append(float(d_ref[j][1]))
 
 
-    # stores averaged reference values for system i->nSys
+    # stores averaged reference values for system i->nTime
     avRefPsi = []
     avRefDel = []
 
     # average reference values
-    for i in range(nSys):
+    for i in range(nTime):
         avRefPsi.append(mean(psi_ref.get(i)))
         avRefDel.append(mean(delta_ref.get(i)))
 
 
     # extract time series data
-    for i in range(nSys):
+    for i in range(nTime):
 
         # initialise data list for each file
         d_t = []
@@ -158,7 +158,7 @@ def main(info, title, outputPath):
 
 
     # user input & sample instructions information
-    nFiles, uniqIDs, tag, nAOI, nSys, info = importSampleData(info)
+    nFiles, uniqIDs, tag, nAOI, nTime, nRef, info = importSampleData(info)
 
 
     # process data
@@ -188,10 +188,10 @@ def main(info, title, outputPath):
     if config.plotTime == True:
 
         # import data
-        t, psi_t, delta_t = importTime(uniqIDs, info, nSys)
+        t, psi_t, delta_t = importTime(uniqIDs, info, nTime, nRef)
 
         # converting delta variables to degrees
-        for i in range(nSys):
+        for i in range(nTime):
             for j in range(len(delta_t.get(i))):
                 delta_t[i][j] = delta_t.get(i)[j] * 180 / np.pi
 

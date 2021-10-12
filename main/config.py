@@ -58,11 +58,11 @@ nPoly = 40
 nth = 50
 
 
-################
-# IAP Analysis #
-################
+##########################
+# Ellipsometry Analysis #
+########################
 
-# plot psi and delta against angle of incidence 
+# plot psi and delta against angle of incidence
 plotAOI = False
 
 # plot psi and delta against time

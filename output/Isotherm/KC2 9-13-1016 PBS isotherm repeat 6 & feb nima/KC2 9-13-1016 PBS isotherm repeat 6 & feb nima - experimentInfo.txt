@@ -1,4 +1,0 @@
-title=KC2 9-13-1016 PBS isotherm repeat 6 & feb nima
-filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
-KC2-PBS buffer 4 cycles - scaled,Nima,1,DLin-KC2-DMA,1,1,18.5E-6,Feb Data
-50ul KC2 - PBS - 3 cycles - repeat 6,Kibron,1,DLin-KC2-DMA,1,0.2,50.0E-6,Repeat 6
