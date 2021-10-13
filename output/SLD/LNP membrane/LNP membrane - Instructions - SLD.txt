@@ -4,13 +4,13 @@ DLin-MC3-DMA:Cholesterol,75:25,15,10,h-lipids
 d-DLin-MC3-DMA:d45-Cholesterol,75:25,15,10,d-lipids
 
 Calculated Membrane: ['DLin-MC3-DMA', 'Cholesterol']
-Average SL;  Head = 16.2405; Tail = -4.4055
-Average SLD; Head = 0.7424; Tail = -0.0486
+Average SL;  Head = 20.8580; Tail = -6.0233
+Average SLD; Head = 0.7233; Tail = -0.0644
 Thickness;   Head = 10.0000; Tail = 15.0000
-Head vol frac = 0.3622
+Head vol frac = 0.4625
 
 Calculated Membrane: ['d-DLin-MC3-DMA', 'd45-Cholesterol']
-Average SL;  Head = 16.2405; Tail = 596.7720
-Average SLD; Head = 0.7424; Tail = 6.5869
+Average SL;  Head = 20.8580; Tail = 608.9251
+Average SLD; Head = 0.7233; Tail = 6.5108
 Thickness;   Head = 10.0000; Tail = 15.0000
-Head vol frac = 0.3622
+Head vol frac = 0.4625

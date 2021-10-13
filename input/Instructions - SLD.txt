@@ -1,4 +1,6 @@
-title=LNP membrane
+title=Raw Scattering Lengths MC3 cholesterol
 membranes,lipidRatios,dt,dh,label
-DLin-MC3-DMA:Cholesterol,75:25,15,10,h-lipids
-d-DLin-MC3-DMA:d45-Cholesterol,75:25,15,10,d-lipids
+DLin-MC3-DMA,100,15,10,h-MC3
+d-DLin-MC3-DMA,100,15,10,d-MC3
+Cholesterol,100,15,10,Cholesterol
+PolyA,100,15,10,polyA

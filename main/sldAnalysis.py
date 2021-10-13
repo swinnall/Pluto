@@ -215,6 +215,7 @@ class Membrane:
         # calculate volume fraction
         self.headVolFrac = (rho1 * d1 * SL2 ) / ( rho2 * d2 * SL1)
 
+        # solvent volume in head group 
         print("\nHead volume fraction: %f" %self.headVolFrac)
 
 

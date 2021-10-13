@@ -74,7 +74,7 @@ plotTime = False
 ################
 
 # use vol frac (molar ratio = default)
-useVolFrac = False
+useVolFrac = True
 
 # include an injected lipid into the system
 addLipid = False
@@ -99,6 +99,7 @@ lipidMw = {
     "DOPE": 744.034,
     "SM": 760.223,
     "LBPA": 792.07,
+    "PolyA": 385.31,
     }
 
 # atom coherent scattering lengths [fm], Coh b from https://www.ncnr.nist.gov/resources/n-lengths/
@@ -109,6 +110,7 @@ atomSL = {
     "N": 9.36,
     "O": 5.803,
     "P": 5.13,
+    "K": 3.67,
     }
 
 # chemical structures for each lipid: (struct_head, struct_tail)
@@ -125,6 +127,7 @@ lipidStruct = {
     "d-DLin-MC3-DMA": ('N-O2','C43-H17-D62'),
     "DSPC": ('N-O8-P','C44-H88'),
     "DMG-PEG-2000": ('O50','C122-H242'),
+    "PolyA": ('C10-H13-K-N5-O7-P','H')
     }
 
 # molecular volumes for each lipid (Angstroms cubed): (head, tail)
@@ -140,6 +143,7 @@ lipidMolVol = {
     "d-DLin-MC3-DMA": (290,1000),
     "DSPC": (322,1000),
     "DMG-PEG-2000": (200,470),
+    "PolyA": (1,1)
     }
 
 
