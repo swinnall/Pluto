@@ -8,10 +8,11 @@ import config
 
 class Membrane:
 
-    def __init__(self, lipidNames, molRatios, outputPath):
-        self.lipidNames = lipidNames
-        self.molRatios  = molRatios
-        self.nLipids    = len(self.lipidNames)
+    def __init__(self, lipidNames, molRatios, thickness, outputPath):
+        self.lipidNames  = lipidNames
+        self.molRatios   = molRatios
+        self.thickness   = thickness
+        self.nLipids     = len(self.lipidNames)
 
         # import databases
         self.lipidStruct = config.lipidStruct
@@ -27,13 +28,14 @@ class Membrane:
         self.lipidSL       = {}
         self.lipidSLD      = {}
         self.totalLipidVol = {'head': 0, 'tails': 0}
+        self.avLipidVol    = {'head': 0, 'tails': 0}
         self.avSL          = {'head': 0, 'tails': 0}
         self.avSLD         = {'head': 0, 'tails': 0}
 
 
 
     # calculates the total volume by summing lipid component volumes
-    def totalVol(self):
+    def calcVolFrac(self):
 
         global monolayerMolVol
 
@@ -46,12 +48,25 @@ class Membrane:
                 print("Lipid: %s" %lipid)
                 sys.exit()
 
+            # calculate total lipid volumes
             for j, struct in enumerate(['head','tails']):
 
                 if lipid == "Monolayer":
                     self.totalLipidVol[struct] += (float(self.molRatios[i])/100) * monolayerMolVol[struct]
                 else:
                     self.totalLipidVol[struct] += (float(self.molRatios[i])/100) * self.lipidMolVol.get(lipid)[j]
+
+
+        # component volume calculation
+        for i, lipid in enumerate(self.lipidNames):
+            self.volFrac[lipid] = {'head': 0, 'tails': 0}
+
+            for j, struct in enumerate(['head','tails']):
+                if lipid == "Monolayer":
+                    self.volFrac[lipid][struct] = (float(self.molRatios[i])/100) * monolayerMolVol.get(struct) / self.totalLipidVol[struct]
+                else:
+                    self.volFrac[lipid][struct] = (float(self.molRatios[i])/100) * self.lipidMolVol.get(lipid)[j] / self.totalLipidVol[struct]
+
 
 
         # save Monolayer monolayer struct volumes on the first iteration
@@ -65,25 +80,9 @@ class Membrane:
         if config.verbose == True and "Monolayer" in self.lipidNames:
             print('\nTotal Volume:\n%s' %self.totalLipidVol)
 
-
-
-    # calculates the volume fractions (replacing input molar fractions)
-    def calcVolFrac(self):
-
-        global monolayerMolVol
-
-        for i, lipid in enumerate(self.lipidNames):
-            self.volFrac[lipid] = {'head': 0, 'tails': 0}
-
-            for j, struct in enumerate(['head','tails']):
-
-                if lipid == "Monolayer":
-                    self.volFrac[lipid][struct] = (float(self.molRatios[i])/100) * monolayerMolVol.get(struct) / self.totalLipidVol[struct]
-                else:
-                    self.volFrac[lipid][struct] = (float(self.molRatios[i])/100) * self.lipidMolVol.get(lipid)[j] / self.totalLipidVol[struct]
-
         if config.verbose == True:
             print('\nComponent Volume Fraction:\n%s' %self.volFrac)
+
 
 
 
@@ -125,7 +124,11 @@ class Membrane:
 
 
                     # multiply total lipid scattering length of a given lipid's head/tail by corresponding vol frac
-                    self.avSL[struct] += self.volFrac[lipid][struct] * self.lipidSL[lipid][struct]
+                    if config.useVolFrac == True:
+                        self.avSL[struct] += self.volFrac[lipid][struct] * self.lipidSL[lipid][struct]
+                    else:
+                        self.avSL[struct] += (float(self.molRatios[i])/100) * self.lipidSL[lipid][struct]
+
 
 
         # save Monolayer monolayer struct volumes on the first iteration
@@ -141,24 +144,46 @@ class Membrane:
 
 
 
+    def calcAvLipidVol(self):
+
+        for i, lipid in enumerate(self.lipidNames):
+
+            # calculate total lipid volumes
+            for j, struct in enumerate(['head','tails']):
+                print("yes")
+                if config.useVolFrac == True:
+                    if lipid == "Monolayer":
+                        self.avLipidVol[struct] += self.volFrac[lipid][struct] * monolayerMolVol[struct]
+                    else:
+                        self.avLipidVol[struct] += self.volFrac[lipid][struct] * self.lipidMolVol.get(lipid)[j]
+
+                else:
+                    if lipid == "Monolayer":
+                        self.avLipidVol[struct] += (float(self.molRatios[i])/100) * monolayerMolVol[struct]
+                    else:
+                        self.avLipidVol[struct] += (float(self.molRatios[i])/100) * self.lipidMolVol.get(lipid)[j]
+                        print("call")
+                        print(self.lipidMolVol.get(lipid)[j])
+                        print(self.avLipidVol[struct] )
+
+
+
+
     # calculates the scattering length density of each lipid component
     def calcSLD(self):
 
+
+        # take avSL and divide by avStructVol (tails, heads)
         global monolayerSLD
 
-        for i, lipid in enumerate(self.lipidNames):
-            self.lipidSLD[lipid] = {'head': 0, 'tails': 0}
+        #for i, lipid in enumerate(self.lipidNames):
 
-            for j, struct in enumerate(['head','tails']):
+        for j, struct in enumerate(['head','tails']):
 
-                # divide the scattering length by the molecular volume for each lipid or call from monolayer
-                if lipid == "Monolayer":
-                    self.lipidSLD[lipid][struct] = monolayerSLD.get(struct)
-                else:
-                    self.lipidSLD[lipid][struct] = 10 * self.lipidSL[lipid][struct] / self.lipidMolVol.get(lipid)[j]
-
-                # add each one to the average lipid
-                self.avSLD[struct] += self.volFrac[lipid][struct] * self.lipidSLD[lipid][struct]
+            # add each one to the average lipid
+            print(self.avSL[struct])
+            print(self.avLipidVol[struct])
+            self.avSLD[struct] = self.avSL[struct] / self.avLipidVol[struct]
 
 
         # save Monolayer monolayer struct volumes on the first iteration
@@ -177,23 +202,23 @@ class Membrane:
     # calculates volume fraction of the head group based on SLD
     def calcHeadVolumeFraction(self):
 
-        # set initial membrane thickness (1: tails, 2: heads)
-        if "Monolayer" not in self.lipidNames:
-            d1 = 10
-            d2 = 10
+        # call SL
+        SL1 = self.avSL.get("tails")
+        SL2 = self.avSL.get("head")
 
-        # set new membrane thickness (1: tails, 2: heads)
-        elif "Monolayer" in self.lipidNames:
-            d1 = 15
-            d2 = 10
-
-        # select SLD (1: tails, 2: heads)
+        # call SLD
         rho1 = self.avSLD.get("tails")
         rho2 = self.avSLD.get("head")
 
-        # select SL (1: tails, 2: heads)
-        SL1 = self.avSL.get("tails")
-        SL2 = self.avSL.get("head")
+        # call membrane thickness
+        if "Monolayer" not in self.lipidNames:
+            d1 = self.thickness.get("tails")
+            d2 = self.thickness.get("head")
+
+        # set new membrane thickness
+        elif "Monolayer" in self.lipidNames:
+            d1 = 15
+            d2 = 10
 
         # calculate volume fraction
         self.headVolFrac = (rho1 * d1 * SL2 ) / ( rho2 * d2 * SL1)
@@ -209,7 +234,9 @@ class Membrane:
         with open(self.outputPath, 'a', newline = '') as f:
 
             f.write('\nCalculated Membrane: %s\n' %self.lipidNames)
+            f.write("Average SL;  Head = %.2f; Tail = %.2f\n" %(self.avSL.get("head"),self.avSL.get("tails")))
             f.write("Average SLD; Head = %.2f; Tail = %.2f\n" %(self.avSLD.get("head"),self.avSLD.get("tails")))
+            f.write("Thickness;   Head = %.2f; Tail = %.2f\n" %(self.thickness.get("head"),self.thickness.get("tails")))
             f.write("Head vol frac = %.2f\n" %self.headVolFrac)
 
 
@@ -225,6 +252,8 @@ def importSampleData(info):
     # variable initialisations
     membranes   = {init: 0 for init in range(nMemb)}
     lipidRatios = {init: 0 for init in range(nMemb)}
+    t_thick     = {init: 0 for init in range(nMemb)}
+    h_thick     = {init: 0 for init in range(nMemb)}
     labels      = {init: 0 for init in range(nMemb)}
 
 
@@ -236,10 +265,13 @@ def importSampleData(info):
 
         membranes[j]   = info[i][0]
         lipidRatios[j] = info[i][1]
-        labels[j]      = info[i][2]
+        t_thick[j]     = info[i][2]
+        h_thick[j]     = info[i][3]
+        labels[j]      = info[i][4]
 
 
-    return nMemb, membranes, lipidRatios, labels
+
+    return nMemb, membranes, lipidRatios, t_thick, h_thick, labels
 
 
 
@@ -256,12 +288,13 @@ def main(info, outputPath):
     global monolayerSL
     global monolayerSLD
     monolayerMolVol = {'head': 0, 'tails': 0}
+    monolayerMolVol = {'head': 0, 'tails': 0}
     monolayerSL     = {'head': 0, 'tails': 0}
     monolayerSLD    = {'head': 0, 'tails': 0}
 
 
     # import txt instructions
-    nMemb, membranes, lipidRatios, labels = importSampleData(info)
+    nMemb, membranes, lipidRatios, t_thick, h_thick, labels = importSampleData(info)
 
 
     # calculate component volumes
@@ -272,17 +305,22 @@ def main(info, outputPath):
         lipids = re.split(':',membranes.get(i))
         ratios = re.split(':',lipidRatios.get(i))
 
-        # create class instance with input variables
-        m = Membrane(lipids, ratios, outputPath)
+        thickness = {'head': 0, 'tails': 0}
+        thickness['tails'] = float(t_thick.get(i))
+        thickness['head']  = float(h_thick.get(i))
 
-        # calculate the total volume of the lipid components
-        m.totalVol()
+
+        # create class instance with input variables
+        m = Membrane(lipids, ratios, thickness, outputPath)
 
         # convert molar fraction to component volume fraction
-        m.calcVolFrac()
+        if config.useVolFrac == True: m.calcVolFrac()
 
         # calculate coherent scattering lengths
         m.calcSL()
+
+        # calculate average lipid structure volumes
+        m.calcAvLipidVol()
 
         # divide scattering length by the molecular volume
         m.calcSLD()
@@ -301,9 +339,8 @@ def main(info, outputPath):
             lipids = ["Monolayer", "DLin-MC3-DMA"]
             ratios = [80, 20]
 
-            m = Membrane(lipids, ratios, outputPath)
-            m.totalVol()
-            m.calcVolFrac()
+            m = Membrane(lipids, ratios, thicknesses, outputPath)
+            if config.useVolFrac == True: m.calcVolFrac()
             m.calcSL()
             m.calcSLD()
             m.calcHeadVolumeFraction()

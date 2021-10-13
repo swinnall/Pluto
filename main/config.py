@@ -5,10 +5,10 @@
 ###################
 
 # set intended analysis type to True
-doIsoAnalysis      = True
+doIsoAnalysis      = False
 doEllipsAnalysis   = False
 doChemFormulations = False
-doSLDAnalysis      = False
+doSLDAnalysis      = True
 
 
 #############
@@ -17,7 +17,7 @@ doSLDAnalysis      = False
 
 # print extra info
 verbose      = True
-very_verbose = False
+very_verbose = True
 
 
 ################
@@ -73,6 +73,9 @@ plotTime = False
 # SLD Analysis #
 ################
 
+# use vol frac (molar ratio = default)
+useVolFrac = False
+
 # include an injected lipid into the system
 addLipid = False
 
@@ -85,11 +88,11 @@ addLipid = False
 lipidMw = {
     "DPPC": 734.039,
     "d-DPPC": 796.43,
-    "POPC": 760.076,
-    "d-POPC": 791.267,
+    "POPC": 760.07,  # 760.076
+    "d31-POPC": 791.07, # 791.267
     "POPS": 783.99,
-    "Cholesterol": 386.654,
-    "d-Cholesterol": 432,
+    "Cholesterol": 386.65,  # 386.654
+    "d45-Cholesterol": 432,
     "DLin-KC2-DMA": 642.1,
     "DLin-MC3-DMA": 642.09,
     "d-DLin-MC3-DMA": 704.5,
@@ -111,13 +114,13 @@ atomSL = {
 # chemical structures for each lipid: (struct_head, struct_tail)
 # Assumption: only hydrogens and carbons in the tails
 lipidStruct = {
-    "POPC": ('N-O8-P','C42-H82'),
-    "d-POPC": ('N-O8-P','C42-D31-H51'),
+    "POPC": ('C10-H18-N-O8-P','C32-H64'),
+    "d31-POPC": ('C10-H18-N-O8-P','C32-D31-H33'),
     "DOPE": ('N-O8-P','C41-H78'),
     "SM": ('N2-O6-P','C47-H93'),
     "LBPA": ('N-O10-P','C42-H82'),
     "Cholesterol": ('O-H','C27-H45'),
-    "d-Cholesterol": ('O-H','C27-D45'),
+    "d45-Cholesterol": ('O-H','C27-D45'),
     "DLin-MC3-DMA": ('N-O2','C43-H79'),
     "d-DLin-MC3-DMA": ('N-O2','C43-H17-D62'),
     "DSPC": ('N-O8-P','C44-H88'),
@@ -127,12 +130,12 @@ lipidStruct = {
 # molecular volumes for each lipid (Angstroms cubed): (head, tail)
 lipidMolVol = {
     "POPC": (344,937),
-    "d-POPC": (344,937),
+    "d31-POPC": (344,937),
     "DOPE": (236,969),
     "SM": (274,953),
     "LBPA": (208,624),
     "Cholesterol": (5,624),
-    "d-Cholesterol": (5,624),
+    "d45-Cholesterol": (5,624),
     "DLin-MC3-DMA": (290,1000),
     "d-DLin-MC3-DMA": (290,1000),
     "DSPC": (322,1000),

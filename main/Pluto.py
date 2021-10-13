@@ -69,6 +69,7 @@ def main():
     # filter out rows that start with '#'
     info = [x for x in info if not x[0].startswith('#')]
 
+
     # gets title of the analysis
     title = info[0][0].split('=')[1]
 

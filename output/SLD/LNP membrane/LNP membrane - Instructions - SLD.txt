@@ -2,13 +2,15 @@ title=LNP membrane
 membranes,lipidRatios,label
 #DLin-MC3-DMA,1,h-single
 #d-DLin-MC3-DMA,1,d-single
-DLin-MC3-DMA:Cholesterol,75:25,h-lipids
-d-DLin-MC3-DMA:d-Cholesterol,75:25,d-lipids
+#DLin-MC3-DMA:Cholesterol,75:25,h-lipids
+#d-DLin-MC3-DMA:d-Cholesterol,75:25,d-lipids
+d-POPC:Cholesterol,7:3,d-Yixuan
+POPC:Cholesterol,7:3,h-Yixuan
 
-Calculated Membrane: ['DLin-MC3-DMA', 'Cholesterol']
-Average SLD; Head = 1.48; Tail = -0.10
-Head vol frac = 0.23
+Calculated Membrane: ['d-POPC', 'Cholesterol']
+Average SLD; Head = 1.79; Tail = 2.49
+Head vol frac = 0.36
 
-Calculated Membrane: ['d-DLin-MC3-DMA', 'd-Cholesterol']
-Average SLD; Head = 1.48; Tail = 13.17
-Head vol frac = 0.30
+Calculated Membrane: ['POPC', 'Cholesterol']
+Average SLD; Head = 1.79; Tail = -0.19
+Head vol frac = 0.34
