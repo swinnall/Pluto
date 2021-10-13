@@ -1,8 +1,4 @@
-title=Yixuan Test
+title=LNP membrane
 membranes,lipidRatios,dt,dh,label
-#DLin-MC3-DMA,100,15,10,h-single
-#d-DLin-MC3-DMA,100,15,10,d-single
-#DLin-MC3-DMA:Cholesterol,75:25,15,10,h-lipids
-#d-DLin-MC3-DMA:d-Cholesterol,75:25,15,10,d-lipids
-d31-POPC:Cholesterol,70:30,15,10,d-Yixuan
-POPC:Cholesterol,70:30,15,10,h-Yixuan
+DLin-MC3-DMA:Cholesterol,75:25,15,10,h-lipids
+d-DLin-MC3-DMA:d45-Cholesterol,75:25,15,10,d-lipids

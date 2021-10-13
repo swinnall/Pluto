@@ -150,7 +150,7 @@ class Membrane:
 
             # calculate total lipid volumes
             for j, struct in enumerate(['head','tails']):
-                print("yes")
+
                 if config.useVolFrac == True:
                     if lipid == "Monolayer":
                         self.avLipidVol[struct] += self.volFrac[lipid][struct] * monolayerMolVol[struct]
@@ -162,28 +162,20 @@ class Membrane:
                         self.avLipidVol[struct] += (float(self.molRatios[i])/100) * monolayerMolVol[struct]
                     else:
                         self.avLipidVol[struct] += (float(self.molRatios[i])/100) * self.lipidMolVol.get(lipid)[j]
-                        print("call")
-                        print(self.lipidMolVol.get(lipid)[j])
-                        print(self.avLipidVol[struct] )
 
+        if config.verbose == True:
+            print("\nAverage Lipid Head/Tail Volume:\n%s" %self.avLipidVol)
 
 
 
     # calculates the scattering length density of each lipid component
     def calcSLD(self):
 
-
-        # take avSL and divide by avStructVol (tails, heads)
         global monolayerSLD
 
-        #for i, lipid in enumerate(self.lipidNames):
-
-        for j, struct in enumerate(['head','tails']):
-
-            # add each one to the average lipid
-            print(self.avSL[struct])
-            print(self.avLipidVol[struct])
-            self.avSLD[struct] = self.avSL[struct] / self.avLipidVol[struct]
+        # take avSL and divide by avStructVol (tails, heads)
+        for i, struct in enumerate(['head','tails']):
+            self.avSLD[struct] = 10 * self.avSL[struct] / self.avLipidVol[struct]
 
 
         # save Monolayer monolayer struct volumes on the first iteration
@@ -234,10 +226,10 @@ class Membrane:
         with open(self.outputPath, 'a', newline = '') as f:
 
             f.write('\nCalculated Membrane: %s\n' %self.lipidNames)
-            f.write("Average SL;  Head = %.2f; Tail = %.2f\n" %(self.avSL.get("head"),self.avSL.get("tails")))
-            f.write("Average SLD; Head = %.2f; Tail = %.2f\n" %(self.avSLD.get("head"),self.avSLD.get("tails")))
-            f.write("Thickness;   Head = %.2f; Tail = %.2f\n" %(self.thickness.get("head"),self.thickness.get("tails")))
-            f.write("Head vol frac = %.2f\n" %self.headVolFrac)
+            f.write("Average SL;  Head = %.4f; Tail = %.4f\n" %(self.avSL.get("head"),self.avSL.get("tails")))
+            f.write("Average SLD; Head = %.4f; Tail = %.4f\n" %(self.avSLD.get("head"),self.avSLD.get("tails")))
+            f.write("Thickness;   Head = %.4f; Tail = %.4f\n" %(self.thickness.get("head"),self.thickness.get("tails")))
+            f.write("Head vol frac = %.4f\n" %self.headVolFrac)
 
 
 
@@ -342,6 +334,7 @@ def main(info, outputPath):
             m = Membrane(lipids, ratios, thicknesses, outputPath)
             if config.useVolFrac == True: m.calcVolFrac()
             m.calcSL()
+            m.calcAvLipidVol()
             m.calcSLD()
             m.calcHeadVolumeFraction()
             m.appendFile()

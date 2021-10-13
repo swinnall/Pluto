@@ -1,20 +1,16 @@
 title=Yixuan Test
 membranes,lipidRatios,dt,dh,label
-#DLin-MC3-DMA,100,15,10,h-single
-#d-DLin-MC3-DMA,100,15,10,d-single
-#DLin-MC3-DMA:Cholesterol,75:25,15,10,h-lipids
-#d-DLin-MC3-DMA:d-Cholesterol,75:25,15,10,d-lipids
 d31-POPC:Cholesterol,70:30,15,10,d-Yixuan
 POPC:Cholesterol,70:30,15,10,h-Yixuan
 
 Calculated Membrane: ['d31-POPC', 'Cholesterol']
-Average SL;  Head = 42.67; Tail = 210.62
-Average SLD; Head = 0.18; Tail = 0.25
-Thickness;   Head = 10.00; Tail = 15.00
-Head vol frac = 0.43
+Average SL;  Head = 42.6696; Tail = 210.6163
+Average SLD; Head = 1.7610; Tail = 2.4981
+Thickness;   Head = 10.0000; Tail = 15.0000
+Head vol frac = 0.4311
 
 Calculated Membrane: ['POPC', 'Cholesterol']
-Average SL;  Head = 42.67; Tail = -15.28
-Average SLD; Head = 0.18; Tail = -0.02
-Thickness;   Head = 10.00; Tail = 15.00
-Head vol frac = 0.43
+Average SL;  Head = 42.6696; Tail = -15.2807
+Average SLD; Head = 1.7610; Tail = -0.1812
+Thickness;   Head = 10.0000; Tail = 15.0000
+Head vol frac = 0.4311

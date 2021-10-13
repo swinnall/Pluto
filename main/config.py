@@ -17,7 +17,7 @@ doSLDAnalysis      = True
 
 # print extra info
 verbose      = True
-very_verbose = True
+very_verbose = False
 
 
 ################
