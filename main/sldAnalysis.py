@@ -169,8 +169,7 @@ class Membrane:
         if config.compactChains == True:
 
             chainCompactFactor = 0.85
-            for j, struct in enumerate(['head','tails']):
-                self.avLipidVol[struct] = chainCompactFactor * self.avLipidVol[struct]
+            self.avLipidVol['tails'] = chainCompactFactor * self.avLipidVol['tails']
 
 
         if config.verbose == True:

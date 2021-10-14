@@ -74,7 +74,7 @@ plotTime = False
 ################
 
 # multiplies average chain vol by 0.85 to model chain compaction of lipids
-compactChains = False 
+compactChains = True 
 
 # use vol frac (molar ratio = default)
 useVolFrac = True
