@@ -73,6 +73,9 @@ plotTime = False
 # SLD Analysis #
 ################
 
+# multiplies average chain vol by 0.85 to model chain compaction of lipids
+compactChains = False 
+
 # use vol frac (molar ratio = default)
 useVolFrac = True
 
@@ -123,8 +126,8 @@ lipidStruct = {
     "LBPA": ('N-O10-P','C42-H82'),
     "Cholesterol": ('O-H','C27-H45'),
     "d45-Cholesterol": ('O-H','C27-D45'),
-    "DLin-MC3-DMA": ('N-O2','C43-H79'),
-    "d-DLin-MC3-DMA": ('N-O2','C43-H17-D62'),
+    "DLin-MC3-DMA": ('N-O2-C6-H9','C37-H70'),
+    "d-DLin-MC3-DMA": ('N-O2-C6-H9','C37-H8-D62'),
     "DSPC": ('N-O8-P','C44-H88'),
     "DMG-PEG-2000": ('O50','C122-H242'),
     "PolyA": ('C10-H13-K-N5-O7-P','H')

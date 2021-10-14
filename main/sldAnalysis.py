@@ -24,6 +24,7 @@ class Membrane:
 
         # initialise new variables
         self.headVolFrac   = 0
+        self.twoSolv       = 0
         self.volFrac       = {}
         self.lipidSL       = {}
         self.lipidSLD      = {}
@@ -163,6 +164,15 @@ class Membrane:
                     else:
                         self.avLipidVol[struct] += (float(self.molRatios[i])/100) * self.lipidMolVol.get(lipid)[j]
 
+
+        # if accounting for chain compaction
+        if config.compactChains == True:
+
+            chainCompactFactor = 0.85
+            for j, struct in enumerate(['head','tails']):
+                self.avLipidVol[struct] = chainCompactFactor * self.avLipidVol[struct]
+
+
         if config.verbose == True:
             print("\nAverage Lipid Head/Tail Volume:\n%s" %self.avLipidVol)
 
@@ -214,9 +224,11 @@ class Membrane:
 
         # calculate volume fraction
         self.headVolFrac = (rho1 * d1 * SL2 ) / ( rho2 * d2 * SL1)
+        self.twoSolv     = (1-self.headVolFrac)*100
 
-        # solvent volume in head group 
+        # solvent volume in head group
         print("\nHead volume fraction: %f" %self.headVolFrac)
+        print("\n2-solv = %f" %self.twoSolv)
 
 
 
@@ -231,6 +243,8 @@ class Membrane:
             f.write("Average SLD; Head = %.4f; Tail = %.4f\n" %(self.avSLD.get("head"),self.avSLD.get("tails")))
             f.write("Thickness;   Head = %.4f; Tail = %.4f\n" %(self.thickness.get("head"),self.thickness.get("tails")))
             f.write("Head vol frac = %.4f\n" %self.headVolFrac)
+            f.write("2-solv = %.4f\n" %self.twoSolv)
+
 
 
 
