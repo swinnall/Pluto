@@ -86,7 +86,6 @@ class Membrane:
 
 
 
-
     # calculates the scattering length of each lipid component
     def calcSL(self):
 
@@ -167,7 +166,6 @@ class Membrane:
 
         # if accounting for chain compaction
         if config.compactChains == True:
-
             chainCompactFactor = 0.85
             self.avLipidVol['tails'] = chainCompactFactor * self.avLipidVol['tails']
 
@@ -229,6 +227,23 @@ class Membrane:
         print("\nHead volume fraction: %f" %self.headVolFrac)
         print("\n2-solv = %f" %self.twoSolv)
 
+
+    # calculates SLD2 for Igor Motofit
+    def calcSLD2(self):
+
+        d3 = 20 - self.thickness.get("head")
+
+        threeSolv     = 91.374
+        vf_polyA      = (100 - threeSolv) / 100
+        SLD_polyA_H2O = 3.67
+        SLD_polyA_D2O = 4.46
+
+        twoSLD_H2O = (self.headVolFrac*self.avSLD.get("head") + vf_polyA*SLD_polyA_H2O ) / (self.headVolFrac + vf_polyA)
+        twoSLD_D2O = (self.headVolFrac*self.avSLD.get("head") + vf_polyA*SLD_polyA_D2O ) / (self.headVolFrac + vf_polyA)
+
+        print("\n3-thick = %f" %d3)
+        print("twoSLD_H2O = %f" %twoSLD_H2O)
+        print("twoSLD_D2O = %f" %twoSLD_D2O)
 
 
     # write output to file
@@ -333,6 +348,9 @@ def main(info, outputPath):
 
         # calculate volume fraction of the headgroups
         m.calcHeadVolumeFraction()
+
+        # calculates SLD2 for mixings layers 2 and 3
+        if config.useL2_L3 == True: m.calcSLD2()
 
         # update copied input instructions with output
         m.appendFile()

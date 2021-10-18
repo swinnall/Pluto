@@ -73,10 +73,13 @@ plotTime = False
 # SLD Analysis #
 ################
 
-# multiplies average chain vol by 0.85 to model chain compaction of lipids
-compactChains = True 
+# multiplies average chain vol by 0.85 to model lipid chain compaction
+compactChains = False
 
-# use vol frac (molar ratio = default)
+# for mixing drug uptake to second and third layers
+useL2_L3 = True
+
+# use vol frac (molar ratio = default); True is more accurate 
 useVolFrac = True
 
 # include an injected lipid into the system
