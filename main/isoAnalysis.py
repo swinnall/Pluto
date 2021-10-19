@@ -252,6 +252,27 @@ def calcPercArea(i, A_list):
     return percA_list
 
 
+
+def calcNormP(t_list, P_list):
+
+    # initialise temporary lists
+    tempNormT_list = []
+    tempNormP_list = []
+
+    # for every nth value, store in temp lists
+    nth = 1000
+    for j in range(0,len(P_list),nth):
+        tempNormT_list.append(t_list[j])
+        tempNormP_list.append(P_list[j])
+
+    P0 = P_list[0]
+    for j in range(len(tempNormP_list)):
+        tempNormP_list[j] = tempNormP_list[j]/P0
+
+    return tempNormT_list, tempNormP_list
+
+
+
 def reduceNpoints(x, y):
 
     # initialise lists
@@ -408,7 +429,6 @@ def main(info, title, plotDIR):
     E     = {new_list: [] for new_list in range(nFiles)}
     Espl  = {new_list: [] for new_list in range(nFiles)}
     percA = {new_list: [] for new_list in range(nFiles)}
-
     normT = {new_list: [] for new_list in range(nFiles)}
     normP = {new_list: [] for new_list in range(nFiles)}
 
@@ -438,14 +458,6 @@ def main(info, title, plotDIR):
         A[i] = A_list
         P[i] = P_list
 
-        tempNormT_list = []
-        tempNormP_list = []
-        for j in range(0,len(P_list),1000):
-            tempNormT_list.append(t_list[j])
-            tempNormP_list.append(P_list[j])
-
-        normT[i] = tempNormT_list
-        normP[i] = tempNormP_list
 
         # calculate area per molecule
         Am_list = calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc, volAdded)
@@ -465,15 +477,14 @@ def main(info, title, plotDIR):
 
 
         if config.plotNormInjection == True:
-            P0 = P_list[0]
-            for j in range(len(tempNormP_list)):
-                normP[i][j] = normP.get(i)[j]/P0
-
+            tempNormT_list, tempNormP_list = calcNormP(t_list, P_list)
+            normT[i] = tempNormT_list
+            normP[i] = tempNormP_list
 
 
         # calculate percentage area
         if config.plotArea == True:
-            percA = calcPercArea(i, A_list)
+            percA = calcPercArea(A_list)
             percA[i] = percA_list
 
 
