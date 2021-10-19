@@ -18,7 +18,7 @@ import genPlot
 
 def importSampleData(info):
 
-    # number of header rows 
+    # number of header rows
     nHeaders = 2
 
     # number of isotherms to plot
@@ -252,7 +252,6 @@ def calcPercArea(i, A_list):
     return percA_list
 
 
-
 def reduceNpoints(x, y):
 
     # initialise lists
@@ -410,6 +409,9 @@ def main(info, title, plotDIR):
     Espl  = {new_list: [] for new_list in range(nFiles)}
     percA = {new_list: [] for new_list in range(nFiles)}
 
+    normT = {new_list: [] for new_list in range(nFiles)}
+    normP = {new_list: [] for new_list in range(nFiles)}
+
 
     # initialise master dicts, store dict of cycles in each element
     master_P  = {new_dict: {0: []} for new_dict in range(nFiles)}
@@ -436,6 +438,14 @@ def main(info, title, plotDIR):
         A[i] = A_list
         P[i] = P_list
 
+        tempNormT_list = []
+        tempNormP_list = []
+        for j in range(0,len(P_list),1000):
+            tempNormT_list.append(t_list[j])
+            tempNormP_list.append(P_list[j])
+
+        normT[i] = tempNormT_list
+        normP[i] = tempNormP_list
 
         # calculate area per molecule
         Am_list = calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc, volAdded)
@@ -447,11 +457,18 @@ def main(info, title, plotDIR):
 
 
         # pass list, get a dict of cycles, store each dict in a masterDict
-        if config.plotPressure == False:
+        if config.plotPressure == False and config.plotIsotherm == True:
             cycleAm, cycleP, cycleL = findCycles(Am.get(i), P.get(i), l.get(i))
             master_Am[i] = cycleAm
             master_P[i]  = cycleP
             master_L[i]  = cycleL
+
+
+        if config.plotNormInjection == True:
+            P0 = P_list[0]
+            for j in range(len(tempNormP_list)):
+                normP[i][j] = normP.get(i)[j]/P0
+
 
 
         # calculate percentage area
@@ -493,6 +510,12 @@ def main(info, title, plotDIR):
         axLabels = {"x": "auto calculated in genPlot", "y": "$\pi$ ($mNm^{-1}$)"}
         suffix   = " - pressure"
         vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (t,0), P)
+        genPlot.main(key,vars)
+
+    if config.plotNormInjection == True:
+        axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta\pi$"}
+        suffix   = " - normInjPressure"
+        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (normT,0), normP)
         genPlot.main(key,vars)
 
     if config.plotArea == True:

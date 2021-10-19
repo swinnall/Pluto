@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import sys
 
-def plot(plotParams, key, vars):
+def plot(key, vars):
 
     # accepts dict structures only
 
@@ -19,7 +19,7 @@ def plot(plotParams, key, vars):
     ax  = plt.axes()
 
     # fontsize
-    fs = plotParams[0]
+    fs = config.fs
 
     # unpack variables
     N, equip, labels, axLabels, suffix, title, plotDIR, x, y = vars
@@ -46,11 +46,12 @@ def plot(plotParams, key, vars):
                 nf.append(len(x[k].get(i)))
 
         # alt. region of interest [number of points]
-        #n0 = [14000, 4500]
-        #nf = [32000, 32000]
+        n0 = [0, 0, 0, 0]
+        nf = [16, 16, 16, 16]
 
         for i in range(N):
-            ax.plot(x[k].get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=plotParams[1][i], linewidth=plotParams[2])
+            ax.scatter(x[k].get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), edgecolors=config.config.c[i], linewidth=config.lw, facecolors='none')
+            #ax.plot(x[k].get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=config.lw)
 
             # store minimum and maximum values for axis scales
             #min_x_vals.append( n0[i] ); max_x_vals.append( nf[i] )
@@ -61,14 +62,14 @@ def plot(plotParams, key, vars):
 
         ## axis ranges
         # set min value
-        ymin = -1.0
+        ymin = 0
         if int(round(min(min_x_vals),-1))-5 >= 0:
             xmin = int(round(min(min_x_vals),-1))-5
         else: xmin = 0
 
         # set max values
         xmax = int(round(max(max_x_vals),-1))+5
-        ymax = int(round(max(max_y_vals),-1))+5
+        ymax = int(round(max(max_y_vals),-1))+2
 
         ax.set_xlim([xmin,xmax])
         ax.set_ylim([ymin,ymax])
@@ -76,11 +77,11 @@ def plot(plotParams, key, vars):
 
         ## set axis ticks
         # thresholds for different x axis scales
-        if xmax >= 7200 and (suffix == " - pressure" or suffix == " - area"):
+        if xmax >= 7200 and suffix in [" - pressure", " - area", " - normInjPressure"]:
             # set axis ticks
             init_xticks = np.arange(xmin, xmax+1, step=(3600))
             ax.set_xticks(init_xticks)
-            ax.set_yticks(np.arange(0, ymax+1, step=plotParams[4]))
+            ax.set_yticks(np.arange(0, ymax+1, step=config.y_interval))
 
             # overwrite tick numbers
             new_xticks = [i for i in range(0,int(xmax/3600)+1)]
@@ -88,11 +89,11 @@ def plot(plotParams, key, vars):
 
             axLabels["x"] = "Time (hr)"
 
-        elif xmax < 7200 and xmax > 600 and (suffix == " - pressure" or suffix == " - area"):
+        elif xmax < 7200 and xmax > 600 and suffix in [" - pressure", " - area", " - normInjPressure"]:
             # set axis ticks
             init_xticks = np.arange(xmin, xmax+1, step=600)
             ax.set_xticks(init_xticks)
-            ax.set_yticks(np.arange(0, ymax+1, step=plotParams[4]))
+            ax.set_yticks(np.arange(0, ymax+1, step=config.y_interval))
 
             # overwrite tick numbers
             new_xticks = [i for i in range(0,int(round(xmax/60,-1))+config.xmin_interval,config.xmin_interval)]
@@ -100,9 +101,9 @@ def plot(plotParams, key, vars):
 
             axLabels["x"] = "Time (min)"
 
-        elif xmax < 600 and (suffix == " - pressure" or suffix == " - area"):
-            ax.set_xticks(np.arange(xmin, xmax+1, step=int( round(((xmin+xmax)/plotParams[3]),-1) )))
-            ax.set_yticks(np.arange(0, ymax+1, step=plotParams[4]))
+        elif xmax < 600 and suffix in [" - pressure", " - area", " - normInjPressure"]:
+            ax.set_xticks(np.arange(xmin, xmax+1, step=int( round(((xmin+xmax)/config.n_xticks),-1) )))
+            ax.set_yticks(np.arange(0, ymax+1, step=config.y_interval))
 
             axLabels["x"] = "Time (s)"
 
@@ -144,16 +145,8 @@ def plot(plotParams, key, vars):
 
 def main(key, vars):
 
-    # import plotting parameters from global variables
-    fs         = config.fs
-    c          = config.c
-    lw         = config.lw
-    n_xticks   = config.n_xticks
-    y_interval = config.y_interval
-    plotParams = (fs, c, lw, n_xticks, y_interval)
-
     # plot either single or dual style plot depending on input key
-    plot(plotParams, key, vars)
+    plot(key, vars)
 
     return
 

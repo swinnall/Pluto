@@ -1,0 +1,18 @@
+title=LNP membrane Citrate MC3 polyA L2&3 compactChain
+membranes,lipidRatios,d1,d2,label
+DLin-MC3-DMA,100,10.208,6.1977,h-lipids
+d-DLin-MC3-DMA,100,10.208,6.1977,d-lipids
+
+Calculated Membrane: ['DLin-MC3-DMA']
+Average SL;  Head = 27.1910; Tail = -15.8280
+Average SLD; Head = 0.9376; Tail = -0.1862
+Thickness;   Head = 6.1977; Tail = 10.2080
+Head vol frac = 0.5619
+2-solv = 43.8061
+
+Calculated Membrane: ['d-DLin-MC3-DMA']
+Average SL;  Head = 27.1910; Tail = 629.5920
+Average SLD; Head = 0.9376; Tail = 7.4070
+Thickness;   Head = 6.1977; Tail = 10.2080
+Head vol frac = 0.5619
+2-solv = 43.8061

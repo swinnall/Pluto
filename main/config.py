@@ -5,10 +5,10 @@
 ###################
 
 # set intended analysis type to True
-doIsoAnalysis      = False
+doIsoAnalysis      = True
 doEllipsAnalysis   = False
 doChemFormulations = False
-doSLDAnalysis      = True
+doSLDAnalysis      = False
 
 
 #############
@@ -25,7 +25,7 @@ very_verbose = False
 ################
 
 # plot standard isotherm
-plotIsotherm = True
+plotIsotherm = False
 
 # run elasticity analysis & plot
 plotElasticity = False
@@ -34,7 +34,10 @@ plotElasticity = False
 plotArea = False
 
 # plot pressure as a function of time
-plotPressure = True
+plotPressure = False
+
+# plot normalised pressure for injection kinetics
+plotNormInjection = True
 
 # plot isotherm compressions only
 plotCompressions = False
@@ -74,12 +77,12 @@ plotTime = False
 ################
 
 # multiplies average chain vol by 0.85 to model lipid chain compaction
-compactChains = False
+compactChains = True
 
 # for mixing drug uptake to second and third layers
 useL2_L3 = True
 
-# use vol frac (molar ratio = default); True is more accurate 
+# use vol frac (molar ratio = default); True is more accurate
 useVolFrac = True
 
 # include an injected lipid into the system
@@ -176,7 +179,7 @@ lw = 2
 n_xticks = 7
 
 # y axis tick interval
-y_interval = 10
+y_interval = 1
 
 # xtick interval for P vs t plots (mins)
 xmin_interval = 10

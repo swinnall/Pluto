@@ -1,4 +1,4 @@
-title=LNP membrane PBS MC3 polyA L2&3 normChain
+title=LNP membrane PBS MC3 Chol polyA L2&3 compactChain
 membranes,lipidRatios,d1,d2,label
-DLin-MC3-DMA:Cholesterol,75:25,10.687,5,h-lipids
-d-DLin-MC3-DMA:d45-Cholesterol,75:25,10.687,5,d-lipids
+DLin-MC3-DMA:Cholesterol,75:25,9.7191,7.1892,h-lipids
+d-DLin-MC3-DMA:d45-Cholesterol,75:25,9.7191,7.1892,d-lipids

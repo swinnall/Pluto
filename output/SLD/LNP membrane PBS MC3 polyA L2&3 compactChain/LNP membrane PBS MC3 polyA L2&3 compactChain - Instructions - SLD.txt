@@ -1,0 +1,18 @@
+title=LNP membrane PBS MC3 polyA L2&3 compactChain
+membranes,lipidRatios,d1,d2,label
+DLin-MC3-DMA,100,9.2148,4,h-lipids
+d-DLin-MC3-DMA,100,9.2148,4,d-lipids
+
+Calculated Membrane: ['DLin-MC3-DMA']
+Average SL;  Head = 27.1910; Tail = -15.8280
+Average SLD; Head = 0.9376; Tail = -0.1862
+Thickness;   Head = 4.0000; Tail = 9.2148
+Head vol frac = 0.7860
+2-solv = 21.4032
+
+Calculated Membrane: ['d-DLin-MC3-DMA']
+Average SL;  Head = 27.1910; Tail = 629.5920
+Average SLD; Head = 0.9376; Tail = 7.4070
+Thickness;   Head = 4.0000; Tail = 9.2148
+Head vol frac = 0.7860
+2-solv = 21.4032

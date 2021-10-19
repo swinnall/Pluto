@@ -1,18 +1,18 @@
 title=LNP membrane PBS MC3 ref
 membranes,lipidRatios,d1,d2,label
-DLin-MC3-DMA:Cholesterol,75:25,10.325,5,h-lipids
-d-DLin-MC3-DMA:d45-Cholesterol,75:25,10.325,5,d-lipids
+DLin-MC3-DMA,100,10.63,5.4453,h-lipids
+d-DLin-MC3-DMA,100,10.63,5.4453,d-lipids
 
-Calculated Membrane: ['DLin-MC3-DMA', 'Cholesterol']
-Average SL;  Head = 27.0474; Tail = -11.1764
-Average SLD; Head = 0.9379; Tail = -0.1195
-Thickness;   Head = 5.0000; Tail = 10.3250
-Head vol frac = 0.6367
-2-solv = 36.3291
+Calculated Membrane: ['DLin-MC3-DMA']
+Average SL;  Head = 27.1910; Tail = -15.8280
+Average SLD; Head = 0.9376; Tail = -0.1583
+Thickness;   Head = 5.4453; Tail = 10.6300
+Head vol frac = 0.5661
+2-solv = 43.3879
 
-Calculated Membrane: ['d-DLin-MC3-DMA', 'd45-Cholesterol']
-Average SL;  Head = 27.0474; Tail = 603.7719
-Average SLD; Head = 0.9379; Tail = 6.4557
-Thickness;   Head = 5.0000; Tail = 10.3250
-Head vol frac = 0.6367
-2-solv = 7
+Calculated Membrane: ['d-DLin-MC3-DMA']
+Average SL;  Head = 27.1910; Tail = 629.5920
+Average SLD; Head = 0.9376; Tail = 6.2959
+Thickness;   Head = 5.4453; Tail = 10.6300
+Head vol frac = 0.5661
+2-solv = 43.3879
