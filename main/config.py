@@ -175,14 +175,21 @@ fs = 14
 # line width
 lw = 2
 
-# number of ticks [n-1]
+# set min x, y axis value
+xAxisMin = 0
+yAxisMin = 0
+
+# set x, y axis adjustment values
+xAxisMinAdj = -5
+xAxisMaxAdj = 0
+yAxisMaxAdj = 2
+
+# number of x axis ticks in time plots (s); [n-1]
 n_xticks = 7
 
-# y axis tick interval
-y_interval = 1
-
-# xtick interval for P vs t plots (mins)
-xmin_interval = 10
+# x, y axis tick interval for P vs t plots; x is mins plot only
+xTickInterval = 10
+yTickInterval = 1
 
 # colours
 colourDict = {
