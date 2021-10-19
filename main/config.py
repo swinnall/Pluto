@@ -24,41 +24,30 @@ very_verbose = False
 # IAP Analysis #
 ################
 
-# plot standard isotherm
-plotIsotherm = False
+## Plot Isotherms
+plotIsotherm     = True             # plot standard isotherm
+plotCompressions = False            # plot isotherm compressions only
+plotExpansions   = False            # plot isotherm expansions only
+plotCycles       = False            # colour code cycles within isotherm
 
-# run elasticity analysis & plot
-plotElasticity = False
+## Plot Y vs Time
+plotPressure      = False           # plot pressure
+plotNormInjection = False           # plot normalised pressure
+plotArea          = False           # plot percentage area
 
-# plot percentage area as a function of time
-plotArea = False
+## Elasticity Analysis
+plotElasticity = False              # plots elasticity analyis
 
-# plot pressure as a function of time
-plotPressure = False
+## Other Functions
+shiftP    = False                    # shift to P_min = 0
+overplot  = False                    # work in progress
+smoothIso = True                     # reduces number of points for final plot
 
-# plot normalised pressure for injection kinetics
-plotNormInjection = True
-
-# plot isotherm compressions only
-plotCompressions = False
-
-# plot isotherm expansions only
-plotExpansions = False
-
-# colour code cycles within isotherm
-plotCycles = False
-
-# W.I.P. overplots n separate files, colour coded by cycle / compression etc.
-overplot = False
-
-# shift to P_min = 0
-shiftP = False
-
-# order of the elasticity fit
-nPoly = 40
-
-# data reduction; take every 'nth' point
-nth = 50
+## Parameters
+useCycles  = [0,1]                   # list of cycles to be passed to module
+nPoly      = 40                      # order of the elasticity fit
+nth        = 50                      # data reduction; take every 'nth' point
+smooth_Nth = 1
 
 
 ##########################
@@ -77,10 +66,10 @@ plotTime = False
 ################
 
 # multiplies average chain vol by 0.85 to model lipid chain compaction
-compactChains = True
+compactChains = False
 
 # for mixing drug uptake to second and third layers
-useL2_L3 = True
+useL2_L3 = False
 
 # use vol frac (molar ratio = default); True is more accurate
 useVolFrac = True
@@ -190,6 +179,11 @@ n_xticks = 7
 # x, y axis tick interval for P vs t plots; x is mins plot only
 xTickInterval = 10
 yTickInterval = 1
+
+# override region of interest and set limits here; [number of points]
+overrideROI = False
+n0 = [0, 0, 0, 0]
+nf = [16, 16, 16, 16]
 
 # colours
 colourDict = {

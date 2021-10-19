@@ -48,31 +48,36 @@ def plot(key, vars):
             elif len(x[k].get(i)) < len(y.get(i)):
                 nf.append(len(x[k].get(i)))
 
-        # alt. region of interest [number of points]; uncomment to override default
-        n0 = [0, 0, 0, 0]
-        nf = [16, 16, 16, 16]
+        # alt. region of interest
+        if config.overrideROI == True:
+            n0 = config.n0
+            nf = config.nf
 
 
     ## Plot
 
         for i in range(N):
 
+            # plots scatter plot with empty circles
             if suffix in suffix in [" - normInjPressure"]:
                 ax.scatter(x[k].get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), edgecolors=config.c[i], linewidth=config.lw, facecolors='none')
 
+            # general line plot
             else:
                 ax.plot(x[k].get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=config.lw)
 
             # store minimum and maximum values for axis scales
-            min_x_vals.append( min(x[k].get(i)) ); max_x_vals.append( max(x[k].get(i)) )   #min_x_vals.append( n0[i] ); max_x_vals.append( nf[i] )
-            min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )         #min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
+            #min_x_vals.append( n0[i] ); max_x_vals.append( nf[i] )
+            #min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
+            min_x_vals.append( min(x[k].get(i)) ); max_x_vals.append( max(x[k].get(i)) )
+            min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
 
 
     ## Set Axis ranges
 
         # set min values
         ymin = config.yAxisMin
-        if int(round(min(min_x_vals),-1))-5 >= 0:
+        if int(round(min(min_x_vals),-1)) + config.xAxisMinAdj >= 0:
             xmin = int(round(min(min_x_vals),-1)) + config.xAxisMinAdj
         else: xmin = config.xAxisMin
 
