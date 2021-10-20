@@ -58,7 +58,11 @@ def getFile(fileDIR,equipParams):
 
     with open(fileDIR, newline = '') as f:
         reader = csv.reader(f, delimiter=equipParams[2])
+        #print(list(reader))
         data = list(reader)
+
+    # filter out empty lines (seemingly randomly introduced in Nima files)
+    data = [x for x in data if x != []]
 
     return data
 
@@ -95,9 +99,10 @@ def importData(equipParams, fname, plotDIR):
 
 
     # set tStart to 0
-    t0 = t[0]
-    for i in range(len(t)):
-        t[i] = t[i] - t0
+    if config.checkT0 == True:
+        t0 = t[0]
+        for i in range(len(t)):
+            t[i] = t[i] - t0
 
 
     # shift data up so minimum = 0
@@ -506,6 +511,9 @@ def main(info, title, plotDIR):
             tempSmoothList = smoothData(stitched_P.get(i))
             stitched_P[i] = tempSmoothList
 
+            tempSmoothList = smoothData(stitched_Am.get(i))
+            stitched_Am[i] = tempSmoothList
+
 
     ## Specific calculation functions
 
@@ -537,59 +545,27 @@ def main(info, title, plotDIR):
 
 
 
-    ## Plot instructions
-    if config.plotElasticity == True:
-        axLabels = {"x": "$\pi$ ($mNm^{-1}$)", "x1": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$C_s^{-1} (mNm^{-1})$"}
-        suffix   = " - elasticity"
-        key = 2; vars = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (halfCycleP.get(0),halfCycleAm.get(0)), Espl)
-        genPlot.main(key,vars)
 
     # set default settings
     axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
-    key      = 1
+    key      = (1,1)
+
+
 
     if config.plotIsotherm == True:
-        suffix   = " - isotherm"
-        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (stitched_Am,0), stitched_P)
+        suffix = " - isotherm"
+        vars   = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (stitched_Am,0), stitched_P)
+
+        # currently only allows 1x1, 2x1, 2x2 subplot types
+        if config.plotSpecialIsotherm == True:
+            nRow = len(config.key)
+            nCol = len(config.key[0])
+            key = (nRow,nCol)
+
+        # have a counter were where the number of files per plot is config.key[row][col]
+
         genPlot.main(key,vars)
 
-    if config.plotPressure == True:
-        axLabels = {"x": "auto calculated in genPlot", "y": "$\pi$ ($mNm^{-1}$)"}
-        suffix   = " - pressure"
-        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (t,0), P)
-        genPlot.main(key,vars)
-
-    if config.plotNormInjection == True:
-        axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta\pi$"}
-        suffix   = " - normInjPressure"
-        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (normT,0), normP)
-        genPlot.main(key,vars)
-
-    if config.plotArea == True:
-        axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta$A (%)"}
-        suffix   = " - area"
-        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (t,0), percA)
-        genPlot.main(key,vars)
-
-    for i in range(nFiles):
-        newTitle = title + " - " + l.get(i)
-
-        if config.plotCompressions == True:
-            suffix = " - compressions"
-            halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
-            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, suffix, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
-            genPlot.main(key,vars)
-
-        if config.plotExpansions == True:
-            suffix = " - expansions"
-            halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
-            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, suffix, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
-            genPlot.main(key,vars)
-
-        if config.plotCycles == True:
-            suffix = " - cycles"
-            vars = (len(master_Am.get(i)), equip, master_L.get(i), axLabels, suffix, newTitle, plotDIR, (master_Am.get(i),0), master_P.get(i))
-            genPlot.main(key,vars)
 
 
     # program executed

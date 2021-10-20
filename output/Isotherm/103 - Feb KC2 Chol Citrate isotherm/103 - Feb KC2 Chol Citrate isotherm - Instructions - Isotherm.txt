@@ -1,4 +1,4 @@
-title=103 - Feb KC2 Chol PBS isotherm
+title=103 - Feb KC2 Chol Citrate isotherm
 filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 #
 # PBS MC3 9-13-1016
@@ -33,10 +33,10 @@ filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 # Feb KC2 proposal isotherms
 #KC2-PBS buffer 4 cycles - scaled - reduced,Nima,1,DLin-KC2-DMA,1,1.0,18.5E-6,KC2 - PBS
 #KC2-PBS polyA buffer 4 cycles - scaled - reduced,Nima,1,DLin-KC2-DMA,1,1.0,18.5E-6,KC2 - PBS w/ PolyA
-KC2-chol PBS 2 cycles,Nima,2,DLin-KC2-DMA:Cholesterol,75:25,1.0,18.5E-6,KC2:Chol - PBS
-KC2-chol PBS polyA 2 cycles,Nima,2,DLin-KC2-DMA:Cholesterol,75:25,1.0,18.5E-6,KC2:Chol - PBS w/ PolyA
+#KC2-chol PBS 2 cycles,Nima,2,DLin-KC2-DMA:Cholesterol,75:25,1.0,18.5E-6,KC2:Chol - PBS
+#KC2-chol PBS polyA 2 cycles,Nima,2,DLin-KC2-DMA:Cholesterol,75:25,1.0,18.5E-6,KC2:Chol - PBS w/ PolyA
 #KC2-citrate buffer 3 cycles - scaled - reduced,Nima,1,DLin-KC2-DMA,1,1.0,18.5E-6,KC2 - Citrate
 #KC2-citrate polyA buffer 4 cycles - reduced to last cycle,Nima,1,DLin-KC2-DMA,1,1.0,18.5E-6,KC2 - Citrate w/ PolyA
-#KC2-chol citrate 2nd cycle - scaled,Nima,2,DLin-KC2-DMA:Cholesterol,75:25,1.0,18.5E-6,KC2:Chol - Citrate
-#KC2-chol citrate polyA 2 cycles - 2nd cycle,Nima,2,DLin-KC2-DMA:Cholesterol,75:25,1.0,18.5E-6,KC2:Chol - Citrate w/ PolyA
+KC2-chol citrate 2nd cycle - scaled,Nima,2,DLin-KC2-DMA:Cholesterol,75:25,1.0,18.5E-6,KC2:Chol - Citrate
+KC2-chol citrate polyA 2 cycles - 2nd cycle,Nima,2,DLin-KC2-DMA:Cholesterol,75:25,1.0,18.5E-6,KC2:Chol - Citrate w/ PolyA
 #

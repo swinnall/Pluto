@@ -11,15 +11,6 @@ doChemFormulations = False
 doSLDAnalysis      = False
 
 
-#############
-# Printing #
-############
-
-# print extra info
-verbose      = True
-very_verbose = False
-
-
 ################
 # IAP Analysis #
 ################
@@ -39,12 +30,17 @@ plotArea          = False           # plot percentage area
 plotElasticity = False              # plots elasticity analyis
 
 ## Other Functions
-shiftP    = True                    # shift to P_min = 0
-overplot  = False                    # work in progress
+checkT0   = True                     # ensures T0 = 0
+shiftP    = True                     # shift to P_min = 0
 smoothIso = True                     # reduces number of points for final plot
+overplot  = False                    # work in progress
+
+## Work in Progress
+plotSpecialIsotherm = True
+key = [(2,2),(2,2)]
 
 ## Parameters
-useCycles  = [0]                     # list of cycles to be passed to module
+useCycles  = [0]                     # list of cycles to be used in isotherm
 nPoly      = 80                      # order of the elasticity fit
 nth        = 60                      # data reduction; take every 'nth' point
 
@@ -76,6 +72,14 @@ useVolFrac = True
 # include an injected lipid into the system
 addLipid = False
 
+
+#############
+# Printing #
+############
+
+# print extra info
+verbose      = True
+very_verbose = False
 
 
 #############
@@ -112,13 +116,12 @@ overrideAxisLim = True
 xmin = 50
 xmax = 160
 ymin = 0
-ymax = 45
+ymax = 50
 
 overrideTickLocation = True
-n_xticks = 3                    # number of x axis ticks in time plots (s); [n-1]
+n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
 xTickInterval = 50              # x, y axis tick interval for P vs t plots; x is mins plot only
-yTickInterval = 1
-
+yTickInterval = 20
 
 
 ##############
@@ -211,7 +214,6 @@ colourDict = {
     "3": ['#1e81b0', '#e28743', '#32BE25', '#6A0F8E', '#AB2330', '#FFCC00'],
 
     }
-
 c = colourDict.get("2")
 
 # markers
@@ -236,5 +238,4 @@ markerDict = {
     "5": ['o','s','d','o','s','d']
 
     }
-
 markerType = markerDict.get("1")

@@ -1,0 +1,9 @@
+filename,deltaP
+KC2-PBS buffer 4 cycles - scaled - reduced,0.0
+KC2-PBS polyA buffer 4 cycles - scaled - reduced,0.0
+KC2-chol PBS 2 cycles,0.912187
+KC2-chol PBS polyA 2 cycles,0.35265
+KC2-citrate buffer 3 cycles - scaled - reduced,0.8514720000000002
+KC2-citrate polyA buffer 4 cycles - reduced to last cycle,0.204579
+KC2-chol citrate 2nd cycle - scaled,0.05189400000000033
+KC2-chol citrate polyA 2 cycles - 2nd cycle,0.916889
