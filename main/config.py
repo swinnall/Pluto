@@ -39,15 +39,14 @@ plotArea          = False           # plot percentage area
 plotElasticity = False              # plots elasticity analyis
 
 ## Other Functions
-shiftP    = False                    # shift to P_min = 0
+shiftP    = True                    # shift to P_min = 0
 overplot  = False                    # work in progress
 smoothIso = True                     # reduces number of points for final plot
 
 ## Parameters
-useCycles  = [0,1]                   # list of cycles to be passed to module
-nPoly      = 40                      # order of the elasticity fit
-nth        = 50                      # data reduction; take every 'nth' point
-smooth_Nth = 1
+useCycles  = [0]                     # list of cycles to be passed to module
+nPoly      = 80                      # order of the elasticity fit
+nth        = 60                      # data reduction; take every 'nth' point
 
 
 ##########################
@@ -76,6 +75,50 @@ useVolFrac = True
 
 # include an injected lipid into the system
 addLipid = False
+
+
+
+#############
+# Plotting #
+############
+
+## General Parameters
+fs = 14    # font size
+lw = 3     # line width
+
+
+## Line Plot with Marker Parameters
+plotWithMarker = True
+markEdgeWidth  = 1
+
+
+## Scatter Plot Parameters
+scatterSuffixList = [" - normInjPressure"]
+scatterSize = 10
+
+
+## Axis Adjustment Parameters
+xAxisMinAdj = -5
+xAxisMaxAdj = 0
+yAxisMaxAdj = 2
+
+
+## Manual Override Parameters
+overrideNoP = False
+n0 = [0, 0, 0, 0]
+nf = [16, 16, 16, 16]
+
+overrideAxisLim = True
+xmin = 50
+xmax = 160
+ymin = 0
+ymax = 45
+
+overrideTickLocation = True
+n_xticks = 3                    # number of x axis ticks in time plots (s); [n-1]
+xTickInterval = 50              # x, y axis tick interval for P vs t plots; x is mins plot only
+yTickInterval = 1
+
 
 
 ##############
@@ -144,7 +187,6 @@ lipidMolVol = {
     "PolyA": (1,1)
     }
 
-
 # dict of input instructions names and output file names
 pathNames = {
     "Isotherm": ('Instructions - Isotherm','Isotherm'),
@@ -152,38 +194,6 @@ pathNames = {
     "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),
     "SLD": ('Instructions - SLD','SLD'),
     }
-
-
-#############
-# Plotting #
-############
-
-# font size
-fs = 14
-
-# line width
-lw = 2
-
-# set min x, y axis value
-xAxisMin = 0
-yAxisMin = 0
-
-# set x, y axis adjustment values
-xAxisMinAdj = -5
-xAxisMaxAdj = 0
-yAxisMaxAdj = 2
-
-# number of x axis ticks in time plots (s); [n-1]
-n_xticks = 7
-
-# x, y axis tick interval for P vs t plots; x is mins plot only
-xTickInterval = 10
-yTickInterval = 1
-
-# override region of interest and set limits here; [number of points]
-overrideROI = False
-n0 = [0, 0, 0, 0]
-nf = [16, 16, 16, 16]
 
 # colours
 colourDict = {
@@ -194,9 +204,37 @@ colourDict = {
     # dark blue, light blue, dark orange, light orange, dark green, light green
     "1": ['#1e81b0','#abdbe3', '#e28743','#eab676', '#32BE25', '#A3e19d'],
 
+    # light blue, light orange, light green
+    "2": ['#abdbe3', '#eab676', '#A3e19d'],
+
     # dark blue, dark orange, dark green, dark purple, dark red, dark yellow
-    "2": ['#1e81b0', '#e28743', '#32BE25', '#6A0F8E', '#AB2330', '#FFCC00'],
+    "3": ['#1e81b0', '#e28743', '#32BE25', '#6A0F8E', '#AB2330', '#FFCC00'],
 
     }
 
 c = colourDict.get("2")
+
+# markers
+markerDict = {
+
+    # point
+    "0": ['.','.','.','.'],
+
+    # circles
+    "1": ['o','o','o','o'],
+
+    # squares
+    "2": ['s','s','s','s'],
+
+    # diamonds
+    "3": ['D','D','D','D'],
+
+    # cicrle-square repeat
+    "4": ['o','s','o','s'],
+
+    # cicrle-square-diamond repeat
+    "5": ['o','s','d','o','s','d']
+
+    }
+
+markerType = markerDict.get("1")

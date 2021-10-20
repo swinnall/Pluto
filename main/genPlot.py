@@ -49,7 +49,7 @@ def plot(key, vars):
                 nf.append(len(x[k].get(i)))
 
         # alt. region of interest
-        if config.overrideROI == True:
+        if config.overrideNoP == True:
             n0 = config.n0
             nf = config.nf
 
@@ -59,12 +59,17 @@ def plot(key, vars):
         for i in range(N):
 
             # plots scatter plot with empty circles
-            if suffix in suffix in [" - normInjPressure"]:
-                ax.scatter(x[k].get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), edgecolors=config.c[i], linewidth=config.lw, facecolors='none')
+            if suffix in config.scatterSuffixList:
+                ax.scatter(x[k].get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), s=config.scatterSize, edgecolors=config.c[i], linewidth=config.lw, facecolors='none')
 
-            # general line plot
+            # line plot with marker
+            elif suffix not in config.scatterSuffixList and config.plotWithMarker == True:
+                ax.plot(x[k].get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=config.lw, marker=config.markerType[i], markerfacecolor="None", markeredgewidth=config.markEdgeWidth)
+
+            # default line plot
             else:
                 ax.plot(x[k].get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=config.lw)
+
 
             # store minimum and maximum values for axis scales
             #min_x_vals.append( n0[i] ); max_x_vals.append( nf[i] )
@@ -73,24 +78,32 @@ def plot(key, vars):
             min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
 
 
-    ## Set Axis ranges
+
+    ## Set Axis ranges / limits
 
         # set min values
-        ymin = config.yAxisMin
+        ymin = 0
         if int(round(min(min_x_vals),-1)) + config.xAxisMinAdj >= 0:
             xmin = int(round(min(min_x_vals),-1)) + config.xAxisMinAdj
-        else: xmin = config.xAxisMin
+        else: xmin = 0
 
         # set max values
         xmax = int(round(max(max_x_vals),-1)) + config.xAxisMaxAdj
         ymax = int(round(max(max_y_vals),-1)) + config.yAxisMaxAdj
+
+        # alt. region of interest
+        if config.overrideAxisLim == True:
+            xmin = config.xmin
+            xmax = config.xmax
+            ymin = config.ymin
+            ymax = config.ymax
 
         ax.set_xlim([xmin,xmax])
         ax.set_ylim([ymin,ymax])
 
 
 
-    ## Determine axis ticks for x-axis = time plots
+    ## Set tick locations plots
 
         # thresholds for different x axis scales
         if xmax >= 7200 and suffix in [" - pressure", " - area", " - normInjPressure"]:
@@ -123,6 +136,11 @@ def plot(key, vars):
             ax.set_yticks(np.arange(0, ymax+1, step=config.yTickInterval))
 
 
+        elif suffix in [" - isotherm"] and config.overrideTickLocation == True:
+            ax.set_xticks(np.arange(xmin, xmax+1, step=config.xTickInterval))
+            #ax.set_yticks(np.arange(0, ymax+1, step=config.yTickInterval))
+
+
 
     ## Axis labels; tick label size; legend; layout; show fig; save fig
 
@@ -132,7 +150,6 @@ def plot(key, vars):
             ax.set_ylabel(axLabels.get("y"), fontsize=fs, fontweight='bold')
         elif k == 1:
             ax.set_xlabel(axLabels.get("x1"), fontsize=fs-4, fontweight='bold')
-            #ax.set_ylabel(axLabels.get("y"), fontsize=fs, fontweight='bold')
             plt.setp(ax.get_yticklabels(), visible=False)
 
     # set axis parameters, size etc.

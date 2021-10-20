@@ -16,6 +16,7 @@ import config
 import genPlot
 
 
+## Import Functions
 def importSampleData(info):
 
     # number of header rows
@@ -60,19 +61,6 @@ def getFile(fileDIR,equipParams):
         data = list(reader)
 
     return data
-
-
-
-def shiftIsotherm(P):
-
-    # take absolute value to add postive number
-    deltaP = abs(min(P))
-
-    # update values in memory
-    for i in range(0,len(P)):
-        P[i] += deltaP
-
-    return P, deltaP
 
 
 
@@ -140,6 +128,60 @@ def importData(equipParams, fname, plotDIR):
 
 
 
+## Data Manipulation Functions
+def shiftIsotherm(P):
+
+    # take absolute value to add postive number
+    deltaP = abs(min(P))
+
+    # update values in memory
+    for i in range(0,len(P)):
+        P[i] += deltaP
+
+    return P, deltaP
+
+
+
+def smoothData(genList):
+
+    # initialise list for func output
+    smoothList = []
+
+
+    # if length is even, truncate as savgol must have odd window length
+    if len(genList) % 2 == 0:
+        genList.pop()
+
+
+    # remove noise introduced via derivative perturbations
+    try:
+        smoothList = savgol_filter(genList, len(genList), config.nPoly, mode='interp')  # variable, window size (length), polynomial order, mode
+
+    # remove infinity and nan values due to Nima having repeated area values
+    except linalg.LinAlgError:
+        print("LinAlgError")
+        for j in range(len(genList)):
+            if genList[j] == float("inf") or genList[j] == float("-inf") or mt.isnan(genList[j]) == True:
+                genList[j] = 0
+
+
+    # high pass filter: remove values less than 0.01 (final smoothing of function)
+    deleteMe = []
+    for j in range(1,len(smoothList)-1):
+
+        if smoothList[j] < 0.01:
+
+            # store indices to be deleted
+            deleteMe.append(j)
+
+    # delete elements from the lists
+    smoothList = np.delete(smoothList, deleteMe)
+
+    return smoothList
+
+
+
+## Calculation Functions
 def calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc, volAdded):
 
     # Aoagadro's Number
@@ -185,9 +227,8 @@ def calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc
 
 def calcElasticity(i, Am_list, P_list):
 
-    # initialise lists
+    # initialise list
     E_list    = []
-    Espl_list = []
 
     # calculates the derivative for each isotherm
     dPdAm = np.diff(P_list)/np.diff(Am_list)
@@ -198,35 +239,7 @@ def calcElasticity(i, Am_list, P_list):
         E_list.append((-Am_list[j])*dPdAm[j])
 
 
-    # if length is even, truncate as savgol must have odd window length
-    if len(E_list) % 2 == 0:
-        E_list.pop()
-
-
-    # remove noise introduced via derivative perturbations
-    try:
-        Espl_list = savgol_filter(E_list, len(E_list), config.nPoly, mode='interp')  # variable, window size (length), polynomial order, mode
-
-    # remove infinity and nan values due to Nima having repeated area values
-    except linalg.LinAlgError:
-        print("LinAlgError")
-        for j in range(len(E_list)):
-            if E_list[j] == float("inf") or E_list[j] == float("-inf") or mt.isnan(E_list[j]) == True:
-                E_list[j] = 0
-
-
-    # high pass filter: remove values less than 0.01 (final smoothing of function)
-    deleteMe = []
-    for j in range(1,len(Espl_list)-1):
-
-        if Espl_list[j] < 0.01:
-
-            # store indices to be deleted
-            deleteMe.append(j)
-
-    # delete elements from the lists
-    Espl_list = np.delete(Espl_list, deleteMe)
-
+    Espl_list = smoothData(E_list)
 
     return E_list, Espl_list
 
@@ -272,6 +285,8 @@ def calcNormP(t_list, P_list):
 
 
 
+
+## Cycle Extraction Functions
 def reduceNpoints(x, y):
 
     # initialise lists
@@ -283,20 +298,6 @@ def reduceNpoints(x, y):
         redY.append(y[j])
 
     return redX, redY
-
-
-
-def smoothData(x, y):
-    ##### fit polynomial through the data points from now on
-    ## maybe plot symbols with smoothed line through; error bars  
-
-
-    tempX = []; tempY = []
-    for j in range(0, len(x), config.smooth_Nth):
-        tempX.append(x[j])
-        tempY.append(y[j])
-
-    return tempX, tempY
 
 
 
@@ -419,6 +420,7 @@ def splitCycles(type, cycleX, cycleY, l):
 
 
 
+# Main
 def main(info, title, plotDIR):
 
     # filter warnings
@@ -501,16 +503,15 @@ def main(info, title, plotDIR):
 
         # smooth data; returns list; stored in stiched
         if config.smoothIso == True:
-            stitched_Am_list, stitched_P_list = smoothData(stitched_Am.get(i), stitched_P.get(i))
-
-            stitched_Am[i] = stitched_Am_list
-            stitched_P[i]  = stitched_P_list
+            tempSmoothList = smoothData(stitched_P.get(i))
+            stitched_P[i] = tempSmoothList
 
 
     ## Specific calculation functions
 
         # calculate elasticity
         if config.plotElasticity == True:
+            pass
             suffix = " - compressions"
 
             # pass dict of cycles to splitCycles
