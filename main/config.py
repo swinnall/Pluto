@@ -88,11 +88,11 @@ very_verbose = False
 
 ## General Parameters
 fs = 14    # font size
-lw = 3     # line width
+lw = 2     # line width
 
 
 ## Line Plot with Marker Parameters
-plotWithMarker = True
+plotWithMarker = False
 markEdgeWidth  = 1
 
 
@@ -213,8 +213,14 @@ colourDict = {
     # dark blue, dark orange, dark green, dark purple, dark red, dark yellow
     "3": ['#1e81b0', '#e28743', '#32BE25', '#6A0F8E', '#AB2330', '#FFCC00'],
 
+    # 'green sheen', 'Turkish Rose'
+    "4": ['#6FBBA6', '#BB6F84'],
+
+    # ,
+    "5": ['#60BBD0', '#D07560']
+
     }
-c = colourDict.get("2")
+c = colourDict.get("5")
 
 # markers
 markerDict = {
@@ -238,4 +244,4 @@ markerDict = {
     "5": ['o','s','d','o','s','d']
 
     }
-markerType = markerDict.get("1")
+markerType = markerDict.get("0")

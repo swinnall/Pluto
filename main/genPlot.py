@@ -6,32 +6,31 @@ import matplotlib.gridspec as gridspec
 import sys
 import config
 
-def isolateFiles(count, row, col, X, Y):
+def isolateFiles(count, row, col, X, Y, LABELS):
 
     nFilesPerPlot = config.key[row][col]
     nFilesTotal   = len(X[0])
 
-    x = {new_list: [] for new_list in range(nFilesPerPlot)}
-    y = {new_list: [] for new_list in range(nFilesPerPlot)}
-
-
+    x      = {new_list: [] for new_list in range(nFilesPerPlot)}
+    y      = {new_list: [] for new_list in range(nFilesPerPlot)}
+    labels = {new_list: [] for new_list in range(nFilesPerPlot)}
 
     # count is how far through the list of total files you are
     # iterate through all files
     for i in range(count, nFilesTotal):
-        #print(i)
+
         if i == count:
             for j in range(nFilesPerPlot):
-                #print('SAVED')
-                x[j] = X[0].get(i+j)
-                y[j] = Y.get(i+j)
+
+                x[j]      = X[0].get(i+j)
+                y[j]      = Y.get(i+j)
+                labels[j] = LABELS.get(i+j)
             break
         break
 
-
     count += nFilesPerPlot
-    #print(x)
-    return count, nFilesPerPlot, x, y
+
+    return count, nFilesPerPlot, x, y, labels
 
 
 
@@ -62,12 +61,12 @@ def plot(key, vars):
         for col in range(nCol):
 
             # unpack variables evertime to prevent overwriting within plot code
-            N, equip, labels, axLabels, suffix, title, plotDIR, X, Y = vars
+            N, equip, LABELS, axLabels, suffix, title, plotDIR, X, Y = vars
 
 
             ## need: for a given subplot (row, col): iterate along the given numbr of files specified
             if config.plotSpecialIsotherm == True:
-                count, nFilesPerPlot, x, y = isolateFiles(count, row, col, X, Y)
+                count, nFilesPerPlot, x, y, labels = isolateFiles(count, row, col, X, Y, LABELS)
                 N = nFilesPerPlot
             else:
                 x = X; y = Y
@@ -219,7 +218,7 @@ def plot(key, vars):
 
 
             # legend; must plot along with every figure
-            ax.legend(prop={'size': fs-5, 'weight':'bold'}, frameon = False)
+            ax.legend(prop={'size': fs-7, 'weight':'bold'}, frameon = False)
 
     ## Tick label size; legend; layout; show fig; save fig
 
@@ -231,13 +230,13 @@ def plot(key, vars):
 
     #
     if config.plotSpecialIsotherm == True:
-        fig.text(0.5, -0.05, axLabels.get("x"), ha='center', fontsize=fs, fontweight='bold')
-        fig.text(-0.05, 0.5, axLabels.get("y"), va='center', rotation='vertical', fontsize=fs, fontweight='bold')
+        fig.text(0.5, -0.03, axLabels.get("x"), ha='center', fontsize=fs, fontweight='bold')
+        fig.text(-0.03, 0.5, axLabels.get("y"), va='center', rotation='vertical', fontsize=fs, fontweight='bold')
 
 
     # tight layout function
     plt.tight_layout()
-    fig.subplots_adjust(wspace=0, hspace=0)
+    fig.subplots_adjust(wspace=0.05, hspace=0.05)
 
     # show plot
     print("\nFigure: %s%s" %(title, suffix))
