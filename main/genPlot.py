@@ -6,13 +6,13 @@ import matplotlib.gridspec as gridspec
 import sys
 import config
 
-def isolateFiles(count, key, row, col, X, Y, LABELS):
+def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
 
     # extract the number of total files to be plotted
     nFilesTotal = len(X[0])
 
     # separate number of files per subplot if multiplot
-    if config.plotMultiPanel == True:
+    if config.plotMultiPanel == True and suffix == " - isotherm":
         nFilesPerPlot = key[row][col]
     else:
         nFilesPerPlot = nFilesTotal
@@ -24,7 +24,7 @@ def isolateFiles(count, key, row, col, X, Y, LABELS):
 
     # count is how far through the list of total files you are
     # iterate through all files
-    if config.plotMultiPanel == True:
+    if config.plotMultiPanel == True and suffix == " - isotherm":
         for i in range(count, nFilesTotal):
 
             if i == count:
@@ -38,6 +38,15 @@ def isolateFiles(count, key, row, col, X, Y, LABELS):
 
         count += nFilesPerPlot
 
+    
+    elif config.plotElasticity == True and suffix == " - elasticity" and col==0:
+        x = X[0]
+        y = Y; labels = LABELS
+    elif config.plotElasticity == True and suffix == " - elasticity" and col==1:
+        x = X[1]
+        y = Y; labels = LABELS
+
+
     else:
         x = X[0]; y = Y; labels = LABELS
 
@@ -45,10 +54,10 @@ def isolateFiles(count, key, row, col, X, Y, LABELS):
 
 
 
-def plot(key, vars):
+def plot(key, vars, suffix):
 
     # unpack key into rows and columns for subplot
-    if config.plotMultiPanel == True:
+    if config.plotMultiPanel == True and suffix == " - isotherm":
         key = config.key
         nRow = len(key)
         nCol = len(key[0]) # assumes same num columns on both rows
@@ -74,10 +83,10 @@ def plot(key, vars):
         for col in range(nCol):
 
             # unpack variables evertime to prevent overwriting within plot code
-            N, equip, LABELS, axLabels, suffix, title, plotDIR, X, Y = vars
+            N, equip, LABELS, axLabels, title, plotDIR, X, Y = vars
 
             # iterate through files and check number of subplots, isolate files accordingly
-            count, nFilesPerPlot, x, y, labels = isolateFiles(count, key, row, col, X, Y, LABELS)
+            count, nFilesPerPlot, x, y, labels = isolateFiles(count, key, suffix, row, col, X, Y, LABELS)
             N = nFilesPerPlot
 
 
@@ -201,7 +210,7 @@ def plot(key, vars):
 
             # axis labels; in for loop as iterates along number of subplots
             ## this is only setup for 4x4 at the moment... need to generalise
-            if config.plotMultiPanel == True:
+            if config.plotMultiPanel == True and suffix == " - isotherm":
 
                 if row == 0 and col == 0:
                     plt.setp(ax.get_xticklabels(), visible=False)
@@ -238,7 +247,7 @@ def plot(key, vars):
 
 
     #
-    if config.plotMultiPanel == True:
+    if config.plotMultiPanel == True and suffix == " - isotherm":
         fig.text(0.5, -0.03, axLabels.get("x"), ha='center', fontsize=fs, fontweight='bold')
         fig.text(-0.03, 0.5, axLabels.get("y"), va='center', rotation='vertical', fontsize=fs, fontweight='bold')
 
@@ -266,11 +275,11 @@ def plot(key, vars):
 
 
 
-def main(key, vars):
+def main(key, vars, suffix):
 
     # plot either single or dual style plot depending on input key
     # accepts dict structures only
-    plot(key, vars)
+    plot(key, vars, suffix)
 
     return
 

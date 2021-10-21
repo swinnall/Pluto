@@ -168,6 +168,10 @@ def smoothData(genList):
             if genList[j] == float("inf") or genList[j] == float("-inf") or mt.isnan(genList[j]) == True:
                 genList[j] = 0
 
+    except ValueError:
+        print("ValueError: Polyorder must be less than window length. Attempting adjustment at 0.5*nPoly = %d." %int(config.nPoly/2))
+        smoothList = savgol_filter(genList, len(genList), int(config.nPoly/2), mode='interp')  # variable, window size (length), polynomial order, mode
+
 
     # high pass filter: remove values less than 0.01 (final smoothing of function)
     deleteMe = []
@@ -229,7 +233,7 @@ def calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc
 
 
 
-def calcElasticity(i, Am_list, P_list):
+def calcElasticity(Am_list, P_list):
 
     # initialise list
     E_list    = []
@@ -237,19 +241,18 @@ def calcElasticity(i, Am_list, P_list):
     # calculates the derivative for each isotherm
     dPdAm = np.diff(P_list)/np.diff(Am_list)
 
-
     # calculate Cs^-1; start from 1st value to avoid spikes
     for j in range(2,len(dPdAm)):
         E_list.append((-Am_list[j])*dPdAm[j])
 
-
+    # smooth data
     Espl_list = smoothData(E_list)
 
     return E_list, Espl_list
 
 
 
-def calcPercArea(i, A_list):
+def calcPercArea(A_list):
 
     # initialise list
     percA_list = []
@@ -453,6 +456,9 @@ def main(info, title, plotDIR):
     stitched_P  = {new_list: [] for new_list in range(nFiles)}
     stitched_Am = {new_list: [] for new_list in range(nFiles)}
 
+    elasticityCompression_Am = {new_list: [] for new_list in range(nFiles)}
+    elasticityCompression_P  = {new_list: [] for new_list in range(nFiles)}
+    elasticityCompression_L  = {new_list: [] for new_list in range(nFiles)}
 
     # initialise master dicts, store dict of cycles in each element
     master_P  = {new_dict: {0: []} for new_dict in range(nFiles)}
@@ -520,12 +526,15 @@ def main(info, title, plotDIR):
         # calculate elasticity
         if config.plotElasticity == True:
 
-            # pass dict of cycles to splitCycles
+            # pass dict of cycles to splitCycles, returns dicts containing all cycles in file
             suffix = " - compressions"
             halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, cycleAm, cycleP, l.get(i))
+            elasticityCompression_Am[i] = halfCycleAm.get(0)
+            elasticityCompression_P[i]  = halfCycleP.get(0)
+            elasticityCompression_L[i]  = halfCycleL.get(0)
 
-            # pass the first half of the files cycles as list
-            E_list, Espl_list = calcElasticity(i, halfCycleAm.get(0), halfCycleP.get(0))
+            # pass the compression of cycle 0 as list; later adapt to selected cycle in config
+            E_list, Espl_list = calcElasticity(halfCycleAm.get(0), halfCycleP.get(0))
             E[i]    = E_list
             Espl[i] = Espl_list
 
@@ -539,7 +548,7 @@ def main(info, title, plotDIR):
 
         # calculate percentage area
         if config.plotArea == True:
-            percA = calcPercArea(A_list)
+            percA_list = calcPercArea(A_list)
             percA[i] = percA_list
 
 
@@ -550,45 +559,45 @@ def main(info, title, plotDIR):
         key      = (1,1)
         axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
         suffix   = " - isotherm"
-        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (stitched_Am,0), stitched_P)
+        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (stitched_Am,0), stitched_P)
 
         # currently only allows 1x1, 2x1, 2x2 subplot types
         if config.plotMultiPanel == True:
             nRow = len(config.key)
             nCol = len(config.key[0])
             key = (nRow,nCol)
-        genPlot.main(key,vars)
+        genPlot.main(key,vars,suffix)
 
 
     if config.plotElasticity == True:
         axLabels = {"x": "$\pi$ ($mNm^{-1}$)", "x1": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$C_s^{-1} (mNm^{-1})$"}
         suffix   = " - elasticity"
-        key = (1,2); vars = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (halfCycleP.get(0),halfCycleAm.get(0)), Espl)
-        genPlot.main(key,vars)
+        key = (1,2); vars = (nFiles, equip, l, axLabels, title, plotDIR, (elasticityCompression_P,elasticityCompression_Am), Espl)
+        genPlot.main(key,vars,suffix)
 
 
     if config.plotPressure == True:
         key      = (1,1)
         axLabels = {"x": "auto calculated in genPlot", "y": "$\pi$ ($mNm^{-1}$)"}
         suffix   = " - pressure"
-        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (t,0), P)
-        genPlot.main(key,vars)
+        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), P)
+        genPlot.main(key,vars,suffix)
 
 
     if config.plotNormInjection == True:
         key      = (1,1)
         axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta\pi$"}
         suffix   = " - normInjPressure"
-        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (normT,0), normP)
-        genPlot.main(key,vars)
+        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (normT,0), normP)
+        genPlot.main(key,vars,suffix)
 
 
     if config.plotArea == True:
         key      = (1,1)
         axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta$A (%)"}
         suffix   = " - area"
-        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (t,0), percA)
-        genPlot.main(key,vars)
+        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), percA)
+        genPlot.main(key,vars,suffix)
 
 
     # set default settings
@@ -601,19 +610,19 @@ def main(info, title, plotDIR):
         if config.plotCompressions == True:
             suffix = " - compressions"
             halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
-            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, suffix, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
-            genPlot.main(key,vars)
+            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
+            genPlot.main(key,vars,suffix)
 
         if config.plotExpansions == True:
             suffix = " - expansions"
             halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
-            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, suffix, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
-            genPlot.main(key,vars)
+            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
+            genPlot.main(key,vars,suffix)
 
         if config.plotCycles == True:
             suffix = " - cycles"
-            vars = (len(master_Am.get(i)), equip, master_L.get(i), axLabels, suffix, newTitle, plotDIR, (master_Am.get(i),0), master_P.get(i))
-            genPlot.main(key,vars)
+            vars = (len(master_Am.get(i)), equip, master_L.get(i), axLabels, newTitle, plotDIR, (master_Am.get(i),0), master_P.get(i))
+            genPlot.main(key,vars,suffix)
 
     # program executed
     print('\nAnalysis Complete! Have a nice day :)')

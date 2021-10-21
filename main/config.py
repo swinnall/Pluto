@@ -19,7 +19,7 @@ doSLDAnalysis      = False
 plotIsotherm     = True             # plot standard isotherm
 plotCompressions = False            # plot isotherm compressions only
 plotExpansions   = False            # plot isotherm expansions only
-plotCycles       = True            # colour code cycles within isotherm
+plotCycles       = False            # colour code cycles within isotherm
 
 ## Plot Y vs Time
 plotPressure      = False           # plot pressure
@@ -32,16 +32,16 @@ plotElasticity = False              # plots elasticity analyis
 ## Other Functions
 checkT0   = True                     # ensures T0 = 0
 shiftP    = True                     # shift to P_min = 0
-smoothIso = True                     # reduces number of points for final plot
+smoothIso = False                     # reduces number of points for final plot
 overplot  = False                    # not yet functional
 
 ## Override Normal Keys
-plotMultiPanel = False              # split input data between subplots
+plotMultiPanel = True              # split input data between subplots
 key = [(2,2),(2,2)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
 
 ## Parameters
 useCycles  = [0]                     # list of cycles to be used in isotherm
-nPoly      = 80                      # order of the elasticity fit
+nPoly      = 40                      # order of the elasticity fit
 nth        = 60                      # data reduction; take every 'nth' point
 
 
