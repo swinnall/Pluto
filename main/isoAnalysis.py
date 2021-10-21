@@ -497,13 +497,16 @@ def main(info, title, plotDIR):
         master_L[i]  = cycleL
 
         # selects cycles based on config input
+        # iterate along each chosen cycle and list of values within each cycle
         for cycleNum in config.useCycles:
-            for value in range(len(cycleAm.get(cycleNum))):
 
-                # iterate along each chosen cycle and list of values within each cycle
-                # append every value to file i of stichedX; must be continuous
+            # append every value to file i of stichedX
+            for value in range(len(cycleAm.get(cycleNum))):
                 stitched_Am[i].append( cycleAm.get(cycleNum)[value] )
                 stitched_P[i].append( cycleP.get(cycleNum)[value] )
+
+
+    ## Specific calculation functions
 
         # smooth data; returns list; stored in stiched
         if config.smoothIso == True:
@@ -514,14 +517,11 @@ def main(info, title, plotDIR):
             stitched_Am[i] = tempSmoothList
 
 
-    ## Specific calculation functions
-
         # calculate elasticity
         if config.plotElasticity == True:
-            pass
-            suffix = " - compressions"
 
             # pass dict of cycles to splitCycles
+            suffix = " - compressions"
             halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, cycleAm, cycleP, l.get(i))
 
             # pass the first half of the files cycles as list
@@ -546,6 +546,20 @@ def main(info, title, plotDIR):
 
 
 	## Plot instructions
+    if config.plotIsotherm == True:
+        key      = (1,1)
+        axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
+        suffix   = " - isotherm"
+        vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (stitched_Am,0), stitched_P)
+
+        # currently only allows 1x1, 2x1, 2x2 subplot types
+        if config.plotMultiPanel == True:
+            nRow = len(config.key)
+            nCol = len(config.key[0])
+            key = (nRow,nCol)
+        genPlot.main(key,vars)
+
+
     if config.plotElasticity == True:
         axLabels = {"x": "$\pi$ ($mNm^{-1}$)", "x1": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$C_s^{-1} (mNm^{-1})$"}
         suffix   = " - elasticity"
@@ -553,40 +567,33 @@ def main(info, title, plotDIR):
         genPlot.main(key,vars)
 
 
-    # set default settings
-    axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
-
-
-    if config.plotIsotherm == True:
-        suffix = " - isotherm"
-        vars   = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (stitched_Am,0), stitched_P)
-
-        # currently only allows 1x1, 2x1, 2x2 subplot types
-        if config.plotSpecialIsotherm == True:
-            nRow = len(config.key)
-            nCol = len(config.key[0])
-            key = (nRow,nCol)
-        genPlot.main(key,vars)
-
-
-    key      = (1,1)
     if config.plotPressure == True:
+        key      = (1,1)
         axLabels = {"x": "auto calculated in genPlot", "y": "$\pi$ ($mNm^{-1}$)"}
         suffix   = " - pressure"
         vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (t,0), P)
         genPlot.main(key,vars)
 
+
     if config.plotNormInjection == True:
+        key      = (1,1)
         axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta\pi$"}
         suffix   = " - normInjPressure"
         vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (normT,0), normP)
         genPlot.main(key,vars)
 
+
     if config.plotArea == True:
+        key      = (1,1)
         axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta$A (%)"}
         suffix   = " - area"
         vars     = (nFiles, equip, l, axLabels, suffix, title, plotDIR, (t,0), percA)
         genPlot.main(key,vars)
+
+
+    # set default settings
+    key      = (1,1)
+    axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
 
     for i in range(nFiles):
         newTitle = title + " - " + l.get(i)

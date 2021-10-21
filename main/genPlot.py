@@ -6,29 +6,40 @@ import matplotlib.gridspec as gridspec
 import sys
 import config
 
-def isolateFiles(count, row, col, X, Y, LABELS):
+def isolateFiles(count, key, row, col, X, Y, LABELS):
 
-    nFilesPerPlot = config.key[row][col]
-    nFilesTotal   = len(X[0])
+    # extract the number of total files to be plotted
+    nFilesTotal = len(X[0])
 
+    # separate number of files per subplot if multiplot
+    if config.plotMultiPanel == True:
+        nFilesPerPlot = key[row][col]
+    else:
+        nFilesPerPlot = nFilesTotal
+
+    # initialise output dicts
     x      = {new_list: [] for new_list in range(nFilesPerPlot)}
     y      = {new_list: [] for new_list in range(nFilesPerPlot)}
     labels = {new_list: [] for new_list in range(nFilesPerPlot)}
 
     # count is how far through the list of total files you are
     # iterate through all files
-    for i in range(count, nFilesTotal):
+    if config.plotMultiPanel == True:
+        for i in range(count, nFilesTotal):
 
-        if i == count:
-            for j in range(nFilesPerPlot):
+            if i == count:
+                for j in range(nFilesPerPlot):
 
-                x[j]      = X[0].get(i+j)
-                y[j]      = Y.get(i+j)
-                labels[j] = LABELS.get(i+j)
+                    x[j]      = X[0].get(i+j)
+                    y[j]      = Y.get(i+j)
+                    labels[j] = LABELS.get(i+j)
+                break
             break
-        break
 
-    count += nFilesPerPlot
+        count += nFilesPerPlot
+
+    else:
+        x = X[0]; y = Y; labels = LABELS
 
     return count, nFilesPerPlot, x, y, labels
 
@@ -36,11 +47,13 @@ def isolateFiles(count, row, col, X, Y, LABELS):
 
 def plot(key, vars):
 
-    ## Add in axis label options for 2x2 case
-
-
     # unpack key into rows and columns for subplot
-    nRow, nCol = key
+    if config.plotMultiPanel == True:
+        key = config.key
+        nRow = len(key)
+        nCol = len(key[0]) # assumes same num columns on both rows
+    else:
+        nRow, nCol = key
 
     # Create key x 1 subplot grid
     gs = gridspec.GridSpec(nRow, nCol)
@@ -63,14 +76,9 @@ def plot(key, vars):
             # unpack variables evertime to prevent overwriting within plot code
             N, equip, LABELS, axLabels, suffix, title, plotDIR, X, Y = vars
 
-
-            ## need: for a given subplot (row, col): iterate along the given numbr of files specified
-            if config.plotSpecialIsotherm == True:
-                count, nFilesPerPlot, x, y, labels = isolateFiles(count, row, col, X, Y, LABELS)
-                N = nFilesPerPlot
-            else:
-                x = X; y = Y
-
+            # iterate through files and check number of subplots, isolate files accordingly
+            count, nFilesPerPlot, x, y, labels = isolateFiles(count, key, row, col, X, Y, LABELS)
+            N = nFilesPerPlot
 
 
             # initialise the subplot
@@ -86,7 +94,7 @@ def plot(key, vars):
             # default region of interest (all values)
             n0 = [0 for i in range(N)]
             nf = []
-
+            #print(x)
             # set upper limit to be shorter of two lists to ensure same length
             for i in range(N):
                 if len(x.get(i)) == len(y.get(i)):
@@ -96,7 +104,7 @@ def plot(key, vars):
                 elif len(x.get(i)) < len(y.get(i)):
                     nf.append(len(x.get(i)))
 
-            # alt. region of interest
+            # alt. region of interest, NoP = number of points
             if config.overrideNoP == True:
                 n0 = config.n0
                 nf = config.nf
@@ -192,7 +200,8 @@ def plot(key, vars):
     ## Axis labels
 
             # axis labels; in for loop as iterates along number of subplots
-            if config.plotSpecialIsotherm == True:
+            ## this is only setup for 4x4 at the moment... need to generalise
+            if config.plotMultiPanel == True:
 
                 if row == 0 and col == 0:
                     plt.setp(ax.get_xticklabels(), visible=False)
@@ -229,7 +238,7 @@ def plot(key, vars):
 
 
     #
-    if config.plotSpecialIsotherm == True:
+    if config.plotMultiPanel == True:
         fig.text(0.5, -0.03, axLabels.get("x"), ha='center', fontsize=fs, fontweight='bold')
         fig.text(-0.03, 0.5, axLabels.get("y"), va='center', rotation='vertical', fontsize=fs, fontweight='bold')
 

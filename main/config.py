@@ -19,7 +19,7 @@ doSLDAnalysis      = False
 plotIsotherm     = True             # plot standard isotherm
 plotCompressions = False            # plot isotherm compressions only
 plotExpansions   = False            # plot isotherm expansions only
-plotCycles       = False            # colour code cycles within isotherm
+plotCycles       = True            # colour code cycles within isotherm
 
 ## Plot Y vs Time
 plotPressure      = False           # plot pressure
@@ -33,11 +33,11 @@ plotElasticity = False              # plots elasticity analyis
 checkT0   = True                     # ensures T0 = 0
 shiftP    = True                     # shift to P_min = 0
 smoothIso = True                     # reduces number of points for final plot
-overplot  = False                    # work in progress
+overplot  = False                    # not yet functional
 
-## Work in Progress
-plotSpecialIsotherm = True
-key = [(2,2),(2,2)]
+## Override Normal Keys
+plotMultiPanel = False              # split input data between subplots
+key = [(2,2),(2,2)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
 
 ## Parameters
 useCycles  = [0]                     # list of cycles to be used in isotherm
@@ -210,8 +210,8 @@ colourDict = {
     # light blue, light orange, light green
     "2": ['#abdbe3', '#eab676', '#A3e19d'],
 
-    # dark blue, dark orange, dark green, dark purple, dark red, dark yellow
-    "3": ['#1e81b0', '#e28743', '#32BE25', '#6A0F8E', '#AB2330', '#FFCC00'],
+    # dark blue, dark orange, dark green, dark purple, dark red, dark yellow, persian pink, medium grey
+    "3": ['#1e81b0', '#e28743', '#32BE25', '#6A0F8E', '#AB2330', '#FFCC00', '#F77FBE', '#71716F'],
 
     # 'green sheen', 'Turkish Rose'
     "4": ['#6FBBA6', '#BB6F84'],
@@ -220,7 +220,7 @@ colourDict = {
     "5": ['#60BBD0', '#D07560']
 
     }
-c = colourDict.get("5")
+c = colourDict.get("3")
 
 # markers
 markerDict = {
