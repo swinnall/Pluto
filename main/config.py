@@ -32,7 +32,7 @@ plotElasticity = False              # plots elasticity analyis
 ## Other Functions
 checkT0   = True                     # ensures T0 = 0
 shiftP    = True                     # shift to P_min = 0
-smoothIso = False                     # reduces number of points for final plot
+smoothIso = True                     # reduces number of points for final plot
 overplot  = False                    # not yet functional
 
 ## Override Normal Keys
@@ -122,6 +122,11 @@ overrideTickLocation = True
 n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
 xTickInterval = 50              # x, y axis tick interval for P vs t plots; x is mins plot only
 yTickInterval = 20
+
+
+## Save Options
+saveAsPNG = True
+saveAsPDF = True
 
 
 ##############

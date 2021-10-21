@@ -38,7 +38,7 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
 
         count += nFilesPerPlot
 
-    
+
     elif config.plotElasticity == True and suffix == " - elasticity" and col==0:
         x = X[0]
         y = Y; labels = LABELS
@@ -261,15 +261,17 @@ def plot(key, vars, suffix):
     plt.show()
 
     # save the plot as a file
-    fig.savefig( plotDIR + '/' + title + suffix + '.png',
-        format='png',
-        dpi=400,
-        bbox_inches='tight')
+    if config.saveAsPNG == True:
+        fig.savefig( plotDIR + '/' + title + suffix + '.png',
+            format='png',
+            dpi=400,
+            bbox_inches='tight')
 
-    fig.savefig( plotDIR + '/' + title + suffix + '.pdf',
-        format='pdf',
-        dpi=400,
-        bbox_inches='tight')
+    if config.saveAsPDF == True:
+        fig.savefig( plotDIR + '/' + title + suffix + '.pdf',
+            format='pdf',
+            dpi=400,
+            bbox_inches='tight')
 
     return
 
