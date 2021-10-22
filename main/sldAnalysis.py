@@ -25,6 +25,10 @@ class Membrane:
         # initialise new variables
         self.headVolFrac   = 0
         self.twoSolv       = 0
+        self.d3            = 0
+        self.twoSLD_H2O    = 0
+        self.twoSLD_D2O    = 0
+        self.normMolRatios = []
         self.volFrac       = {}
         self.lipidSL       = {}
         self.lipidSLD      = {}
@@ -33,6 +37,16 @@ class Membrane:
         self.avSL          = {'head': 0, 'tails': 0}
         self.avSLD         = {'head': 0, 'tails': 0}
 
+
+    # converts molar ratio txt input to a normalised version e.g. 4:5 ==> 4/9:5/9
+    def normaliseMolarRatios(self):
+
+        totMol = 0
+        for i, value in enumerate(self.molRatios):
+            totMol += float(value)
+
+        for i, value in enumerate(self.molRatios):
+            self.normMolRatios.append( float(value) / totMol  )
 
 
     # calculates the total volume by summing lipid component volumes
@@ -53,9 +67,9 @@ class Membrane:
             for j, struct in enumerate(['head','tails']):
 
                 if lipid == "Monolayer":
-                    self.totalLipidVol[struct] += (float(self.molRatios[i])/100) * monolayerMolVol[struct]
+                    self.totalLipidVol[struct] += self.normMolRatios[i] * monolayerMolVol[struct]
                 else:
-                    self.totalLipidVol[struct] += (float(self.molRatios[i])/100) * self.lipidMolVol.get(lipid)[j]
+                    self.totalLipidVol[struct] += self.normMolRatios[i] * self.lipidMolVol.get(lipid)[j]
 
 
         # component volume calculation
@@ -64,9 +78,9 @@ class Membrane:
 
             for j, struct in enumerate(['head','tails']):
                 if lipid == "Monolayer":
-                    self.volFrac[lipid][struct] = (float(self.molRatios[i])/100) * monolayerMolVol.get(struct) / self.totalLipidVol[struct]
+                    self.volFrac[lipid][struct] = self.normMolRatios[i] * monolayerMolVol.get(struct) / self.totalLipidVol[struct]
                 else:
-                    self.volFrac[lipid][struct] = (float(self.molRatios[i])/100) * self.lipidMolVol.get(lipid)[j] / self.totalLipidVol[struct]
+                    self.volFrac[lipid][struct] = self.normMolRatios[i] * self.lipidMolVol.get(lipid)[j] / self.totalLipidVol[struct]
 
 
 
@@ -127,7 +141,7 @@ class Membrane:
                     if config.useVolFrac == True:
                         self.avSL[struct] += self.volFrac[lipid][struct] * self.lipidSL[lipid][struct]
                     else:
-                        self.avSL[struct] += (float(self.molRatios[i])/100) * self.lipidSL[lipid][struct]
+                        self.avSL[struct] += self.normMolRatios[i] * self.lipidSL[lipid][struct]
 
 
 
@@ -159,9 +173,9 @@ class Membrane:
 
                 else:
                     if lipid == "Monolayer":
-                        self.avLipidVol[struct] += (float(self.molRatios[i])/100) * monolayerMolVol[struct]
+                        self.avLipidVol[struct] += self.normMolRatios[i] * monolayerMolVol[struct]
                     else:
-                        self.avLipidVol[struct] += (float(self.molRatios[i])/100) * self.lipidMolVol.get(lipid)[j]
+                        self.avLipidVol[struct] += self.normMolRatios[i] * self.lipidMolVol.get(lipid)[j]
 
 
         # if accounting for chain compaction
@@ -228,22 +242,22 @@ class Membrane:
         print("\n2-solv = %f" %self.twoSolv)
 
 
-    # calculates SLD2 for Igor Motofit
+    # calculates SLD2 for Igor Motofit; used when merging L3 with L2
     def calcSLD2(self):
 
-        d3 = 20 - self.thickness.get("head")
+        self.d3 = 20 - self.thickness.get("head")
 
         threeSolv     = 91.374
         vf_polyA      = (100 - threeSolv) / 100
         SLD_polyA_H2O = 3.67
         SLD_polyA_D2O = 4.46
 
-        twoSLD_H2O = (self.headVolFrac*self.avSLD.get("head") + vf_polyA*SLD_polyA_H2O ) / (self.headVolFrac + vf_polyA)
-        twoSLD_D2O = (self.headVolFrac*self.avSLD.get("head") + vf_polyA*SLD_polyA_D2O ) / (self.headVolFrac + vf_polyA)
+        self.twoSLD_H2O = (self.headVolFrac*self.avSLD.get("head") + vf_polyA*SLD_polyA_H2O ) / (self.headVolFrac + vf_polyA)
+        self.twoSLD_D2O = (self.headVolFrac*self.avSLD.get("head") + vf_polyA*SLD_polyA_D2O ) / (self.headVolFrac + vf_polyA)
 
-        print("\n3-thick = %f" %d3)
-        print("twoSLD_H2O = %f" %twoSLD_H2O)
-        print("twoSLD_D2O = %f" %twoSLD_D2O)
+        print("\n3-thick = %f" %self.d3)
+        print("twoSLD_H2O = %f" %self.twoSLD_H2O)
+        print("twoSLD_D2O = %f" %self.twoSLD_D2O)
 
 
     # write output to file
@@ -258,6 +272,11 @@ class Membrane:
             f.write("Thickness;   Head = %.4f; Tail = %.4f\n" %(self.thickness.get("head"),self.thickness.get("tails")))
             f.write("Head vol frac = %.4f\n" %self.headVolFrac)
             f.write("2-solv = %.4f\n" %self.twoSolv)
+
+            if config.useL2_L3 == True:
+                f.write("3-thick = %f\n" %self.d3)
+                f.write("twoSLD_H2O = %f\n" %self.twoSLD_H2O)
+                f.write("twoSLD_D2O = %f\n" %self.twoSLD_D2O)
 
 
 
@@ -334,6 +353,9 @@ def main(info, outputPath):
         # create class instance with input variables
         m = Membrane(lipids, ratios, thickness, outputPath)
 
+        # converts 3:5 to 3/8:5/8
+        m.normaliseMolarRatios()
+
         # convert molar fraction to component volume fraction
         if config.useVolFrac == True: m.calcVolFrac()
 
@@ -364,6 +386,7 @@ def main(info, outputPath):
             ratios = [80, 20]
 
             m = Membrane(lipids, ratios, thicknesses, outputPath)
+            m.normaliseMolarRatios()
             if config.useVolFrac == True: m.calcVolFrac()
             m.calcSL()
             m.calcAvLipidVol()
