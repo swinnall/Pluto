@@ -11,6 +11,7 @@ import isoAnalysis
 import ellipsAnalysis
 import chemFormulations
 import sldAnalysis
+import gammaAnalysis
 
 
 def modSelection():
@@ -31,6 +32,10 @@ def modSelection():
 
     if config.doSLDAnalysis == True:
         analysisType = 'SLD'
+        count += 1
+
+    if config.doGammaAnalysis == True:
+        analysisType = 'Gamma'
         count += 1
 
 
@@ -123,6 +128,9 @@ def main():
 
     if config.doSLDAnalysis == True:
         sldAnalysis.main(info, new_name)
+
+    if config.doGammaAnalysis == True:
+        gammaAnalysis.main(info, title, outputPath)
 
 
     return

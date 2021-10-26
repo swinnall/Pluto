@@ -1,4 +1,4 @@
-title=000 9-13-1016 MC3 ACMW pH and cholesterol comparison elasticity no legend
+title=000 9-13-1016 MC3 ACMW pH and cholesterol comparison isotherm
 filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 #
 # Feb KC2 proposal isotherms

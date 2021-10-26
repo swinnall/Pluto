@@ -200,7 +200,7 @@ def plot(key, vars, suffix):
                 ax.set_yticks(np.arange(0, ymax+1, step=config.yTickInterval))
 
 
-            elif suffix in [" - isotherm"] and config.overrideTickLocation == True:
+            elif suffix in [" - isotherm", " - gammaL", " - gammaP"] and config.overrideTickLocation == True:
                 ax.set_xticks(np.arange(xmin, xmax+1, step=config.xTickInterval))
                 ax.set_yticks(np.arange(ymin, ymax+1, step=config.yTickInterval))
 
@@ -209,8 +209,7 @@ def plot(key, vars, suffix):
     ## Axis labels
 
             # axis labels; in for loop as iterates along number of subplots
-            ## this is only setup for 4x4 at the moment... need to generalise
-            if config.plotMultiPanel == True and suffix == " - isotherm":
+            if config.plotMultiPanel == True and suffix == " - isotherm" and (nRow == 2 and nCol == 2):
 
                 if row == 0 and col == 0:
                     plt.setp(ax.get_xticklabels(), visible=False)
@@ -221,9 +220,15 @@ def plot(key, vars, suffix):
                 elif row == 1 and col == 0:
                     plt.setp(ax.get_xticklabels(), visible=True)
                     plt.setp(ax.get_yticklabels(), visible=True)
-
                 elif row == 1 and col == 1:
                     plt.setp(ax.get_xticklabels(), visible=True)
+                    plt.setp(ax.get_yticklabels(), visible=False)
+
+            elif config.plotMultiPanel == True and suffix == " - isotherm" and (nRow == 1 and nCol == 2):
+
+                if row == 0 and col == 0:
+                    plt.setp(ax.get_yticklabels(), visible=True)
+                elif row == 0 and col == 1:
                     plt.setp(ax.get_yticklabels(), visible=False)
 
             else:
@@ -235,8 +240,15 @@ def plot(key, vars, suffix):
                     plt.setp(ax.get_yticklabels(), visible=False)
 
 
-            # legend; must plot along with every figure
-            ax.legend(prop={'size': fs-7, 'weight':'bold'}, frameon = False)
+            # legend; plot along with every figure unless elasticity
+            if config.plotIsotherm == True and config.plotElasticity == True and col == 1:
+                pass
+                #ax.legend(prop={'size': fs-config.legend_fs_reduction, 'weight':'bold'}, frameon = False)
+            elif config.plotIsotherm == True and config.plotElasticity == True and col == 0:
+                pass
+            else:
+                ax.legend(prop={'size': fs-config.legend_fs_reduction, 'weight':'bold'}, frameon = False)
+
 
     ## Tick label size; legend; layout; show fig; save fig
 

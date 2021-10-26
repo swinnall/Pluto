@@ -8,7 +8,8 @@
 doIsoAnalysis      = False
 doEllipsAnalysis   = False
 doChemFormulations = False
-doSLDAnalysis      = True
+doSLDAnalysis      = False
+doGammaAnalysis    = True
 
 
 ################
@@ -16,7 +17,7 @@ doSLDAnalysis      = True
 ################
 
 ## Plot Isotherms
-plotIsotherm     = True             # plot standard isotherm
+plotIsotherm     = False             # plot standard isotherm
 plotCompressions = False            # plot isotherm compressions only
 plotExpansions   = False            # plot isotherm expansions only
 plotCycles       = False            # colour code cycles within isotherm
@@ -27,17 +28,17 @@ plotNormInjection = False           # plot normalised pressure
 plotArea          = False           # plot percentage area
 
 ## Elasticity Analysis
-plotElasticity = False              # plots elasticity analyis
+plotElasticity = True              # plots elasticity analyis
 
 ## Other Functions
 checkT0   = True                     # ensures T0 = 0
 shiftP    = True                     # shift to P_min = 0
-smoothIso = True                     # reduces number of points for final plot
+smoothIso = False                     # reduces number of points for final plot
 overplot  = False                    # not yet functional
 
 ## Override Normal Keys
-plotMultiPanel = True              # split input data between subplots
-key = [(2,2),(2,2)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
+plotMultiPanel = False              # split input data between subplots
+key = [(2,2)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
 
 ## Parameters
 useCycles  = [0]                     # list of cycles to be used in isotherm
@@ -73,6 +74,24 @@ useVolFrac = True
 addLipid = False
 
 
+###################
+# Gamma Analysis #
+##################
+
+# reduce number of points by len()/gammaNth
+gammaNth = 1
+
+# smooth function
+gamma_nPoly = 10
+
+# select which quantities to plot
+plotGammaL = True
+plotGammaP = True
+
+# overplot L and P; to be implemented
+overPlotGammaLP = False
+
+
 #############
 # Printing #
 ############
@@ -88,24 +107,23 @@ very_verbose = False
 
 ## General Parameters
 fs = 14    # font size
-lw = 2     # line width
-
+lw = 3     # line width
 
 ## Line Plot with Marker Parameters
 plotWithMarker = False
 markEdgeWidth  = 1
 
-
 ## Scatter Plot Parameters
-scatterSuffixList = [" - normInjPressure"]
-scatterSize = 10
-
+scatterSuffixList = [" - normInjPressure", " - gammaL", " - gammaP"]
+scatterSize = 50
 
 ## Axis Adjustment Parameters
 xAxisMinAdj = -5
 xAxisMaxAdj = 0
 yAxisMaxAdj = 2
 
+## Reduce legend font size by
+legend_fs_reduction = 1
 
 ## Manual Override Parameters
 overrideNoP = False
@@ -113,20 +131,75 @@ n0 = [0, 0, 0, 0]
 nf = [16, 16, 16, 16]
 
 overrideAxisLim = True
-xmin = 50
-xmax = 160
+xmin = 0
+xmax = 65
 ymin = 0
-ymax = 50
+ymax = 1.5
 
 overrideTickLocation = True
 n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
-xTickInterval = 50              # x, y axis tick interval for P vs t plots; x is mins plot only
-yTickInterval = 20
-
+xTickInterval = 20              # x, y axis tick interval for P vs t plots; x is mins plot only
+yTickInterval = 0.5
 
 ## Save Options
 saveAsPNG = True
 saveAsPDF = True
+
+# colours
+colourDict = {
+
+    # dark blue, light blue, dark orange, light orange
+    "0": ['#1e81b0','#abdbe3', '#e28743','#eab676'],
+
+    # dark blue, light blue, dark orange, light orange, dark green, light green
+    "1": ['#1e81b0','#abdbe3', '#e28743','#eab676', '#32BE25', '#A3e19d'],
+
+    # light blue, light orange, light green
+    "2": ['#abdbe3', '#eab676', '#A3e19d'],
+
+    # dark blue, dark orange, dark green, dark purple, dark red, dark yellow, persian pink, medium grey
+    "3": ['#1e81b0', '#e28743', '#32BE25', '#6A0F8E', '#AB2330', '#FFCC00', '#F77FBE', '#71716F'],
+
+    # 'Silver Lake' , 'Sea Serpent', 'Fuzzy Wuzzy', 'Cinnamon Satin'
+    "4": ['#6083D0', '#60BBD0', '#D07560', '#D06083'],
+
+    # 'green sheen', 'Turkish Rose'
+    "5": ['#6FBBA6', '#BB6F84'],
+
+    # 'Fuzzy Wuzzy', 'Cinnamon Satin'
+    "6": ['#D07560', '#D06083'],
+
+    # light blue, dark blue, light orange, dark orange, light green, dark green
+    "7": ['#abdbe3', '#1e81b0', '#eab676', '#e28743', '#A3e19d', '#32BE25'],
+
+
+    }
+c = colourDict.get("4")
+
+# markers
+markerDict = {
+
+    # point
+    "0": ['.','.','.','.'],
+
+    # circles
+    "1": ['o','o','o','o'],
+
+    # squares
+    "2": ['s','s','s','s'],
+
+    # diamonds
+    "3": ['D','D','D','D'],
+
+    # cicrle-square repeat
+    "4": ['o','s','o','s'],
+
+    # cicrle-square-diamond repeat
+    "5": ['o','s','d','o','s','d']
+
+    }
+markerType = markerDict.get("0")
+
 
 
 ##############
@@ -172,8 +245,8 @@ lipidStruct = {
     "LBPA": ('N-O10-P','C42-H82'),
     "Cholesterol": ('O-H','C27-H45'),
     "d45-Cholesterol": ('O-H','C27-D45'),
-    "DLin-MC3-DMA": ('N-O2-C6-H9','C37-H70'),
-    "d-DLin-MC3-DMA": ('N-O2-C6-H9','C37-H8-D62'),
+    "DLin-MC3-DMA": ('N-O2-C8-H13','C37-H66'),
+    "d-DLin-MC3-DMA": ('N-O2-C8-H13','C37-H4-D62'),
     "DSPC": ('N-O8-P','C44-H88'),
     "DMG-PEG-2000": ('O50','C122-H242'),
     "PolyA": ('C10-H13-K-N5-O7-P','H')
@@ -188,8 +261,8 @@ lipidMolVol = {
     "LBPA": (208,624),
     "Cholesterol": (5,624),
     "d45-Cholesterol": (5,624),
-    "DLin-MC3-DMA": (290,1000),
-    "d-DLin-MC3-DMA": (290,1000),
+    "DLin-MC3-DMA": (260,1030), # (290,1000)
+    "d-DLin-MC3-DMA": (260,1030),
     "DSPC": (322,1000),
     "DMG-PEG-2000": (200,470),
     "PolyA": (1,1)
@@ -201,52 +274,5 @@ pathNames = {
     "Ellipsometry": ('Instructions - Ellipsometry','Ellipsometry'),
     "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),
     "SLD": ('Instructions - SLD','SLD'),
+    "Gamma": ('Instructions - Gamma', 'Gamma'),
     }
-
-# colours
-colourDict = {
-
-    # dark blue, light blue, dark orange, light orange
-    "0": ['#1e81b0','#abdbe3', '#e28743','#eab676'],
-
-    # dark blue, light blue, dark orange, light orange, dark green, light green
-    "1": ['#1e81b0','#abdbe3', '#e28743','#eab676', '#32BE25', '#A3e19d'],
-
-    # light blue, light orange, light green
-    "2": ['#abdbe3', '#eab676', '#A3e19d'],
-
-    # dark blue, dark orange, dark green, dark purple, dark red, dark yellow, persian pink, medium grey
-    "3": ['#1e81b0', '#e28743', '#32BE25', '#6A0F8E', '#AB2330', '#FFCC00', '#F77FBE', '#71716F'],
-
-    # 'green sheen', 'Turkish Rose'
-    "4": ['#6FBBA6', '#BB6F84'],
-
-    # ,
-    "5": ['#60BBD0', '#D07560']
-
-    }
-c = colourDict.get("3")
-
-# markers
-markerDict = {
-
-    # point
-    "0": ['.','.','.','.'],
-
-    # circles
-    "1": ['o','o','o','o'],
-
-    # squares
-    "2": ['s','s','s','s'],
-
-    # diamonds
-    "3": ['D','D','D','D'],
-
-    # cicrle-square repeat
-    "4": ['o','s','o','s'],
-
-    # cicrle-square-diamond repeat
-    "5": ['o','s','d','o','s','d']
-
-    }
-markerType = markerDict.get("0")
