@@ -75,7 +75,7 @@ addLipid = False
 
 
 ###################
-# Gamma Analysis #
+# Surface Excess #
 ##################
 
 # reduce number of points by len()/gammaNth
@@ -107,14 +107,14 @@ very_verbose = False
 
 ## General Parameters
 fs = 14    # font size
-lw = 3     # line width
+lw = 0     # line width
 
 ## Line Plot with Marker Parameters
-plotWithMarker = False
+plotWithMarker = True
 markEdgeWidth  = 1
 
 ## Scatter Plot Parameters
-scatterSuffixList = [" - normInjPressure", " - gammaL", " - gammaP"]
+scatterSuffixList = [" - normInjPressure", " - gammaL", " - gammaP", "Ellipsometry"]
 scatterSize = 50
 
 ## Axis Adjustment Parameters
@@ -130,13 +130,13 @@ overrideNoP = False
 n0 = [0, 0, 0, 0]
 nf = [16, 16, 16, 16]
 
-overrideAxisLim = True
+overrideAxisLim = False
 xmin = 0
 xmax = 65
 ymin = 0
 ymax = 1.5
 
-overrideTickLocation = True
+overrideTickLocation = False
 n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
 xTickInterval = 20              # x, y axis tick interval for P vs t plots; x is mins plot only
 yTickInterval = 0.5
