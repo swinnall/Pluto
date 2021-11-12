@@ -67,7 +67,7 @@ def getFile(fileDIR,equipParams):
 
 
 
-def importData(equipParams, fname, plotDIR):
+def importData(equipParams, fname, inputDIR, plotDIR):
 
     # initialise variables
     t = []
@@ -75,7 +75,7 @@ def importData(equipParams, fname, plotDIR):
     P = []
 
     # read file into memory data
-    fileDIR = "../input/00/" + fname + equipParams[1]
+    fileDIR = inputDIR + fname + equipParams[1]
     data = getFile(fileDIR,equipParams)
 
     # Kibron
@@ -428,7 +428,7 @@ def splitCycles(type, cycleX, cycleY, l):
 
 
 # Main
-def main(info, title, plotDIR):
+def main(info, title, inputDIR, plotDIR):
 
     # filter warnings
     warnings.filterwarnings("ignore")
@@ -480,7 +480,7 @@ def main(info, title, plotDIR):
             equipParams = (1,".txt","\t")
 
         # import data from given file i
-        t_list, A_list, P_list = importData(equipParams, fname, plotDIR)
+        t_list, A_list, P_list = importData(equipParams, fname, inputDIR, plotDIR)
         t[i] = t_list
         A[i] = A_list
         P[i] = P_list

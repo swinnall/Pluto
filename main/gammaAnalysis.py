@@ -55,7 +55,7 @@ def getFile(fileDIR,equipParams):
 
 
 
-def importData(equipParams, fname, plotDIR):
+def importData(equipParams, fname, inputDIR, plotDIR):
 
     # initialise variables
     t      = []
@@ -63,7 +63,7 @@ def importData(equipParams, fname, plotDIR):
     gammaP = []
 
     # read file into memory data
-    fileDIR = "../input/00/" + fname + equipParams[1]
+    fileDIR = inputDIR + fname + equipParams[1]
     data = getFile(fileDIR,equipParams)
 
     for j in range(equipParams[0],len(data)):
@@ -132,7 +132,7 @@ def smoothData(genList):
 
 
 # Main
-def main(info, title, plotDIR):
+def main(info, title, inputDIR, plotDIR):
 
     # filter warnings
     warnings.filterwarnings("ignore")
@@ -157,7 +157,7 @@ def main(info, title, plotDIR):
         equipParams = (1,".txt","\t")
 
         # import data from given file i
-        t_list, gammaL_list, gammaP_list = importData(equipParams, fname, plotDIR)
+        t_list, gammaL_list, gammaP_list = importData(equipParams, fname, inputDIR, plotDIR)
 
 
         # smooth data

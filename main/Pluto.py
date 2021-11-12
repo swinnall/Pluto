@@ -34,8 +34,8 @@ def modSelection():
         analysisType = 'SLD'
         count += 1
 
-    if config.doGammaAnalysis == True:
-        analysisType = 'Gamma'
+    if config.doSurfaceExcess == True:
+        analysisType = 'SurfaceExcess'
         count += 1
 
 
@@ -79,6 +79,10 @@ def main():
     title = info[0][0].split('=')[1]
 
 
+    # create input path for data source
+    inputPath = '../input/00 - ' + config.pathNames.get(analysisType)[1] + ''
+
+
     # create path for analysis
     outputPath = '../output/' + config.pathNames.get(analysisType)[1] + '/' + title + ''
 
@@ -118,10 +122,10 @@ def main():
 
     # calls analysis module
     if config.doIsoAnalysis == True:
-        isoAnalysis.main(info, title, outputPath)
+        isoAnalysis.main(info, title, inputPath, outputPath)
 
     if config.doEllipsAnalysis == True:
-        ellipsAnalysis.main(info, title, outputPath)
+        ellipsAnalysis.main(info, title, inputPath, outputPath)
 
     if config.doChemFormulations == True:
         chemFormulations.main(info, new_name)
@@ -129,8 +133,8 @@ def main():
     if config.doSLDAnalysis == True:
         sldAnalysis.main(info, new_name)
 
-    if config.doGammaAnalysis == True:
-        gammaAnalysis.main(info, title, outputPath)
+    if config.doSurfaceExcess == True:
+        gammaAnalysis.main(info, title, inputPath, outputPath)
 
 
     return

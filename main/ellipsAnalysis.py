@@ -52,7 +52,7 @@ def importSampleData(info):
     return nFiles, uniqIDs, tag, nAOI, nTime, nRef, info
 
 
-def importAOI(uniqIDs, info, nAOI):
+def importAOI(inputDIR, uniqIDs, info, nAOI):
 
     # initialise y axis variables for angle of incidence plots
     AOI       = {new_list: [] for new_list in range(nAOI)}
@@ -67,7 +67,7 @@ def importAOI(uniqIDs, info, nAOI):
         d_AOI = []
 
         # read file into memory d
-        with open( "../input/00/" + info[uniqIDs.get("AOI")[i]][1] +".txt", newline = '') as f:
+        with open( inputDIR + info[uniqIDs.get("AOI")[i]][1] +".txt", newline = '') as f:
 
             # ignore rows starting with '#'
             rdr = csv.DictReader(filter(lambda row: row[0]!='#', f))
@@ -84,7 +84,7 @@ def importAOI(uniqIDs, info, nAOI):
     return AOI, psi_AOI, delta_AOI
 
 
-def importTime(uniqIDs, info, nTime, nRef):
+def importTime(inputDIR, uniqIDs, info, nTime, nRef):
 
     # initialise y axis variables for time plots
     t         = {new_list: [] for new_list in range(nTime)}
@@ -100,7 +100,7 @@ def importTime(uniqIDs, info, nTime, nRef):
         d_ref = []
 
         # read file into memory d
-        with open( "../input/00/" + info[uniqIDs.get("ref")[i]][1] +".txt", newline = '') as f:
+        with open( inputDIR + info[uniqIDs.get("ref")[i]][1] +".txt", newline = '') as f:
 
             # ignore rows starting with '#'
             rdr = csv.DictReader(filter(lambda row: row[0]!='#', f))
@@ -151,7 +151,7 @@ def importTime(uniqIDs, info, nTime, nRef):
     return t, psi_t, delta_t
 
 
-def main(info, title, outputPath):
+def main(info, title, inputDIR, outputPath):
 
     # filter warnings
     # warnings.filterwarnings("ignore")
@@ -165,7 +165,7 @@ def main(info, title, outputPath):
     if config.plotAOI == True:
 
         # import data
-        AOI, psi_AOI, delta_AOI = importAOI(uniqIDs, info, nAOI)
+        AOI, psi_AOI, delta_AOI = importAOI(inputDIR, uniqIDs, info, nAOI)
 
         # converting delta variables to degrees
         for i in range(nAOI):
@@ -188,7 +188,7 @@ def main(info, title, outputPath):
     if config.plotTime == True:
 
         # import data
-        t, psi_t, delta_t = importTime(uniqIDs, info, nTime, nRef)
+        t, psi_t, delta_t = importTime(inputDIR, uniqIDs, info, nTime, nRef)
 
         # converting delta variables to degrees
         for i in range(nTime):

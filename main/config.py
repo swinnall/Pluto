@@ -6,10 +6,10 @@
 
 # set intended analysis type to True
 doIsoAnalysis      = False
-doEllipsAnalysis   = False
+doEllipsAnalysis   = True
 doChemFormulations = False
 doSLDAnalysis      = False
-doGammaAnalysis    = True
+doSurfaceExcess    = False
 
 
 ################
@@ -51,7 +51,7 @@ nth        = 60                      # data reduction; take every 'nth' point
 ########################
 
 # plot psi and delta against angle of incidence
-plotAOI = False
+plotAOI = True
 
 # plot psi and delta against time
 plotTime = False
@@ -274,5 +274,5 @@ pathNames = {
     "Ellipsometry": ('Instructions - Ellipsometry','Ellipsometry'),
     "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),
     "SLD": ('Instructions - SLD','SLD'),
-    "Gamma": ('Instructions - Gamma', 'Gamma'),
+    "SurfaceExcess": ('Instructions - SurfaceExcess', 'Surface Excess'),
     }

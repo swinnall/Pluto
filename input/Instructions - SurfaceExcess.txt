@@ -1,5 +1,7 @@
 title=9-13-1016 comparison
 fname,label
+#
+# September Beamtime 9-13-1016
 9-13-1016 MC3 PBS Gamma,MC3 PBS
 9-13-1016 MC3 Chol PBS Gamma,MC3 Chol PBS
 9-13-1016 MC3 Citrate Gamma,MC3 Citrate
