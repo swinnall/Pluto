@@ -78,7 +78,7 @@ def importAOIData(inputDIR, AOI_ID, nAOI):
             psi_AOI[i]  .append(float(AOI_df[j][0]))
             delta_AOI[i].append(float(AOI_df[j][1]))
 
-        label_AOI[i].append(AOI_ID[i].get('label'))
+        label_AOI[i] = AOI_ID[i].get('label')
 
     return AOI, psi_AOI, delta_AOI, label_AOI
 
@@ -90,7 +90,7 @@ def importTimeData(inputDIR, time_ID, nTime, ref_ID, nRef):
     t         = {new_list: [] for new_list in range(nTime)}
     psi_t     = {new_list: [] for new_list in range(nTime)}
     delta_t   = {new_list: [] for new_list in range(nTime)}
-    label_t   = {new_list: [] for new_list in range(nTime)}
+    label_t   = {new_list: 0 for new_list in range(nTime)}
 
     psi_ref   = {new_list: [] for new_list in range(nRef)}
     delta_ref = {new_list: [] for new_list in range(nRef)}
@@ -131,7 +131,7 @@ def importTimeData(inputDIR, time_ID, nTime, ref_ID, nRef):
             psi_t[i]  .append(float(time_df[j][0]) - avRefPsi[i])
             delta_t[i].append(float(time_df[j][1]) - avRefDel[i])
 
-        label_t[i].append(time_ID[i].get('label'))
+        label_t[i] = time_ID[i].get('label')
 
     return t, psi_t, delta_t, label_t
 

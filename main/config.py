@@ -38,7 +38,7 @@ overplot  = False                    # not yet functional
 
 ## Override Normal Keys
 plotMultiPanel = False              # split input data between subplots
-key = [(2,2)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
+key = [(1,1)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
 
 ## Parameters
 useCycles  = [0]                     # list of cycles to be used in isotherm
@@ -51,10 +51,10 @@ nth        = 60                      # data reduction; take every 'nth' point
 ########################
 
 # plot psi and delta against angle of incidence
-plotAOI = True
+plotAOI = False
 
 # plot psi and delta against time
-plotTime = False
+plotTime = True
 
 
 #################
@@ -107,20 +107,21 @@ very_verbose = False
 
 ## General Parameters
 fs = 14    # font size
-lw = 0     # line width
+lw = 3     # line width
 
 ## Line Plot with Marker Parameters
 plotWithMarker = True
 markEdgeWidth  = 1
 
 ## Scatter Plot Parameters
-scatterSuffixList = [" - normInjPressure", " - gammaL", " - gammaP", "Ellipsometry"]
+scatterSuffixList = [" - normInjPressure", " - gammaL", " - gammaP", " - psi Time", " - delta Time"]
 scatterSize = 50
 
 ## Axis Adjustment Parameters
-xAxisMinAdj = -5
+setAxInt    = False
+xAxisMinAdj = 0
 xAxisMaxAdj = 0
-yAxisMaxAdj = 2
+yAxisMaxAdj = 1
 
 ## Reduce legend font size by
 legend_fs_reduction = 1
@@ -140,10 +141,12 @@ overrideTickLocation = False
 n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
 xTickInterval = 20              # x, y axis tick interval for P vs t plots; x is mins plot only
 yTickInterval = 0.5
+thresholdList = [" - pressure", " - area", " - normInjPressure"]
+overrideList  = [" - isotherm", " - gammaL", " - gammaP", " - psi Time", " - delta Time"]
 
 ## Save Options
 saveAsPNG = True
-saveAsPDF = True
+saveAsPDF = False
 
 # colours
 colourDict = {

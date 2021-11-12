@@ -29,7 +29,6 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
 
             if i == count:
                 for j in range(nFilesPerPlot):
-
                     x[j]      = X[0].get(i+j)
                     y[j]      = Y.get(i+j)
                     labels[j] = LABELS.get(i+j)
@@ -140,23 +139,42 @@ def plot(key, vars, suffix):
                 #min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
                 min_x_vals.append( min(x.get(i)) ); max_x_vals.append( max(x.get(i)) )
                 min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
+                print(max_y_vals)
 
 
 
     ## Set Axis ranges / limits
 
-            # set min values
-            ymin = 0
-            if int(round(min(min_x_vals),-1)) + config.xAxisMinAdj >= 0:
-                xmin = int(round(min(min_x_vals),-1)) + config.xAxisMinAdj
-            else: xmin = 0
+            # default sets axis values as integers
+            if config.setAxInt == True:
 
-            # set max values
-            xmax = int(round(max(max_x_vals),-1)) + config.xAxisMaxAdj
-            ymax = int(round(max(max_y_vals),-1)) + config.yAxisMaxAdj
+                # set min values
+                ymin = 0
+                if int(round(min(min_x_vals),-1)) + config.xAxisMinAdj >= 0:
+                    xmin = int(round(min(min_x_vals),-1)) + config.xAxisMinAdj
+                else: xmin = 0
+
+                # set max values
+                xmax = int(round(max(max_x_vals),-1)) + config.xAxisMaxAdj
+                ymax = int(round(max(max_y_vals),-1)) + config.yAxisMaxAdj
+
+
+            # uses float max and mins instead
+            elif config.setAxInt == False:
+
+                # set min values
+                ymin = 0
+                if round(min(min_x_vals),-1) + config.xAxisMinAdj >= 0:
+                    xmin = round(min(min_x_vals),-1) + config.xAxisMinAdj
+                else: xmin = 0
+
+                # set max values
+                xmax = round(max(max_x_vals),-1) + config.xAxisMaxAdj
+                ymax = round(max(max_y_vals),3) + config.yAxisMaxAdj
+
 
             # alt. region of interest
-            if config.overrideAxisLim == True:
+            elif config.overrideAxisLim == True:
                 xmin = config.xmin
                 xmax = config.xmax
                 ymin = config.ymin
@@ -164,13 +182,14 @@ def plot(key, vars, suffix):
 
             ax.set_xlim([xmin,xmax])
             ax.set_ylim([ymin,ymax])
-
+            print([xmin,xmax])
+            print([ymin,ymax])
 
 
     ## Set tick locations plots
 
             # thresholds for different x axis scales
-            if xmax >= 7200 and suffix in [" - pressure", " - area", " - normInjPressure"]:
+            if xmax >= 7200 and suffix in config.thresholdList:
                 axLabels["x"] = "Time (hr)"
 
                 # set axis ticks
@@ -183,7 +202,7 @@ def plot(key, vars, suffix):
                 plt.xticks(init_xticks, new_xticks)
 
 
-            elif xmax < 7200 and xmax > 600 and suffix in [" - pressure", " - area", " - normInjPressure"]:
+            elif xmax < 7200 and xmax > 600 and suffix in config.thresholdList:
                 axLabels["x"] = "Time (min)"
 
                 init_xticks = np.arange(xmin, xmax+1, step=600)
@@ -194,17 +213,17 @@ def plot(key, vars, suffix):
                 plt.xticks(init_xticks, new_xticks)
 
 
-            elif xmax < 600 and suffix in [" - pressure", " - area", " - normInjPressure"]:
+            elif xmax < 600 and suffix in config.thresholdList:
                 axLabels["x"] = "Time (s)"
                 ax.set_xticks(np.arange(xmin, xmax+1, step=int( round(((xmin+xmax)/config.n_xticks),-1) )))
                 ax.set_yticks(np.arange(0, ymax+1, step=config.yTickInterval))
 
 
-            elif suffix in [" - isotherm", " - gammaL", " - gammaP"] and config.overrideTickLocation == True:
+            elif suffix in config.overrideList and config.overrideTickLocation == True:
                 ax.set_xticks(np.arange(xmin, xmax+1, step=config.xTickInterval))
                 ax.set_yticks(np.arange(ymin, ymax+1, step=config.yTickInterval))
 
-
+            else: pass
 
     ## Axis labels
 
