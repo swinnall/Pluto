@@ -63,7 +63,7 @@ def importData(equipParams, fname, inputDIR, plotDIR):
     gammaP = []
 
     # read file into memory data
-    fileDIR = inputDIR + fname + equipParams[1]
+    fileDIR = inputDIR + '/' + fname + equipParams[1]
     data = getFile(fileDIR,equipParams)
 
     for j in range(equipParams[0],len(data)):

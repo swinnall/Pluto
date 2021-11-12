@@ -75,7 +75,7 @@ def importData(equipParams, fname, inputDIR, plotDIR):
     P = []
 
     # read file into memory data
-    fileDIR = inputDIR + fname + equipParams[1]
+    fileDIR = inputDIR + '/' + fname + equipParams[1]
     data = getFile(fileDIR,equipParams)
 
     # Kibron

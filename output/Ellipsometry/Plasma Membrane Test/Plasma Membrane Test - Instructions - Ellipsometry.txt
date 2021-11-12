@@ -1,6 +1,6 @@
 title=Plasma Membrane Test
-ID,filename,tag,label
+filename,tag,label
 #
 #Test Samples
-1,popc_pops_chol_PBS_AOI_p30_14DEC_epd,AOI,Test AOI - P = 30 mN/m
-2,popc_pops_chol_PBS_t_14DEC_epd,t,Test t - P = 30 mN/m
+popc_pops_chol_PBS_AOI_p30_14DEC_epd,AOI,Test AOI - P = 30 mN/m
+popc_pops_chol_PBS_t_14DEC_epd,t,Test t - P = 30 mN/m
