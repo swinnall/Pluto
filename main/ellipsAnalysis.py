@@ -142,15 +142,13 @@ def main(info, title, inputDIR, outputPath):
     # filter warnings
     warnings.filterwarnings("ignore")
 
-    # set equip to null - remove in future version?
-    equip = 'null'
 
     # user input & sample instructions information
     nFiles, AOI_ID, nAOI, time_ID, nTime, ref_ID, nRef = importSampleInfo(info)
 
 
     # process data
-    if config.plotAOI == True:
+    if config.plotAOIpsi == True or config.plotAOIdelta == True:
 
         if nAOI < 1:
             print("Error: No AOI files in input.")
@@ -164,20 +162,8 @@ def main(info, title, inputDIR, outputPath):
             for j in range(len(delta_AOI.get(i))):
                 delta_AOI[i][j] = delta_AOI.get(i)[j] * 180 / np.pi
 
-        # plot data
-        key      = (1,1)
-        axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Psi$ (\N{DEGREE SIGN})"}
-        suffix   = " - psi AOI"
-        vars     = (nFiles, equip, label_AOI, axLabels, title, outputPath, (AOI,0), psi_AOI)
-        genPlot.main(key,vars,suffix)
 
-        axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Delta$ (\N{DEGREE SIGN})"}
-        suffix   = " - delta AOI"
-        vars     = (nFiles, equip, label_AOI, axLabels, title, outputPath, (AOI,0), delta_AOI)
-        genPlot.main(key,vars,suffix)
-
-
-    if config.plotTime == True:
+    if config.plotTimePsi == True or config.plotTimeDelta == True:
 
         if nTime < 1:
             print("Error: No Time files in input.")
@@ -191,13 +177,29 @@ def main(info, title, inputDIR, outputPath):
             for j in range(len(delta_t.get(i))):
                 delta_t[i][j] = delta_t.get(i)[j] * 180 / np.pi
 
-        # plot data
-        key      = (1,1)
+
+    # plot data
+    equip = 'null'
+    key   = (1,1)
+    if config.plotAOIpsi == True:
+        axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Psi$ (\N{DEGREE SIGN})"}
+        suffix   = " - psi AOI"
+        vars     = (nFiles, equip, label_AOI, axLabels, title, outputPath, (AOI,0), psi_AOI)
+        genPlot.main(key,vars,suffix)
+
+    if config.plotAOIdelta == True:
+        axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Delta$ (\N{DEGREE SIGN})"}
+        suffix   = " - delta AOI"
+        vars     = (nFiles, equip, label_AOI, axLabels, title, outputPath, (AOI,0), delta_AOI)
+        genPlot.main(key,vars,suffix)
+
+    if config.plotTimePsi == True:
         axLabels = {"x": "Time (s)", "y": "$\Psi$ (\N{DEGREE SIGN})"}
         suffix   = " - psi Time"
         vars     = (nFiles, equip, label_t, axLabels, title, outputPath, (t,0), psi_t)
         genPlot.main(key,vars,suffix)
 
+    if config.plotTimeDelta == True:
         axLabels = {"x": "Time (s)", "y": "$\Delta_{Lipids}$ - $\Delta_{Buffer}$ (\N{DEGREE SIGN})"}
         suffix   = " - delta Time"
         vars     = (nFiles, equip, label_t, axLabels, title, outputPath, (t,0), delta_t)

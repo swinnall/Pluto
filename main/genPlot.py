@@ -122,11 +122,11 @@ def plot(key, vars, suffix):
             for i in range(N):
 
                 # plots scatter plot with empty circles
-                if suffix in config.scatterSuffixList:
+                if config.plotWithScatter == True:
                     ax.scatter(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), s=config.scatterSize, edgecolors=config.c[i], linewidth=config.lw, facecolors='none')
 
                 # line plot with marker
-                elif suffix not in config.scatterSuffixList and config.plotWithMarker == True:
+                elif config.plotLineWithMarker == True:
                     ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=config.lw, marker=config.markerType[i], markerfacecolor="None", markeredgewidth=config.markEdgeWidth)
 
                 # default line plot
@@ -145,36 +145,17 @@ def plot(key, vars, suffix):
 
     ## Set Axis ranges / limits
 
-            # default sets axis values as integers
-            if config.setAxInt == True:
+            ymin = 0
+            if int(round(min(min_x_vals),-1)) + config.xAxisMinAdj >= 0:
+                xmin = int(round(min(min_x_vals),-1)) + config.xAxisMinAdj
+            else: xmin = 0
 
-                # set min values
-                ymin = 0
-                if int(round(min(min_x_vals),-1)) + config.xAxisMinAdj >= 0:
-                    xmin = int(round(min(min_x_vals),-1)) + config.xAxisMinAdj
-                else: xmin = 0
-
-                # set max values
-                xmax = int(round(max(max_x_vals),-1)) + config.xAxisMaxAdj
-                ymax = int(round(max(max_y_vals),-1)) + config.yAxisMaxAdj
-
-
-            # uses float max and mins instead
-            elif config.setAxInt == False:
-
-                # set min values
-                ymin = 0
-                if round(min(min_x_vals),-1) + config.xAxisMinAdj >= 0:
-                    xmin = round(min(min_x_vals),-1) + config.xAxisMinAdj
-                else: xmin = 0
-
-                # set max values
-                xmax = round(max(max_x_vals),-1) + config.xAxisMaxAdj
-                ymax = round(max(max_y_vals),3) + config.yAxisMaxAdj
+            xmax = int(round(max(max_x_vals),config.setX_AxInt)) + config.xAxisMaxAdj
+            ymax = int(round(max(max_y_vals),config.setY_AxInt)) + config.yAxisMaxAdj
 
 
             # alt. region of interest
-            elif config.overrideAxisLim == True:
+            if config.overrideAxisLim == True:
                 xmin = config.xmin
                 xmax = config.xmax
                 ymin = config.ymin
@@ -188,7 +169,7 @@ def plot(key, vars, suffix):
     ## Set tick locations plots
 
             # thresholds for different x axis scales
-            if xmax >= 7200 and suffix in config.thresholdList:
+            if xmax >= 7200 and suffix in config.tAxisList:
                 axLabels["x"] = "Time (hr)"
 
                 # set axis ticks
@@ -201,7 +182,7 @@ def plot(key, vars, suffix):
                 plt.xticks(init_xticks, new_xticks)
 
 
-            elif xmax < 7200 and xmax > 600 and suffix in config.thresholdList:
+            elif xmax < 7200 and xmax > 600 and suffix in config.tAxisList:
                 axLabels["x"] = "Time (min)"
 
                 init_xticks = np.arange(xmin, xmax+1, step=600)
@@ -212,13 +193,13 @@ def plot(key, vars, suffix):
                 plt.xticks(init_xticks, new_xticks)
 
 
-            elif xmax < 600 and suffix in config.thresholdList:
+            elif xmax < 600 and suffix in config.tAxisList:
                 axLabels["x"] = "Time (s)"
                 ax.set_xticks(np.arange(xmin, xmax+1, step=int( round(((xmin+xmax)/config.n_xticks),-1) )))
                 ax.set_yticks(np.arange(0, ymax+1, step=config.yTickInterval))
 
 
-            elif suffix in config.overrideList and config.overrideTickLocation == True:
+            elif config.overrideTickLocation == True:
                 ax.set_xticks(np.arange(xmin, xmax+1, step=config.xTickInterval))
                 ax.set_yticks(np.arange(ymin, ymax+1, step=config.yTickInterval))
 

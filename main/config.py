@@ -17,7 +17,7 @@ doSurfaceExcess    = False
 ################
 
 ## Plot Isotherms
-plotIsotherm     = False             # plot standard isotherm
+plotIsotherm     = False            # plot standard isotherm
 plotCompressions = False            # plot isotherm compressions only
 plotExpansions   = False            # plot isotherm expansions only
 plotCycles       = False            # colour code cycles within isotherm
@@ -50,11 +50,13 @@ nth        = 60                      # data reduction; take every 'nth' point
 # Ellipsometry Analysis #
 ########################
 
-# plot psi and delta against angle of incidence
-plotAOI = False
+# plot psi and/or delta against angle of incidence
+plotAOIpsi   = False
+plotAOIdelta = False
 
-# plot psi and delta against time
-plotTime = True
+# plot psi and/or delta against time
+plotTimePsi   = False
+plotTimeDelta = False
 
 
 #################
@@ -105,26 +107,25 @@ very_verbose = False
 # Plotting #
 ############
 
-## General Parameters
-fs = 14    # font size
-lw = 3     # line width
+## Plot Types, default line plot if false
+plotWithScatter    = True
+plotLineWithMarker = False
 
-## Line Plot with Marker Parameters
-plotWithMarker = True
-markEdgeWidth  = 1
+## Marker Parameters
+lw            = 3
+scatterSize   = 50
+markEdgeWidth = 1
 
-## Scatter Plot Parameters
-scatterSuffixList = [" - normInjPressure", " - gammaL", " - gammaP", " - psi Time", " - delta Time"]
-scatterSize = 50
+## Font Size
+fs                  = 14
+legend_fs_reduction = 1
 
 ## Axis Adjustment Parameters
-setAxInt    = False
+setX_AxInt  = -1
+setY_AxInt  = 3
 xAxisMinAdj = 0
 xAxisMaxAdj = 0
 yAxisMaxAdj = 1
-
-## Reduce legend font size by
-legend_fs_reduction = 1
 
 ## Manual Override Parameters
 overrideNoP = False
@@ -141,14 +142,13 @@ overrideTickLocation = False
 n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
 xTickInterval = 20              # x, y axis tick interval for P vs t plots; x is mins plot only
 yTickInterval = 0.5
-thresholdList = [" - pressure", " - area", " - normInjPressure"]
-overrideList  = [" - isotherm", " - gammaL", " - gammaP", " - psi Time", " - delta Time"]
+tAxisList     = [" - pressure", " - area", " - normInjPressure"]
 
 ## Save Options
 saveAsPNG = True
 saveAsPDF = False
 
-# colours
+## Colours
 colourDict = {
 
     # dark blue, light blue, dark orange, light orange
@@ -179,7 +179,7 @@ colourDict = {
     }
 c = colourDict.get("4")
 
-# markers
+## Markers
 markerDict = {
 
     # point

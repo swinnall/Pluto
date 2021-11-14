@@ -71,6 +71,7 @@ def main():
         reader = csv.reader(f, delimiter=",")
         info = list(reader)
 
+
     # filter out rows that start with '#'
     info = [x for x in info if not x[0].startswith('#')]
 
@@ -83,7 +84,7 @@ def main():
     inputPath = '../input/00 - ' + config.pathNames.get(analysisType)[1] + ''
 
 
-    # create path for analysis
+    # create output path for analysis
     outputPath = '../output/' + config.pathNames.get(analysisType)[1] + '/' + title + ''
 
 
@@ -141,5 +142,11 @@ def main():
 
 
 if __name__ == '__main__':
-    print("\n\nLaunching Pluto...\n\n")
+    print("\n\nLaunching...")
+    print(" ___ _      _    ")
+    print("| _ \ |_  _| |_ ___")
+    print("|  _/ | || |  _/ _ \\")
+    print("|_| |_|\_,_|\__\___/")
+    print("\nAuthor: Samuel Winnall \nEmail:  winnall@ill.fr\n\n\n")
+
     main()
