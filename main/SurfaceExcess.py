@@ -1,4 +1,4 @@
-" Analysis module within IAP "
+" Module for calculating surface excess "
 
 import csv
 import os

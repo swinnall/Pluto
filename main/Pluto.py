@@ -11,7 +11,7 @@ import isoAnalysis
 import ellipsAnalysis
 import chemFormulations
 import sldAnalysis
-import gammaAnalysis
+import SurfaceExcess
 
 
 def modSelection():
@@ -135,7 +135,7 @@ def main():
         sldAnalysis.main(info, new_name)
 
     if config.doSurfaceExcess == True:
-        gammaAnalysis.main(info, title, inputPath, outputPath)
+        SurfaceExcess.main(info, title, inputPath, outputPath)
 
 
     return
