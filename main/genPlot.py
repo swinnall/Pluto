@@ -139,7 +139,7 @@ def plot(key, vars, suffix):
                 #min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
                 min_x_vals.append( min(x.get(i)) ); max_x_vals.append( max(x.get(i)) )
                 min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
-                print(max_y_vals)
+
 
 
 
@@ -182,8 +182,7 @@ def plot(key, vars, suffix):
 
             ax.set_xlim([xmin,xmax])
             ax.set_ylim([ymin,ymax])
-            print([xmin,xmax])
-            print([ymin,ymax])
+
 
 
     ## Set tick locations plots
