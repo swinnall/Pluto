@@ -105,7 +105,7 @@ def importData(equipParams, fname, inputDIR, plotDIR):
 
 
     # shift data up so minimum = 0
-    if config.shiftP == True:
+    if config.shiftP == True and min(P) < 0:
 
         P, deltaP = shiftIsotherm(P)
 
@@ -453,6 +453,7 @@ def main(info, title, inputDIR, plotDIR):
     normT = {new_list: [] for new_list in range(nFiles)}
     normP = {new_list: [] for new_list in range(nFiles)}
 
+    stitched_t  = {new_list: [] for new_list in range(nFiles)}
     stitched_P  = {new_list: [] for new_list in range(nFiles)}
     stitched_Am = {new_list: [] for new_list in range(nFiles)}
 
@@ -504,12 +505,16 @@ def main(info, title, inputDIR, plotDIR):
 
         # selects cycles based on config input
         # iterate along each chosen cycle and list of values within each cycle
+
         for cycleNum in config.useCycles:
 
             # append every value to file i of stichedX
             for value in range(len(cycleAm.get(cycleNum))):
                 stitched_Am[i].append( cycleAm.get(cycleNum)[value] )
                 stitched_P[i].append( cycleP.get(cycleNum)[value] )
+
+        for i in range(len(stitched_Am)):
+            stitched_t[i].append(t[i])
 
 
     ## Specific calculation functions
@@ -621,7 +626,7 @@ def main(info, title, inputDIR, plotDIR):
 
         if config.plotCycles == True:
             suffix = " - cycles"
-            vars = (len(master_Am.get(i)), equip, master_L.get(i), axLabels, newTitle, plotDIR, (master_Am.get(i),0), master_P.get(i))
+            vars = (len(master_Am.get(i)), equip, master_L.get(i), axLabels, newTitle, plotDIR, (stitched_Am,0), stitched_P)
             genPlot.main(key,vars,suffix)
 
     # program executed

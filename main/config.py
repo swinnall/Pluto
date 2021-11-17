@@ -5,8 +5,8 @@
 ###################
 
 # set intended analysis type to True
-doIsoAnalysis      = False
-doEllipsAnalysis   = True
+doIsoAnalysis      = True
+doEllipsAnalysis   = False
 doChemFormulations = False
 doSLDAnalysis      = False
 doSurfaceExcess    = False
@@ -23,16 +23,16 @@ plotExpansions   = False            # plot isotherm expansions only
 plotCycles       = False            # colour code cycles within isotherm
 
 ## Plot Y vs Time
-plotPressure      = False           # plot pressure
+plotPressure      = True           # plot pressure
 plotNormInjection = False           # plot normalised pressure
 plotArea          = False           # plot percentage area
 
 ## Elasticity Analysis
-plotElasticity = True              # plots elasticity analyis
+plotElasticity = False              # plots elasticity analyis
 
 ## Other Functions
 checkT0   = True                     # ensures T0 = 0
-shiftP    = True                     # shift to P_min = 0
+shiftP    = False                     # shift to P_min = 0
 smoothIso = False                     # reduces number of points for final plot
 overplot  = False                    # not yet functional
 
@@ -41,7 +41,7 @@ plotMultiPanel = False              # split input data between subplots
 key = [(1,1)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
 
 ## Parameters
-useCycles  = [0]                     # list of cycles to be used in isotherm
+useCycles  = [0,1,2,3,4]                     # list of cycles to be used in isotherm
 nPoly      = 40                      # order of the elasticity fit
 nth        = 60                      # data reduction; take every 'nth' point
 
@@ -108,7 +108,7 @@ very_verbose = False
 ############
 
 ## Plot Types, default line plot if false
-plotWithScatter    = True
+plotWithScatter    = False
 plotLineWithMarker = False
 
 ## Marker Parameters
@@ -132,21 +132,21 @@ overrideNoP = False
 n0 = [0, 0, 0, 0]
 nf = [16, 16, 16, 16]
 
-overrideAxisLim = False
+overrideAxisLim = True
 xmin = 0
-xmax = 65
+xmax = 10700
 ymin = 0
-ymax = 1.5
+ymax = 45
 
-overrideTickLocation = False
+overrideTickLocation = True
 n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
-xTickInterval = 20              # x, y axis tick interval for P vs t plots; x is mins plot only
-yTickInterval = 0.5
+xTickInterval = 10000              # x, y axis tick interval for P vs t plots; x is mins plot only
+yTickInterval = 10
 tAxisList     = [" - pressure", " - area", " - normInjPressure"]
 
 ## Save Options
 saveAsPNG = True
-saveAsPDF = False
+saveAsPDF = True
 
 ## Colours
 colourDict = {
@@ -177,7 +177,7 @@ colourDict = {
 
 
     }
-c = colourDict.get("4")
+c = colourDict.get("3")
 
 ## Markers
 markerDict = {

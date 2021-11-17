@@ -1,4 +1,4 @@
-title=000 9-13-1016 MC3 ACMW pH and cholesterol comparison elasticity no legend
+title=202 - plasma membrane 50 ml trough test
 filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 #
 # Feb KC2 proposal isotherms
@@ -12,10 +12,10 @@ filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 #KC2-chol citrate polyA 2 cycles - 2nd cycle,Nima,2,DLin-KC2-DMA:Cholesterol,75:25,1.0,18.5E-6,KC2 Chol - Citrate with PolyA
 #
 # MC3 kibron isotherms
-100 ul h-MC3 ACMW PBS,Kibron,1,DLin-MC3-DMA,1,0.1,100.0E-6,MC3 PBS
-100 ul h-MC3 h-Chol ACMW PBS,Kibron,1,DLin-MC3-DMA,1,0.1,100.0E-6,MC3:Chol PBS
-100 ul h-MC3 ACMW Citrate,Kibron,1,DLin-MC3-DMA,1,0.1,100.0E-6,MC3 Citrate
-100 ul h-MC3 h-Chol ACMW Citrate,Kibron,1,DLin-MC3-DMA,1,0.1,100.0E-6,MC3:Chol Citrate
+#100 ul h-MC3 ACMW PBS,Kibron,1,DLin-MC3-DMA,1,0.1,100.0E-6,MC3 PBS
+#100 ul h-MC3 h-Chol ACMW PBS,Kibron,1,DLin-MC3-DMA,1,0.1,100.0E-6,MC3:Chol PBS
+#100 ul h-MC3 ACMW Citrate,Kibron,1,DLin-MC3-DMA,1,0.1,100.0E-6,MC3 Citrate
+#100 ul h-MC3 h-Chol ACMW Citrate,Kibron,1,DLin-MC3-DMA,1,0.1,100.0E-6,MC3:Chol Citrate
 #
 # PBS MC3 9-13-1016
 #Sample 07 PBS ACMW h-MC3,Nima,1,DLin-MC3-DMA,1,0.1,120.0E-6,PBS ACMW h-MC3
@@ -39,4 +39,6 @@ filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 #100 ul healthy plasma membrane,Kibron,3,POPC:POPS:Cholesterol,60:20:20,0.1,100.0E-6,POPC:POPS:Cholesterol (60:20:20)
 #100 ul cancer plasma membrane,Kibron,3,POPC:POPS:Cholesterol,45:20:35,0.1,100.0E-6,POPC:POPS:Cholesterol (45:20:35)
 #100 ul cancer plasma membrane 2,Kibron,3,POPC:POPS:Cholesterol,45:20:35,0.1,100.0E-6,POPC:POPS:Cholesterol (45:20:35)
+100 ul PBS 7-2 cancerous membrane 50 cycles test,Nima,3,POPC:POPS:Cholesterol,45:20:35,0.1,100.0E-6,50 ml Nima Trough
+#100 ul cancer plasma membrane 2,Kibron,3,POPC:POPS:Cholesterol,45:20:35,0.1,100.0E-6,120 ml Kibron Trough
 #
