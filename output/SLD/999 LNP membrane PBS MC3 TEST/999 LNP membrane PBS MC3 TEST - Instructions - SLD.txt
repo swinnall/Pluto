@@ -1,0 +1,18 @@
+title=999 LNP membrane PBS MC3 TEST
+membranes,lipidRatios,d1,d2,label
+DLin-MC3-DMA,1,10.708,3.5266,h-lipids
+d-DLin-MC3-DMA,1,10.708,3.5266,d-lipids
+
+Calculated Membrane: ['DLin-MC3-DMA']
+Average SL;  Head = 25.5270; Tail = -0.8720
+Average SLD; Head = 0.9818; Tail = -0.0085
+Thickness;   Head = 3.5266; Tail = 10.7080
+Head vol frac = 0.7665
+2-solv = 23.3542
+
+Calculated Membrane: ['d-DLin-MC3-DMA']
+Average SL;  Head = 25.5270; Tail = 644.5480
+Average SLD; Head = 0.9818; Tail = 6.2577
+Thickness;   Head = 3.5266; Tail = 10.7080
+Head vol frac = 0.7665
+2-solv = 23.3542
