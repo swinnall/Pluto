@@ -35,7 +35,7 @@ def importSampleInfo(info):
             time_ID.append({'fname': info[i][0], 'refname': info[i][1], 'label': info[i][2]})
             nTime += 1
 
-    return nFiles, AOI_ID, nAOI, time_ID, nTime
+    return AOI_ID, nAOI, time_ID, nTime
 
 
 
@@ -130,7 +130,7 @@ def main(info, title, inputDIR, outputPath):
 
 
     # user input & sample instructions information
-    nFiles, AOI_ID, nAOI, time_ID, nTime = importSampleInfo(info)
+    AOI_ID, nAOI, time_ID, nTime = importSampleInfo(info)
 
 
     # process data
@@ -170,25 +170,25 @@ def main(info, title, inputDIR, outputPath):
     if config.plotAOIpsi == True:
         axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Psi$ (\N{DEGREE SIGN})"}
         suffix   = " - psi AOI"
-        vars     = (nFiles, equip, label_AOI, axLabels, title, outputPath, (AOI,0), psi_AOI)
+        vars     = (nAOI, equip, label_AOI, axLabels, title, outputPath, (AOI,0), psi_AOI)
         genPlot.main(key,vars,suffix)
 
     if config.plotAOIdelta == True:
         axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Delta$ (\N{DEGREE SIGN})"}
         suffix   = " - delta AOI"
-        vars     = (nFiles, equip, label_AOI, axLabels, title, outputPath, (AOI,0), delta_AOI)
+        vars     = (nAOI, equip, label_AOI, axLabels, title, outputPath, (AOI,0), delta_AOI)
         genPlot.main(key,vars,suffix)
 
     if config.plotTimePsi == True:
         axLabels = {"x": "Time (s)", "y": "$\Psi$ (\N{DEGREE SIGN})"}
         suffix   = " - psi Time"
-        vars     = (nFiles, equip, label_t, axLabels, title, outputPath, (t,0), psi_t)
+        vars     = (nTime, equip, label_t, axLabels, title, outputPath, (t,0), psi_t)
         genPlot.main(key,vars,suffix)
 
     if config.plotTimeDelta == True:
         axLabels = {"x": "Time (s)", "y": "$\Delta_{Lipids}$ - $\Delta_{Buffer}$ (\N{DEGREE SIGN})"}
         suffix   = " - delta Time"
-        vars     = (nFiles, equip, label_t, axLabels, title, outputPath, (t,0), delta_t)
+        vars     = (nTime, equip, label_t, axLabels, title, outputPath, (t,0), delta_t)
         genPlot.main(key,vars,suffix)
 
 
