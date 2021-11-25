@@ -1,0 +1,18 @@
+title=105 - MIT hMC3 PBS7-2 test
+filename,tag,label
+#
+#Test Samples - PBS
+#popc_pops_chol_PBS_AOI_p30_14DEC_epd,AOI,PBS at P = 30 mN/m
+#popc_pops_chol_PBS_t_14DEC_epd,t,PBS
+#just_PBS_t_14DEC_epd,ref,Null
+#
+#Test Samples - MilliQ
+#popc_pops_chol_AoI_p30_epd,AOI,MilliQ at P = 30 mN/m
+#popc_pops_chol_isotherm_2_epd,MilliQ
+#water_t_51_23_nov_20_epd,ref,Null
+#
+# Manual Injection Trough - LNP membrane system
+PBS7_2_hMC3_polyA_24Nov21_epd,t,h-MC3 PBS pH 7.2
+PBS7_2_Ref_24Nov21_epd,ref,Null
+#
+# 

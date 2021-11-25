@@ -2,6 +2,7 @@
 
 import sys
 import csv
+import re
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
@@ -22,24 +23,19 @@ def importSampleInfo(info):
     # create ID and count structures for later parsing
     AOI_ID  = []; nAOI  = 0
     time_ID = []; nTime = 0
-    ref_ID  = []; nRef  = 0
 
     # separate input data into relevant ID lists of dicts
     for i in range(nHeaders,nHeaders+nFiles):
 
-        if info[i][1] in ["AOI", "AoI", "aoi"]:
+        if info[i][1].upper() == "NULL":
             AOI_ID.append({'fname': info[i][0], 'label': info[i][2]})
             nAOI += 1
 
-        if info[i][1] in ["T", "t", "Time", 'time']:
-            time_ID.append({'fname': info[i][0], 'label': info[i][2]})
+        else:
+            time_ID.append({'fname': info[i][0], 'refname': info[i][1], 'label': info[i][2]})
             nTime += 1
 
-        if info[i][1] in ["Ref", "ref"]:
-            ref_ID.append({'fname': info[i][0], 'label': info[i][2]})
-            nRef += 1
-
-    return nFiles, AOI_ID, nAOI, time_ID, nTime, ref_ID, nRef
+    return nFiles, AOI_ID, nAOI, time_ID, nTime
 
 
 
@@ -84,52 +80,42 @@ def importAOIData(inputDIR, AOI_ID, nAOI):
 
 
 
-def importTimeData(inputDIR, time_ID, nTime, ref_ID, nRef):
+def importTimeData(inputDIR, time_ID, nTime):
 
     # initialise variables for time plots
+    psi_ref   = []
+    delta_ref = []
     t         = {new_list: [] for new_list in range(nTime)}
     psi_t     = {new_list: [] for new_list in range(nTime)}
     delta_t   = {new_list: [] for new_list in range(nTime)}
     label_t   = {new_list: 0 for new_list in range(nTime)}
 
-    psi_ref   = {new_list: [] for new_list in range(nRef)}
-    delta_ref = {new_list: [] for new_list in range(nRef)}
 
-    # averaged reference values for system i->nTime
-    avRefPsi = []
-    avRefDel = []
+    for i in range(nTime):
 
-
-    # extract reference data
-    for i in range(nRef):
-
-        fileDIR = inputDIR + '/' + ref_ID[i].get('fname') +".txt"
+        ## Extract reference data
+        fileDIR = inputDIR + '/' + time_ID[i].get('refname') +".txt"
         ref_df  = getFile(fileDIR)
 
-        # extract data; subtract ref data from lipid measurements
+        # extract raw ref data from dataframe
         for j in range(0,len(ref_df)):
-            t[i]        .append(float(ref_df[j][6]))
-            psi_ref[i]  .append(float(ref_df[j][0]))
-            delta_ref[i].append(float(ref_df[j][1]))
+            psi_ref  .append(float(ref_df[j][0]))
+            delta_ref.append(float(ref_df[j][1]))
+
+        # average reference values; each list ele is an averaged ref
+        avRefPsi = mean(psi_ref)
+        avRefDel = mean(delta_ref)
 
 
-    # average reference values
-    for i in range(nTime):
-        avRefPsi.append(mean(psi_ref.get(i)))
-        avRefDel.append(mean(delta_ref.get(i)))
-
-
-    # extract time series data
-    for i in range(nTime):
-
+        ## Extract time series data
         fileDIR = inputDIR + '/' + time_ID[i].get('fname') +".txt"
         time_df = getFile(fileDIR)
 
         # subtract ref data from these to give lipid-only data
         for j in range(0,len(time_df)):
             t[i]      .append(float(time_df[j][6]))
-            psi_t[i]  .append(float(time_df[j][0]) - avRefPsi[i])
-            delta_t[i].append(float(time_df[j][1]) - avRefDel[i])
+            psi_t[i]  .append(float(time_df[j][0]) - avRefPsi) ## for now subtract psi ref
+            delta_t[i].append(float(time_df[j][1]) - avRefDel) ## comment for doing buffer exchange
 
         label_t[i] = time_ID[i].get('label')
 
@@ -144,7 +130,7 @@ def main(info, title, inputDIR, outputPath):
 
 
     # user input & sample instructions information
-    nFiles, AOI_ID, nAOI, time_ID, nTime, ref_ID, nRef = importSampleInfo(info)
+    nFiles, AOI_ID, nAOI, time_ID, nTime = importSampleInfo(info)
 
 
     # process data
@@ -170,7 +156,7 @@ def main(info, title, inputDIR, outputPath):
             sys.exit()
 
         # import data
-        t, psi_t, delta_t, label_t = importTimeData(inputDIR, time_ID, nTime, ref_ID, nRef)
+        t, psi_t, delta_t, label_t = importTimeData(inputDIR, time_ID, nTime)
 
         # converting delta variables to degrees
         for i in range(nTime):

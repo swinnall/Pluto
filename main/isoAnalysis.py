@@ -498,23 +498,24 @@ def main(info, title, inputDIR, plotDIR):
         Am[i] = Am_list
 
         # pass list, get a dict of cycles, store each dict in a masterDict
-        cycleAm, cycleP, cycleL = findCycles(Am_list, P_list, l.get(i))
-        master_Am[i] = cycleAm
-        master_P[i]  = cycleP
-        master_L[i]  = cycleL
+        if config.plotIsotherm == True or config.plotCompressions == True or config.plotExpansions == True or config.plotCycles == True:
+            cycleAm, cycleP, cycleL = findCycles(Am_list, P_list, l.get(i))
+            master_Am[i] = cycleAm
+            master_P[i]  = cycleP
+            master_L[i]  = cycleL
 
-        # selects cycles based on config input
-        # iterate along each chosen cycle and list of values within each cycle
+            # selects cycles based on config input
+            # iterate along each chosen cycle and list of values within each cycle
 
-        for cycleNum in config.useCycles:
+            for cycleNum in config.useCycles:
 
-            # append every value to file i of stichedX
-            for value in range(len(cycleAm.get(cycleNum))):
-                stitched_Am[i].append( cycleAm.get(cycleNum)[value] )
-                stitched_P[i].append( cycleP.get(cycleNum)[value] )
+                # append every value to file i of stichedX
+                for value in range(len(cycleAm.get(cycleNum))):
+                    stitched_Am[i].append( cycleAm.get(cycleNum)[value] )
+                    stitched_P[i].append( cycleP.get(cycleNum)[value] )
 
-        for i in range(len(stitched_Am)):
-            stitched_t[i].append(t[i])
+                for i in range(len(stitched_Am)):
+                    stitched_t[i].append(t[i])
 
 
     ## Specific calculation functions

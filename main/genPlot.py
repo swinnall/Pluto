@@ -187,7 +187,7 @@ def plot(key, vars, suffix):
 
                 init_xticks = np.arange(xmin, xmax+1, step=600)
                 ax.set_xticks(init_xticks)
-                ax.set_yticks(np.arange(0, ymax+1, step=config.yTickInterval))
+                ax.set_yticks(np.arange(config.ymin, ymax+config.yAxisMaxAdj, step=config.yTickInterval))
 
                 new_xticks = [i for i in range(0,int(round(xmax/60,-1))+config.xTickInterval,config.xTickInterval)]
                 plt.xticks(init_xticks, new_xticks)

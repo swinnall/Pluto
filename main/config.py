@@ -6,9 +6,9 @@
 
 # set intended analysis type to True
 doIsoAnalysis      = False
-doEllipsAnalysis   = False
+doEllipsAnalysis   = True
 doChemFormulations = False
-doSLDAnalysis      = True
+doSLDAnalysis      = False
 doSurfaceExcess    = False
 
 
@@ -32,7 +32,7 @@ plotArea          = False           # plot percentage area
 plotElasticity = False              # plots elasticity analyis
 
 ## Other Functions
-checkT0   = True                     # ensures T0 = 0
+checkT0   = False                     # ensures T0 = 0
 shiftP    = False                     # shift to P_min = 0
 smoothIso = False                     # reduces number of points for final plot
 overplot  = False                    # not yet functional
@@ -57,7 +57,7 @@ plotAOIdelta = False
 
 # plot psi and/or delta against time
 plotTimePsi   = False
-plotTimeDelta = False
+plotTimeDelta = True
 
 
 #################
@@ -123,27 +123,27 @@ legend_fs_reduction = 1
 
 ## Axis Adjustment Parameters
 setX_AxInt  = -1
-setY_AxInt  = 3
+setY_AxInt  = 0
 xAxisMinAdj = 0
 xAxisMaxAdj = 0
 yAxisMaxAdj = 1
 
 ## Manual Override Parameters
 overrideNoP = False
-n0 = [0, 0, 0, 0]
-nf = [16, 16, 16, 16]
+n0 = [0, 2400, 0, 0]
+nf = [600, 17000, 16, 16]
 
 overrideAxisLim = True
 xmin = 0
-xmax = 10700
-ymin = 0
-ymax = 45
+xmax = 2600
+ymin = -2
+ymax = 5
 
-overrideTickLocation = True
-n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
-xTickInterval = 10000              # x, y axis tick interval for P vs t plots; x is mins plot only
-yTickInterval = 10
-tAxisList     = [" - pressure", " - area", " - normInjPressure"]
+overrideTickLocation = False
+n_xticks      = 10               # number of x axis ticks in time plots (s); [n-1]
+xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
+yTickInterval = 2
+tAxisList     = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time"]
 
 ## Save Options
 saveAsPNG = True
