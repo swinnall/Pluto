@@ -5,8 +5,8 @@
 ###################
 
 # set intended analysis type to True
-doIsoAnalysis      = False
-doEllipsAnalysis   = True
+doIsoAnalysis      = True
+doEllipsAnalysis   = False
 doChemFormulations = False
 doSLDAnalysis      = False
 doSurfaceExcess    = False
@@ -56,8 +56,8 @@ plotAOIpsi   = False
 plotAOIdelta = False
 
 # plot psi and/or delta against time
-plotTimePsi   = False
-plotTimeDelta = True
+plotTimePsi   = True
+plotTimeDelta = False
 
 
 #################
@@ -126,23 +126,23 @@ setX_AxInt  = -1
 setY_AxInt  = 0
 xAxisMinAdj = 0
 xAxisMaxAdj = 0
-yAxisMaxAdj = 1
+yAxisMaxAdj = 0.0001
 
 ## Manual Override Parameters
 overrideNoP = False
 n0 = [0, 2400, 0, 0]
 nf = [600, 17000, 16, 16]
 
-overrideAxisLim = True
+overrideAxisLim = False
 xmin = 0
-xmax = 2600
-ymin = -2
-ymax = 5
+xmax = 10000
+ymin = 0.0
+ymax = 0.003
 
 overrideTickLocation = False
 n_xticks      = 10               # number of x axis ticks in time plots (s); [n-1]
 xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
-yTickInterval = 2
+yTickInterval = 10
 tAxisList     = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time"]
 
 ## Save Options

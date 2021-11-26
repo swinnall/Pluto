@@ -175,7 +175,7 @@ def plot(key, vars, suffix):
                 # set axis ticks
                 init_xticks = np.arange(xmin, xmax+1, step=(3600))
                 ax.set_xticks(init_xticks)
-                ax.set_yticks(np.arange(0, ymax+1, step=config.yTickInterval))
+                ax.set_yticks(np.arange(config.ymin, ymax+config.yAxisMaxAdj, step=config.yTickInterval))
 
                 # overwrite tick numbers
                 new_xticks = [i for i in range(0,int(xmax/3600)+1)]
@@ -201,7 +201,7 @@ def plot(key, vars, suffix):
 
             elif config.overrideTickLocation == True:
                 ax.set_xticks(np.arange(xmin, xmax+1, step=config.xTickInterval))
-                ax.set_yticks(np.arange(ymin, ymax+1, step=config.yTickInterval))
+                ax.set_yticks(np.arange(config.ymin, ymax+config.yAxisMaxAdj, step=config.yTickInterval))
 
             else: pass
 

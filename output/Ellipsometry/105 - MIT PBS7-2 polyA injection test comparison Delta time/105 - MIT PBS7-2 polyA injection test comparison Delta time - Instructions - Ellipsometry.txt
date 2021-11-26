@@ -1,6 +1,6 @@
 ## Remember: Put analysis type in title to prevent overwriting; e.g. Psi AOI
 ##
-title=105 - MIT PBS7-2 polyA injection test comparison Delete Me 
+title=105 - MIT PBS7-2 polyA injection test comparison Delta time
 filename,refName,label
 #
 #Test popc_pops_chol
