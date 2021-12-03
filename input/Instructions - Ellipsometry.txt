@@ -1,6 +1,6 @@
 ## Remember: Put analysis type in title to prevent overwriting; e.g. Psi AOI
 ##
-title=105 - MIT PBS7-2 polyA injection test comparison Delete Me 
+title=105 - MIT PBS7-4 polyA Sample1 comparison Delta-t
 filename,refName,label
 #
 #Test popc_pops_chol
@@ -10,9 +10,15 @@ filename,refName,label
 #popc_pops_chol_PBS_t_14DEC_epd,just_PBS_t_14DEC_epd,PBS
 #
 # Manual Injection Trough - LNP membrane system
-PBS7_2_hMC3_polyA_24Nov21_epd,PBS7_2_Ref_24Nov21_epd,Just injection - hMC3 PBS pH 7.2
-PBS7_2_hMC3_polyA_26Nov21_epd,PBS7_2_Ref_26Nov21_epd,Extract & inject - hMC3 PBS pH 7.2
+PBS7_2_hMC3_polyA_24Nov21_epd,PBS7_2_Ref_24Nov21_epd,100 ul Test Just Inject - pH 7.2
+PBS7_2_hMC3_polyA_26Nov21_epd,PBS7_2_Ref_26Nov21_epd,100 ul Test Extract&Inject - pH 7.2
+100ul_sample1_rep0_01Dec21_epd,PBS7_4_Ref_01Dec21_epd,100 ul Sample1 Rep0
+100ul_sample1_rep1_01Dec21_epd,PBS7_4_Ref2_01Dec21_epd,100 ul Sample1 Rep1
+134ul_sample1_rep0_29Nov_epd,PBS7_4_Ref_29Nov21_epd,134 ul Sample1 Rep0
+134ul_sample1_rep1_30Nov21_epd,PBS7_4_Ref_30Nov21_epd,134 ul Sample1 Rep1
 #
-# Manual Injection Trough - Buffer Exchange Test
+# Manual Injection Trough Tests
 #PBS7_2_buffer_exchange_epd,PBS7_2_Ref_25Nov21_epd,PBS pH 7.2
+#milliQ_evapTest_29Nov_epd,PBS7_4_Ref_29Nov21_epd,MilliQ RT (night)
+#milliQ_evapTest_30deg_30Nov_epd,PBS7_4_Ref_29Nov21_epd,MilliQ 30 deg
 #

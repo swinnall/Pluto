@@ -115,7 +115,7 @@ def importTimeData(inputDIR, time_ID, nTime):
         for j in range(0,len(time_df)):
             t[i]      .append(float(time_df[j][6]))
             psi_t[i]  .append(float(time_df[j][0]) - avRefPsi) ## for now subtract psi ref
-            delta_t[i].append(float(time_df[j][1]) - avRefDel) ## comment for doing buffer exchange
+            delta_t[i].append(float(time_df[j][1]) - avRefDel) ## comment for bare interface
 
         label_t[i] = time_ID[i].get('label')
 

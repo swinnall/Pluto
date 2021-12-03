@@ -1,0 +1,7 @@
+title=100 - h-MC3 3ml
+lipidType,lipidAmount,stockConc,weightTot=0.3,finConc=0.1,ratioType=ratio
+DLin-MC3-DMA,75,1.0
+
+Calculated Quantities:
+300.00 uL of DLin-MC3-DMA
+2700.00 uL of chloroform

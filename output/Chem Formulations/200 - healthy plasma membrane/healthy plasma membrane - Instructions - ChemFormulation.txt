@@ -1,0 +1,11 @@
+title=healthy plasma membrane
+lipidType,lipidAmount,stockConc,weightTot=0.2,finConc=0.1,ratioType=ratio
+POPC,60,1.0
+POPS,20,1.0
+Cholesterol,20,1.0
+
+Calculated Quantities:
+132.15 uL of POPC
+45.44 uL of POPS
+22.41 uL of Cholesterol
+1800.00 uL of chloroform

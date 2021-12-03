@@ -36,9 +36,15 @@ filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 #Sample 17 Citrate D2O d-MC3,Nima,1,d-DLin-MC3-DMA,1,0.1,120.0E-6,Citrate D2O d-MC3
 #
 # Manual Injection Trough Ellipsometry Samples
+pressure - 100 ul hMC3 PBS 7-2 polyA inj prelim test 24Nov,Nima,1,DLin-MC3-DMA,1,0.1,100.0E-6,100 ul Test Just Inject - pH 7.2
+pressure - 100 ul hMC3 PBS 7-2 polyA inj prelim test 26Nov,Nima,1,DLin-MC3-DMA,1,0.1,100.0E-6,100 ul Test Extract&Inject - pH 7.2
+pressure - 100 ul sample1 repeat0 01Dec,Nima,1,DLin-MC3-DMA,1,0.1,134.0E-6,100 ul Sample1 Rep0
+pressure - 100 ul sample1 repeat1 01Dec,Nima,1,DLin-MC3-DMA,1,0.1,134.0E-6,100 ul Sample1 Rep1
+pressure - 134 ul sample1 repeat0 29Nov,Nima,1,DLin-MC3-DMA,1,0.1,134.0E-6,134 ul Sample1 Rep0
+pressure - 134 ul sample1 repeat1 30Nov,Nima,1,DLin-MC3-DMA,1,0.1,134.0E-6,134 ul Sample1 Rep1
+#pressure - milliQ evapTest 29Nov,Nima,1,DLin-MC3-DMA,1,0.1,0.01E-6,MilliQ RT (night)
+#pressure - milliQ evapTest 30deg 30Nov,Nima,1,DLin-MC3-DMA,1,0.1,0.01E-6,MilliQ 30 deg
 #PBS 7-2 buffer exchange test,Nima,1,DLin-MC3-DMA,1,1,1,PBS H2O pH 7.2
-pressure - 100 ul hMC3 PBS 7-2 polyA inj prelim test 24Nov,Nima,1,DLin-MC3-DMA,1,0.1,100.0E-6,Inject - PBS H2O pH 7.2 h-MC3
-pressure - 100 ul hMC3 PBS 7-2 polyA inj prelim test 26Nov,Nima,1,DLin-MC3-DMA,1,0.1,100.0E-6,Extract & Inject - PBS H2O pH 7.2 h-MC3
 #
 # Plasma membrane isotherms
 #100 ul healthy plasma membrane,Kibron,3,POPC:POPS:Cholesterol,60:20:20,0.1,100.0E-6,POPC:POPS:Cholesterol (60:20:20)

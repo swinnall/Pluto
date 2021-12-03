@@ -1,5 +1,3 @@
-title=cancerous plasma membrane
-lipidType,lipidAmount,stockConc,weightTot=0.2,finConc=0.1,ratioType=ratio
-POPC,45,1.0
-POPS,20,1.0
-Cholesterol,35,1.0
+title=100 - h-MC3 3ml
+lipidType,lipidAmount,stockConc,weightTot=0.3,finConc=0.1,ratioType=ratio
+DLin-MC3-DMA,75,1.0

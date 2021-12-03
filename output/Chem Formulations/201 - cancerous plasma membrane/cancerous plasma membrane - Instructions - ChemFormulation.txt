@@ -1,0 +1,11 @@
+title=cancerous plasma membrane
+lipidType,lipidAmount,stockConc,weightTot=0.2,finConc=0.1,ratioType=ratio
+POPC,45,1.0
+POPS,20,1.0
+Cholesterol,35,1.0
+
+Calculated Quantities:
+107.87 uL of POPC
+49.45 uL of POPS
+42.68 uL of Cholesterol
+1800.00 uL of chloroform
