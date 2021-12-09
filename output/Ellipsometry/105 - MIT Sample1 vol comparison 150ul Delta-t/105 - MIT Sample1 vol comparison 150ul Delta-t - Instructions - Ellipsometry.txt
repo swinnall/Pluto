@@ -1,6 +1,6 @@
 ## Remember: Put analysis type in title to prevent overwriting; e.g. Psi AOI
 ##
-title=105 - MIT Sample1 vol comparison Delta-t
+title=105 - MIT Sample1 vol comparison 150ul Delta-t
 filename,refName,label
 #
 #Test popc_pops_chol
@@ -13,10 +13,10 @@ filename,refName,label
 #PBS7_2_hMC3_polyA_24Nov21_epd,PBS7_2_Ref_24Nov21_epd,100 ul Test Just Inject - pH 7.2
 #PBS7_2_hMC3_polyA_26Nov21_epd,PBS7_2_Ref_26Nov21_epd,100 ul Test Extract&Inject - pH 7.2
 #100ul_sample1_rep0_01Dec21_epd,PBS7_4_Ref_01Dec21_epd,100 ul Sample1 Rep0
-100ul_sample1_rep1_01Dec21_epd,PBS7_4_Ref2_01Dec21_epd,100 ul Sample1 Rep1
+#100ul_sample1_rep1_01Dec21_epd,PBS7_4_Ref2_01Dec21_epd,100 ul Sample1 Rep1
 #134ul_sample1_rep0_29Nov_epd,PBS7_4_Ref_29Nov21_epd,134 ul Sample1 Rep0
-134ul_sample1_rep1_30Nov21_epd,PBS7_4_Ref_30Nov21_epd,134 ul Sample1 Rep1
-#150ul_sample1_rep0_07Dec21_epd,PBS7_4_Ref_07Dec21_epd,150 ul Sample1 Rep0 (3 ml/min)
+#134ul_sample1_rep1_30Nov21_epd,PBS7_4_Ref_30Nov21_epd,134 ul Sample1 Rep1
+150ul_sample1_rep0_07Dec21_epd,PBS7_4_Ref_07Dec21_epd,150 ul Sample1 Rep0 (3 ml/min)
 150ul_sample1_rep1_07Dec21_epd,PBS7_4_Ref2_07Dec21_epd,150 ul Sample1 Rep1 (12 ml/min)
 #
 # Manual Injection Trough Tests

@@ -5,8 +5,8 @@
 ###################
 
 # set intended analysis type to True
-doIsoAnalysis      = True
-doEllipsAnalysis   = False
+doIsoAnalysis      = False
+doEllipsAnalysis   = True
 doChemFormulations = False
 doSLDAnalysis      = False
 doSurfaceExcess    = False
@@ -113,7 +113,7 @@ plotWithScatter    = False
 plotLineWithMarker = False
 
 ## Marker Parameters
-lw            = 2
+lw            = 1
 scatterSize   = 50
 markEdgeWidth = 1
 
@@ -136,13 +136,13 @@ nf = [600, 17000, 16, 16]
 overrideAxisLim = True
 xmin = 0
 xmax = 9000
-ymin = 0
-ymax = 32
+ymin = 2
+ymax = 6
 
 overrideTickLocation = True
-n_xticks      = 10               # number of x axis ticks in time plots (s); [n-1]
+n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
 xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
-yTickInterval = 5
+yTickInterval = 1
 tAxisList     = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time"]
 
 ## Save Options
