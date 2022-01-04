@@ -263,6 +263,9 @@ def plot(key, vars, suffix):
         fig.text(-0.03, 0.5, axLabels.get("y"), va='center', rotation='vertical', fontsize=fs, fontweight='bold')
 
 
+    # plot vertical line
+    plt.axvline(900, 0, 6, label='pyplot vertical line', c='r')
+
     # tight layout function
     plt.tight_layout()
     fig.subplots_adjust(wspace=0.05, hspace=0.05)

@@ -1,4 +1,4 @@
-title=105 - MIT Sample1 vol comparison CHECKNAME
+title=105 - MIT Sample2 comparison
 filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 #
 # Feb KC2 proposal isotherms
@@ -42,7 +42,10 @@ filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
 #pressure - 100 ul sample1 repeat1 01Dec,Nima,1,DLin-MC3-DMA,1,0.1,134.0E-6,100 ul Sample1 Rep1
 #pressure - 134 ul sample1 repeat0 29Nov,Nima,1,DLin-MC3-DMA,1,0.1,134.0E-6,134 ul Sample1 Rep0
 #pressure - 134 ul sample1 repeat1 30Nov,Nima,1,DLin-MC3-DMA,1,0.1,134.0E-6,134 ul Sample1 Rep1
-#pressure - 150 ul sample1 repeat0 07Dec,Nima,1,DLin-MC3-DMA,1,0.1,134.0E-6,150 ul Sample1 Rep0
+#pressure - 134 ul sample1 repeat2 08Dec,Nima,1,DLin-MC3-DMA,1,0.1,134.0E-6,134 ul Sample1 Rep2
+#pressure - 150 ul sample1 repeat0 07Dec,Nima,1,DLin-MC3-DMA,1,0.1,150.0E-6,150 ul Sample1 Rep0
+pressure - 130 ul sample2 repeat0 09Dec,Nima,1,DLin-MC3-DMA,1,0.1,130.0E-6,150 ul Sample2 Rep0
+pressure - 130 ul sample2 repeat1 09Dec,Nima,1,DLin-MC3-DMA,1,0.1,130.0E-6,150 ul Sample2 Rep1
 #pressure - milliQ evapTest 29Nov,Nima,1,DLin-MC3-DMA,1,0.1,0.01E-6,MilliQ RT (night)
 #pressure - milliQ evapTest 30deg 30Nov,Nima,1,DLin-MC3-DMA,1,0.1,0.01E-6,MilliQ 30 deg
 #PBS 7-2 buffer exchange test,Nima,1,DLin-MC3-DMA,1,1,1,PBS H2O pH 7.2

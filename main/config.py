@@ -113,7 +113,7 @@ plotWithScatter    = False
 plotLineWithMarker = False
 
 ## Marker Parameters
-lw            = 1
+lw            = 3
 scatterSize   = 50
 markEdgeWidth = 1
 
@@ -136,7 +136,7 @@ nf = [600, 17000, 16, 16]
 overrideAxisLim = True
 xmin = 0
 xmax = 9000
-ymin = 2
+ymin = 0
 ymax = 6
 
 overrideTickLocation = True
