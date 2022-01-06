@@ -14,36 +14,23 @@ import sldAnalysis
 import SurfaceExcess
 
 
-def modSelection():
+def modSelection(analysisOptions):
+    print([i for i in range(len(analysisOptions))])
+    # ask user to pick one of the analysisOptions
+    print("Analysis Options: %s" %analysisOptions)
 
-    count = 0
+    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-4) or 'q' to exit:\n  ")
 
-    if config.doIsoAnalysis == True:
-        analysisType = 'Isotherm'
-        count += 1
-
-    if config.doEllipsAnalysis == True:
-        analysisType = 'Ellipsometry'
-        count += 1
-
-    if config.doChemFormulations == True:
-        analysisType = 'chemFormulations'
-        count += 1
-
-    if config.doSLDAnalysis == True:
-        analysisType = 'SLD'
-        count += 1
-
-    if config.doSurfaceExcess == True:
-        analysisType = 'SurfaceExcess'
-        count += 1
-
-
-    if count > 1:
-        print("Error: More than one analysis type selected.")
+    if analysisChoice == 'q':
+        print("Session closed.")
         sys.exit()
-    elif count == 0:
-        print("Error: No analysis type selected.")
+
+    elif analysisChoice in [str(i) for i in range(len(analysisOptions))]:
+        analysisType   = analysisOptions[int(analysisChoice)]
+        print("You picked %s.py\n" %analysisType)
+
+    else:
+        print("Not a valid response. Session closed.")
         sys.exit()
 
 
@@ -60,11 +47,7 @@ def modSelection():
 
 
 
-def main():
-
-    # get name of instructions file
-    analysisType, fname, source = modSelection()
-
+def organisePaths(analysisType, fname, source):
 
     # read instructions
     with open(source, newline = '') as f:
@@ -120,23 +103,40 @@ def main():
     except:
         print("Instructions Copying Error:\n  Error occurred while copying file.")
 
+    return info, title, inputPath, outputPath
 
-    # calls analysis module
-    if config.doIsoAnalysis == True:
-        isoAnalysis.main(info, title, inputPath, outputPath)
 
-    if config.doEllipsAnalysis == True:
-        ellipsAnalysis.main(info, title, inputPath, outputPath)
 
-    if config.doChemFormulations == True:
-        chemFormulations.main(info, new_name)
 
-    if config.doSLDAnalysis == True:
-        sldAnalysis.main(info, new_name)
+def main():
 
-    if config.doSurfaceExcess == True:
-        SurfaceExcess.main(info, title, inputPath, outputPath)
+    analysisOptions = ['isoAnalysis','ellipsAnalysis','chemFormulations',      \
+                        'sldAnalysis','SurfaceExcess']
 
+    PlutoRunning = True
+    while PlutoRunning:
+
+        # get name of instructions file
+        analysisType, fname, source = modSelection(analysisOptions)
+
+        # get file and path information
+        info, title, inputPath, outputPath = organisePaths(analysisType, fname, source)
+
+        # calls analysis module
+        if analysisType == analysisOptions[0]:
+            isoAnalysis.main(info, title, inputPath, outputPath)
+
+        if analysisType == analysisOptions[1]:
+            ellipsAnalysis.main(info, title, inputPath, outputPath)
+
+        if analysisType == analysisOptions[2]:
+            chemFormulations.main(info, new_name)
+
+        if analysisType == analysisOptions[3]:
+            sldAnalysis.main(info, new_name)
+
+        if analysisType == analysisOptions[4]:
+            SurfaceExcess.main(info, title, inputPath, outputPath)
 
     return
 

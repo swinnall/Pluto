@@ -1,16 +1,5 @@
 " Module that defines global variables for Pluto"
 
-####################
-# Analysis Module #
-###################
-
-# set intended analysis type to True
-doIsoAnalysis      = True
-doEllipsAnalysis   = False
-doChemFormulations = False
-doSLDAnalysis      = False
-doSurfaceExcess    = False
-
 
 ################
 # IAP Analysis #
@@ -107,9 +96,14 @@ very_verbose = False
 # Plotting #
 ############
 
-def plotParameters():
+analysisOptions = ['isoAnalysis','ellipsAnalysis','chemFormulations',          \
+                    'sldAnalysis','SurfaceExcess']
 
-    if doIsoAnalysis == True:
+analysisType = analysisOptions[0]
+
+def plotParameters(analysisOptions, analysisType):
+
+    if analysisType == analysisOptions[0]:
 
         ## Plot Types, default line plot if false
         plotWithScatter    = False
@@ -149,7 +143,8 @@ def plotParameters():
 
 
 
-    elif doEllipsAnalysis == True:
+
+    elif analysisType == analysisOptions[1]:
 
         ## Plot Types, default line plot if false
         plotWithScatter    = False
@@ -187,7 +182,7 @@ def plotParameters():
         xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
         yTickInterval = 1
 
-    elif doSurfaceExcess == True:
+    elif analysisType == analysisOptions[4]:
 
         ## Plot Types, default line plot if false
         plotWithScatter    = False
@@ -235,7 +230,7 @@ def plotParameters():
 plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,           \
  fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj, xAxisMaxAdj,    \
  yAxisMaxAdj, overrideNoP, n0, nf, overrideAxisLim, xmin, xmax, ymin,          \
- ymax, overrideTickLocation, n_xticks, xTickInterval, yTickInterval = plotParameters()
+ ymax, overrideTickLocation, n_xticks, xTickInterval, yTickInterval = plotParameters(analysisOptions, analysisType)
 
 
 # List of plot types that use the time axis
@@ -369,9 +364,9 @@ lipidMolVol = {
 
 # dict of input instructions names and output file names
 pathNames = {
-    "Isotherm": ('Instructions - Isotherm','Isotherm'),
-    "Ellipsometry": ('Instructions - Ellipsometry','Ellipsometry'),
+    "isoAnalysis": ('Instructions - Isotherm','Isotherm'),
+    "ellipsAnalysis": ('Instructions - Ellipsometry','Ellipsometry'),
     "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),
-    "SLD": ('Instructions - SLD','SLD'),
+    "sldAnalysis": ('Instructions - SLD','SLD'),
     "SurfaceExcess": ('Instructions - SurfaceExcess', 'Surface Excess'),
     }
