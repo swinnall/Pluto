@@ -264,7 +264,7 @@ def plot(key, vars, suffix):
 
 
     # plot vertical line
-    plt.axvline(900, 0, 6, label='pyplot vertical line', c='r')
+    #plt.axvline(900, 0, 6, label='pyplot vertical line', c='r')
 
     # tight layout function
     plt.tight_layout()

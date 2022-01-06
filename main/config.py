@@ -5,12 +5,11 @@
 ###################
 
 # set intended analysis type to True
-doIsoAnalysis      = False
-doEllipsAnalysis   = True
+doIsoAnalysis      = True
+doEllipsAnalysis   = False
 doChemFormulations = False
 doSLDAnalysis      = False
 doSurfaceExcess    = False
-
 
 
 ################
@@ -108,42 +107,139 @@ very_verbose = False
 # Plotting #
 ############
 
-## Plot Types, default line plot if false
-plotWithScatter    = False
-plotLineWithMarker = False
+def plotParameters():
 
-## Marker Parameters
-lw            = 3
-scatterSize   = 50
-markEdgeWidth = 1
+    if doIsoAnalysis == True:
 
-## Font Size
-fs                  = 14
-legend_fs_reduction = 5
+        ## Plot Types, default line plot if false
+        plotWithScatter    = False
+        plotLineWithMarker = False
 
-## Axis Adjustment Parameters
-setX_AxInt  = -1
-setY_AxInt  = 0
-xAxisMinAdj = 0
-xAxisMaxAdj = 0
-yAxisMaxAdj = 0.0000001
+        ## Marker Parameters
+        lw            = 3
+        scatterSize   = 50
+        markEdgeWidth = 1
 
-## Manual Override Parameters
-overrideNoP = False
-n0 = [0, 2400, 0, 0]
-nf = [600, 17000, 16, 16]
+        ## Font Size
+        fs                  = 14
+        legend_fs_reduction = 5
 
-overrideAxisLim = True
-xmin = 0
-xmax = 9000
-ymin = 0
-ymax = 6
+        ## Axis Adjustment Parameters
+        setX_AxInt  = -1
+        setY_AxInt  = 0
+        xAxisMinAdj = 0
+        xAxisMaxAdj = 0
+        yAxisMaxAdj = 0.0000001
 
-overrideTickLocation = True
-n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
-xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
-yTickInterval = 1
-tAxisList     = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time"]
+        ## Manual Override Parameters
+        overrideNoP = False
+        n0 = [0, 2400, 0, 0]
+        nf = [600, 17000, 16, 16]
+
+        overrideAxisLim = True
+        xmin = 0
+        xmax = 9000
+        ymin = 0
+        ymax = 30
+
+        overrideTickLocation = True
+        n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
+        xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
+        yTickInterval = 5
+
+
+
+    elif doEllipsAnalysis == True:
+
+        ## Plot Types, default line plot if false
+        plotWithScatter    = False
+        plotLineWithMarker = False
+
+        ## Marker Parameters
+        lw            = 3
+        scatterSize   = 50
+        markEdgeWidth = 1
+
+        ## Font Size
+        fs                  = 14
+        legend_fs_reduction = 5
+
+        ## Axis Adjustment Parameters
+        setX_AxInt  = -1
+        setY_AxInt  = 0
+        xAxisMinAdj = 0
+        xAxisMaxAdj = 0
+        yAxisMaxAdj = 0.0000001
+
+        ## Manual Override Parameters
+        overrideNoP = False
+        n0 = [0, 2400, 0, 0]
+        nf = [600, 17000, 16, 16]
+
+        overrideAxisLim = True
+        xmin = 0
+        xmax = 9000
+        ymin = 0
+        ymax = 6
+
+        overrideTickLocation = True
+        n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
+        xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
+        yTickInterval = 1
+
+    elif doSurfaceExcess == True:
+
+        ## Plot Types, default line plot if false
+        plotWithScatter    = False
+        plotLineWithMarker = False
+
+        ## Marker Parameters
+        lw            = 3
+        scatterSize   = 50
+        markEdgeWidth = 1
+
+        ## Font Size
+        fs                  = 14
+        legend_fs_reduction = 5
+
+        ## Axis Adjustment Parameters
+        setX_AxInt  = -1
+        setY_AxInt  = 0
+        xAxisMinAdj = 0
+        xAxisMaxAdj = 0
+        yAxisMaxAdj = 0.0000001
+
+        ## Manual Override Parameters
+        overrideNoP = False
+        n0 = [0, 2400, 0, 0]
+        nf = [600, 17000, 16, 16]
+
+        overrideAxisLim = True
+        xmin = 0
+        xmax = 9000
+        ymin = 0
+        ymax = 6
+
+        overrideTickLocation = True
+        n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
+        xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
+        yTickInterval = 1
+
+    return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\
+            fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj,      \
+            xAxisMaxAdj, yAxisMaxAdj, overrideNoP, n0, nf, overrideAxisLim,    \
+            xmin, xmax, ymin, ymax, overrideTickLocation, n_xticks,            \
+            xTickInterval, yTickInterval
+
+
+plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,           \
+ fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj, xAxisMaxAdj,    \
+ yAxisMaxAdj, overrideNoP, n0, nf, overrideAxisLim, xmin, xmax, ymin,          \
+ ymax, overrideTickLocation, n_xticks, xTickInterval, yTickInterval = plotParameters()
+
+
+# List of plot types that use the time axis
+tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time"]
 
 ## Save Options
 saveAsPNG = True
@@ -203,7 +299,6 @@ markerDict = {
 
     }
 markerType = markerDict.get("0")
-
 
 
 ##############
