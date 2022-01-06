@@ -99,7 +99,7 @@ very_verbose = False
 analysisOptions = ['isoAnalysis','ellipsAnalysis','chemFormulations',          \
                     'sldAnalysis','SurfaceExcess']
 
-analysisType = analysisOptions[0]
+analysisType = analysisOptions[1]
 
 def plotParameters(analysisOptions, analysisType):
 
@@ -151,7 +151,7 @@ def plotParameters(analysisOptions, analysisType):
         plotLineWithMarker = False
 
         ## Marker Parameters
-        lw            = 3
+        lw            = 1
         scatterSize   = 50
         markEdgeWidth = 1
 
@@ -173,12 +173,12 @@ def plotParameters(analysisOptions, analysisType):
 
         overrideAxisLim = True
         xmin = 0
-        xmax = 9000
-        ymin = 0
-        ymax = 6
+        xmax = 6000
+        ymin = 179
+        ymax = 180.2
 
         overrideTickLocation = True
-        n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
+        n_xticks      = 2               # number of x axis ticks in time plots (s); [n-1]
         xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
         yTickInterval = 1
 

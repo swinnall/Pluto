@@ -15,7 +15,7 @@ import SurfaceExcess
 
 
 def modSelection(analysisOptions):
-    print([i for i in range(len(analysisOptions))])
+
     # ask user to pick one of the analysisOptions
     print("Analysis Options: %s" %analysisOptions)
 
