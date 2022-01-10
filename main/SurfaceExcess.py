@@ -16,6 +16,31 @@ import config
 import genPlot
 
 
+def modSelection(analysisOptions):
+
+    # ask user to pick one of the analysisOptions
+    print("~~~\nElasticity analysis Options:\n %s" %analysisOptions)
+
+    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to exit:\n  " %(len(analysisOptions)-1) )
+
+    if analysisChoice == 'q':
+        print("Returning to Pluto landing page.\n\n")
+        analysisType    = 'n/a'
+        analysisRunning = False
+
+    elif analysisChoice in [str(i) for i in range(len(analysisOptions))]:
+        analysisType = analysisOptions[int(analysisChoice)]
+        print("You picked %s.py\n" %analysisType)
+        analysisRunning = True
+
+    else:
+        print("Not a valid response. Returning to Pluto landing page.\n\n")
+        analysisType    = 'n/a'
+        analysisRunning = False
+
+    return analysisType, analysisRunning
+
+
 ## Import Functions
 def importSampleData(info):
 
@@ -138,84 +163,95 @@ def main(info, title, inputDIR, plotDIR):
     warnings.filterwarnings("ignore")
 
 
-    # user input & sample instructions information
-    nFiles, fileNames, l = importSampleData(info)
+    # give analysis choice to user
+    analysisOptions = ['plotGammaL','plotGammaP']
+
+    analysisRunning = True
+    while analysisRunning:
+        analysisType, analysisRunning = modSelection(analysisOptions)
+
+        if analysisRunning == False:
+            break
 
 
-    # initialise dicts, store 1 file in each list
-    t      = {new_list: [] for new_list in range(nFiles)}
-    gammaL = {new_list: [] for new_list in range(nFiles)}
-    gammaP = {new_list: [] for new_list in range(nFiles)}
-
-    ## perform analysis on each file and store in dict for genPlot.py
-    for i in range(nFiles):
-
-        # get filename
-        fname = fileNames.get(i)
-
-        # organise equipment
-        equipParams = (1,".txt","\t")
-
-        # import data from given file i
-        t_list, gammaL_list, gammaP_list = importData(equipParams, fname, inputDIR, plotDIR)
+        # user input & sample instructions information
+        nFiles, fileNames, l = importSampleData(info)
 
 
-        # smooth data
-        if config.plotGammaL == True:
+        # initialise dicts, store 1 file in each list
+        t      = {new_list: [] for new_list in range(nFiles)}
+        gammaL = {new_list: [] for new_list in range(nFiles)}
+        gammaP = {new_list: [] for new_list in range(nFiles)}
 
-            # reduce number of points
-            reduced_t, reduced_L = reduceNpoints(t_list, gammaL_list)
-            t[i]      = reduced_t
-            gammaL[i] = reduced_L
+        ## perform analysis on each file and store in dict for genPlot.py
+        for i in range(nFiles):
 
-            # calculate smoothed function for plotting
-            #temp = smoothData(gammaL_list)
-            #gammaL[2*i+1] = temp
+            # get filename
+            fname = fileNames.get(i)
 
+            # organise equipment
+            equipParams = (1,".txt","\t")
 
-        if config.plotGammaP == True:
-            reduced_t, reduced_P = reduceNpoints(t_list, gammaP_list)
-            t[i]      = reduced_t
-            gammaP[i] = reduced_P
-
-            #temp = smoothData(gammaP_list)
-            #gammaP[2*i+1] = temp
+            # import data from given file i
+            t_list, gammaL_list, gammaP_list = importData(equipParams, fname, inputDIR, plotDIR)
 
 
+            # smooth data
+            if analysisType == 'plotGammaL':
 
-	## Plot instructions
-    if config.plotGammaL == True:
-        key      = (1,1)
-        axLabels = {"x": "Time (min)", "y": "$\Gamma_{Lipid}$"}
-        suffix   = " - gammaL"
-        equip    = "N/A"
-        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), gammaL)
+                # reduce number of points
+                reduced_t, reduced_L = reduceNpoints(t_list, gammaL_list)
+                t[i]      = reduced_t
+                gammaL[i] = reduced_L
 
-        # currently only allows 1x1, 2x1, 2x2 subplot types
-        if config.plotMultiPanel == True:
-            nRow = len(config.key)
-            nCol = len(config.key[0])
-            key = (nRow,nCol)
-        genPlot.main(key,vars,suffix)
+                # calculate smoothed function for plotting
+                #temp = smoothData(gammaL_list)
+                #gammaL[2*i+1] = temp
 
 
-    if config.plotGammaP == True:
-        key      = (1,1)
-        axLabels = {"x": "Time (min)", "y": "$\Gamma_{PolyA}$ (molecule $m^{-2}$)"}
-        suffix   = " - gammaP"
-        equip    = "N/A"
-        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), gammaP)
+            if analysisType == 'plotGammaP':
+                reduced_t, reduced_P = reduceNpoints(t_list, gammaP_list)
+                t[i]      = reduced_t
+                gammaP[i] = reduced_P
 
-        # currently only allows 1x1, 2x1, 2x2 subplot types
-        if config.plotMultiPanel == True:
-            nRow = len(config.key)
-            nCol = len(config.key[0])
-            key = (nRow,nCol)
-        genPlot.main(key,vars,suffix)
+                #temp = smoothData(gammaP_list)
+                #gammaP[2*i+1] = temp
 
 
-    # program executed
-    print('\nAnalysis Complete! Have a nice day :)')
+
+	    ## Plot instructions
+        if analysisType == 'plotGammaL':
+            key      = (1,1)
+            axLabels = {"x": "Time (min)", "y": "$\Gamma_{Lipid}$"}
+            suffix   = " - gammaL"
+            equip    = "N/A"
+            vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), gammaL)
+
+            # currently only allows 1x1, 2x1, 2x2 subplot types
+            if config.plotMultiPanel == True:
+                nRow = len(config.key)
+                nCol = len(config.key[0])
+                key = (nRow,nCol)
+            genPlot.main(key,vars,suffix)
+
+
+        if analysisType == 'plotGammaP':
+            key      = (1,1)
+            axLabels = {"x": "Time (min)", "y": "$\Gamma_{PolyA}$ (molecule $m^{-2}$)"}
+            suffix   = " - gammaP"
+            equip    = "N/A"
+            vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), gammaP)
+
+            # currently only allows 1x1, 2x1, 2x2 subplot types
+            if config.plotMultiPanel == True:
+                nRow = len(config.key)
+                nCol = len(config.key[0])
+                key = (nRow,nCol)
+            genPlot.main(key,vars,suffix)
+
+
+        # program executed
+        print('\nAnalysis Complete!\n')
 
     return
 

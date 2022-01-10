@@ -55,10 +55,6 @@ gammaNth = 1
 # smooth function
 gamma_nPoly = 10
 
-# select which quantities to plot
-plotGammaL = True
-plotGammaP = True
-
 # overplot L and P; to be implemented
 overPlotGammaLP = False
 
