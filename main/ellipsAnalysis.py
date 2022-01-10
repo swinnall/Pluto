@@ -17,12 +17,16 @@ def modSelection(analysisOptions):
     # ask user to pick one of the analysisOptions
     print("~~~\nElasticity analysis Options:\n %s" %analysisOptions)
 
-    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to exit:\n  " %(len(analysisOptions)-1) )
+    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to reutrn to landing page:\n  " %(len(analysisOptions)-1) )
 
     if analysisChoice == 'q':
         print("Returning to Pluto landing page.\n\n")
         analysisType    = 'n/a'
         analysisRunning = False
+
+    elif analysisChoice == 'Q':
+        print("Session closed.")
+        sys.exit()
 
     elif analysisChoice in [str(i) for i in range(len(analysisOptions))]:
         analysisType = analysisOptions[int(analysisChoice)]

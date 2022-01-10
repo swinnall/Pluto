@@ -12,23 +12,33 @@ def plotParameters(suffix):
     # ask user to pick one of the analysisOptions
     analysisChoice = input("Would you like to use default plot parameters (y/n):\n  ")
 
-    if analysisChoice.upper() == 'Y':
-        pass
-        # implement else: give option to change to override options
+    if analysisChoice.upper() == 'N':
 
+        ## Plot Types, default line plot if false
+        plotWithScatter    = False
+        plotLineWithMarker = False
 
-    ## Plot Types, default line plot if false
-    plotWithScatter    = False
-    plotLineWithMarker = False
+        ## Marker Parameters
+        lw            = 3
+        scatterSize   = 50
+        markEdgeWidth = 1
 
-    ## Marker Parameters
-    lw            = 3
-    scatterSize   = 50
-    markEdgeWidth = 1
+        ## Font Size
+        fs                  = 14
+        legend_fs_reduction = 5
 
-    ## Font Size
-    fs                  = 14
-    legend_fs_reduction = 5
+    # default parameters
+    else:
+        plotWithScatter    = False
+        plotLineWithMarker = False
+
+        lw            = 3
+        scatterSize   = 50
+        markEdgeWidth = 1
+
+        fs                  = 14
+        legend_fs_reduction = 5
+
 
     ## Axis Adjustment Parameters
     setX_AxInt  = -1
@@ -38,83 +48,107 @@ def plotParameters(suffix):
     yAxisMaxAdj = 0.0000001
 
 
-    # Override Parameters; ovrrideNoP, config_n0, config_nf
-    overrideNoP_Dict = {
-        " - isotherm":        [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - elasticity":      [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - pressure":        [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - normInjPressure": [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - area":            [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - compressions":    [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - expansions":      [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - cycles":          [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
 
-        " - psi AOI":         [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - delta AOI":       [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - psi Time":        [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - delta Time":      [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+    # ask user to pick one of the analysisOptions
+    analysisChoice = input("Would you like to override plot region (y/n):\n  ")
 
-        " - gammaL":          [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-        " - gammaP":          [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
-    }
+    if analysisChoice.upper() == 'Y':
 
-    overrideNoP = overrideNoP_Dict.get(suffix)[0]
-    config_n0   = overrideNoP_Dict.get(suffix)[1]
-    config_nf   = overrideNoP_Dict.get(suffix)[2]
+        # Override Parameters; config_n0, config_nf
+        overrideNoP_Dict = {
+            " - isotherm":        [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
+            " - elasticity":      [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
+            " - pressure":        [[0, 0, 0, 0], [15000, 15000, 9000, 9000]],
+            " - normInjPressure": [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
+            " - area":            [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
+            " - compressions":    [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
+            " - expansions":      [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
+            " - cycles":          [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
 
+            " - psi AOI":         [[0, 0, 0, 0], [6000, 17000, 16, 16]],
+            " - delta AOI":       [[0, 0, 0, 0], [6000, 17000, 16, 16]],
+            " - psi Time":        [[0, 0, 0, 0], [6000, 17000, 16, 16]],
+            " - delta Time":      [[0, 0, 0, 0], [6000, 17000, 16, 16]],
 
-    # Override Parameters; overrideAxisLim, config_xmin, config_xmax, config_ymin, config_ymax
-    overrideAxis_Dict = {
-        " - isotherm":        [True, 0, 9000, 0, 30],
-        " - elasticity":      [True, 0, 9000, 0, 30],
-        " - pressure":        [True, 0, 9000, 0, 30],
-        " - normInjPressure": [True, 0, 9000, 0, 30],
-        " - area":            [True, 0, 9000, 0, 30],
-        " - compressions":    [True, 0, 9000, 0, 30],
-        " - expansions":      [True, 0, 9000, 0, 30],
-        " - cycles":          [True, 0, 9000, 0, 30],
+            " - gammaL":          [[0, 0, 0, 0], [6000, 17000, 16, 16]],
+            " - gammaP":          [[0, 0, 0, 0], [6000, 17000, 16, 16]],
+        }
 
-        " - psi AOI":         [True, 0, 6000, 179, 180.2],
-        " - delta AOI":       [True, 0, 6000, 179, 180.2],
-        " - psi Time":        [True, 0, 6000, 179, 180.2],
-        " - delta Time":      [True, 0, 6000, 179, 180.2],
-
-        " - gammaL":          [False, 0, 9000, 0, 6],
-        " - gammaP":          [False, 0, 9000, 0, 6],
-    }
-
-    overrideAxisLim = overrideAxis_Dict.get(suffix)[0]
-    config_xmin     = overrideAxis_Dict.get(suffix)[1]
-    config_xmax     = overrideAxis_Dict.get(suffix)[2]
-    config_ymin     = overrideAxis_Dict.get(suffix)[3]
-    config_ymax     = overrideAxis_Dict.get(suffix)[4]
+        overrideNoP = True
+        config_n0   = overrideNoP_Dict.get(suffix)[0]
+        config_nf   = overrideNoP_Dict.get(suffix)[1]
 
 
+        # Override Parameters; config_xmin, config_xmax, config_ymin, config_ymax
+        overrideAxis_Dict = {
+            " - isotherm":        [0, 9000, 0, 30],
+            " - elasticity":      [0, 9000, 0, 30],
+            " - pressure":        [0, 9000, 0, 35],
+            " - normInjPressure": [0, 9000, 0, 30],
+            " - area":            [0, 9000, 0, 30],
+            " - compressions":    [0, 9000, 0, 30],
+            " - expansions":      [0, 9000, 0, 30],
+            " - cycles":          [0, 9000, 0, 30],
 
-    # Override Parameters; overrideTickLocation, n_xticks, xTickInterval, yTickInterval
-    overrideTick_Dict = {
-        " - isotherm":        [True, 3, 10, 5],
-        " - elasticity":      [True, 3, 10, 5],
-        " - pressure":        [True, 3, 10, 5],
-        " - normInjPressure": [True, 3, 10, 5],
-        " - area":            [True, 3, 10, 5],
-        " - compressions":    [True, 3, 10, 5],
-        " - expansions":      [True, 3, 10, 5],
-        " - cycles":          [True, 3, 10, 5],
+            " - psi AOI":         [0, 6000, 179, 180.2],
+            " - delta AOI":       [0, 6000, 179, 180.2],
+            " - psi Time":        [0, 6000, 179, 180.2],
+            " - delta Time":      [0, 6000, 179, 180.2],
 
-        " - psi AOI":         [True, 2, 10, 1],
-        " - delta AOI":       [True, 2, 10, 1],
-        " - psi Time":        [True, 2, 10, 1],
-        " - delta Time":      [True, 2, 10, 1],
+            " - gammaL":          [0, 9000, 0, 6],
+            " - gammaP":          [0, 9000, 0, 6],
+        }
 
-        " - gammaL":          [False, 3, 10, 1],
-        " - gammaP":          [False, 3, 10, 1],
-    }
+        overrideAxisLim = True
+        config_xmin     = overrideAxis_Dict.get(suffix)[0]
+        config_xmax     = overrideAxis_Dict.get(suffix)[1]
+        config_ymin     = overrideAxis_Dict.get(suffix)[2]
+        config_ymax     = overrideAxis_Dict.get(suffix)[3]
 
-    overrideTickLocation = overrideTick_Dict.get(suffix)[0]
-    n_xticks             = overrideTick_Dict.get(suffix)[1]  # number of x axis ticks in time plots (s); [n-1]
-    xTickInterval        = overrideTick_Dict.get(suffix)[2]  # x, y axis tick interval for P vs t plots; x is mins plot only
-    yTickInterval        = overrideTick_Dict.get(suffix)[3]
+
+
+        # Override Parameters; n_xticks, xTickInterval, yTickInterval
+        overrideTick_Dict = {
+            " - isotherm":        [3, 10, 5],
+            " - elasticity":      [3, 10, 5],
+            " - pressure":        [3, 10, 5],
+            " - normInjPressure": [3, 10, 5],
+            " - area":            [3, 10, 5],
+            " - compressions":    [3, 10, 5],
+            " - expansions":      [3, 10, 5],
+            " - cycles":          [3, 10, 5],
+
+            " - psi AOI":         [2, 10, 1],
+            " - delta AOI":       [2, 10, 1],
+            " - psi Time":        [2, 10, 1],
+            " - delta Time":      [2, 10, 1],
+
+            " - gammaL":          [3, 10, 1],
+            " - gammaP":          [3, 10, 1],
+        }
+
+        overrideTickLocation = True
+        n_xticks             = overrideTick_Dict.get(suffix)[0]  # number of x axis ticks in time plots (s); [n-1]
+        xTickInterval        = overrideTick_Dict.get(suffix)[1]  # x, y axis tick interval for P vs t plots; x is mins plot only
+        yTickInterval        = overrideTick_Dict.get(suffix)[2]
+
+
+    # default parameters, initialise with arbitrary numbers
+    else:
+        overrideNoP = False
+        config_n0   = 0
+        config_nf   = 1E6
+
+        overrideAxisLim = False
+        config_xmin     = 0
+        config_xmax     = 1E6
+        config_ymin     = 0
+        config_ymax     = 1E6
+
+        overrideTickLocation = False
+        n_xticks             = 3
+        xTickInterval        = 10
+        yTickInterval        = 10
 
 
     return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\
