@@ -19,7 +19,7 @@ def modSelection(analysisOptions):
     # ask user to pick one of the analysisOptions
     print("Analysis Options: %s" %analysisOptions)
 
-    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-4) or 'q' to exit:\n  ")
+    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to exit:\n  " %(len(analysisOptions)-1))
 
     if analysisChoice == 'q':
         print("Session closed.")

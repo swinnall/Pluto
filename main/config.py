@@ -5,21 +5,7 @@
 # IAP Analysis #
 ################
 
-## Plot Isotherms
-plotIsotherm     = False            # plot standard isotherm
-plotCompressions = False            # plot isotherm compressions only
-plotExpansions   = False            # plot isotherm expansions only
-plotCycles       = False            # colour code cycles within isotherm
-
-## Plot Y vs Time
-plotPressure      = True           # plot pressure
-plotNormInjection = False           # plot normalised pressure
-plotArea          = False           # plot percentage area
-
-## Elasticity Analysis
-plotElasticity = False              # plots elasticity analyis
-
-## Other Functions
+## Functions
 checkT0   = False                     # ensures T0 = 0
 shiftP    = False                     # shift to P_min = 0
 smoothIso = False                     # reduces number of points for final plot
