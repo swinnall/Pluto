@@ -4,28 +4,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import sys
+import ast
 import config
 
 
 def plotParameters(suffix):
 
     # ask user to pick one of the analysisOptions
-    analysisChoice = input("Would you like to use default plot parameters (y/n):\n  ")
+    analysisChoice = input("Would you like to use default plot parameters (y/n): ")
 
     if analysisChoice.upper() == 'N':
 
         ## Plot Types, default line plot if false
-        plotWithScatter    = False
-        plotLineWithMarker = False
+        scatterPlot = (input("Plot as scatter plot (y/n)?: "))
+        if scatterPlot.upper() == 'Y':
+            plotWithScatter = True
+            scatterSize     = int(input("Scatter size = "))
+        else: plotWithScatter = False; scatterSize = 0
+
+        lineMarkerPlot = (input("Plot as line with maker (y/n)?: "))
+        if lineMarkerPlot.upper() == 'Y':
+            plotLineWithMarker = True
+            markEdgeWidth     = int(input("Marker edge width = "))
+        else: plotLineWithMarker = False; markEdgeWidth = 0
 
         ## Marker Parameters
-        lw            = 3
-        scatterSize   = 50
-        markEdgeWidth = 1
+        lw = int(input("Line width = "))
 
         ## Font Size
-        fs                  = 14
-        legend_fs_reduction = 5
+        fs                  = int(input("Fontsize = "))
+        legend_fs_reduction = int(input("Reduce fontsize by factor for legend = "))
 
     # default parameters
     else:
@@ -33,8 +41,8 @@ def plotParameters(suffix):
         plotLineWithMarker = False
 
         lw            = 3
-        scatterSize   = 50
-        markEdgeWidth = 1
+        scatterSize   = 0
+        markEdgeWidth = 0
 
         fs                  = 14
         legend_fs_reduction = 5
@@ -50,87 +58,27 @@ def plotParameters(suffix):
 
 
     # ask user to pick one of the analysisOptions
-    analysisChoice = input("Would you like to override plot region (y/n):\n  ")
+    analysisChoice = input("Would you like to override plot region (y/n): ")
 
     if analysisChoice.upper() == 'Y':
 
         # Override Parameters; config_n0, config_nf
-        overrideNoP_Dict = {
-            " - isotherm":        [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
-            " - elasticity":      [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
-            " - pressure":        [[0, 0, 0, 0], [15000, 15000, 9000, 9000]],
-            " - normInjPressure": [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
-            " - area":            [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
-            " - compressions":    [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
-            " - expansions":      [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
-            " - cycles":          [[0, 0, 0, 0], [9000, 9000, 9000, 9000]],
-
-            " - psi AOI":         [[0, 0, 0, 0], [6000, 17000, 16, 16]],
-            " - delta AOI":       [[0, 0, 0, 0], [6000, 17000, 16, 16]],
-            " - psi Time":        [[0, 0, 0, 0], [6000, 17000, 16, 16]],
-            " - delta Time":      [[0, 0, 0, 0], [6000, 17000, 16, 16]],
-
-            " - gammaL":          [[0, 0, 0, 0], [6000, 17000, 16, 16]],
-            " - gammaP":          [[0, 0, 0, 0], [6000, 17000, 16, 16]],
-        }
-
         overrideNoP = True
-        config_n0   = overrideNoP_Dict.get(suffix)[0]
-        config_nf   = overrideNoP_Dict.get(suffix)[1]
-
+        config_n0   = ast.literal_eval(input("Starting data point [n0, n0, ...]:\n  "))
+        config_nf   = ast.literal_eval(input("Final data point [nf, nf, ...]:\n  "))
 
         # Override Parameters; config_xmin, config_xmax, config_ymin, config_ymax
-        overrideAxis_Dict = {
-            " - isotherm":        [0, 9000, 0, 30],
-            " - elasticity":      [0, 9000, 0, 30],
-            " - pressure":        [0, 9000, 0, 35],
-            " - normInjPressure": [0, 9000, 0, 30],
-            " - area":            [0, 9000, 0, 30],
-            " - compressions":    [0, 9000, 0, 30],
-            " - expansions":      [0, 9000, 0, 30],
-            " - cycles":          [0, 9000, 0, 30],
-
-            " - psi AOI":         [0, 6000, 179, 180.2],
-            " - delta AOI":       [0, 6000, 179, 180.2],
-            " - psi Time":        [0, 6000, 179, 180.2],
-            " - delta Time":      [0, 6000, 179, 180.2],
-
-            " - gammaL":          [0, 9000, 0, 6],
-            " - gammaP":          [0, 9000, 0, 6],
-        }
-
         overrideAxisLim = True
-        config_xmin     = overrideAxis_Dict.get(suffix)[0]
-        config_xmax     = overrideAxis_Dict.get(suffix)[1]
-        config_ymin     = overrideAxis_Dict.get(suffix)[2]
-        config_ymax     = overrideAxis_Dict.get(suffix)[3]
-
-
+        config_xmin     = ast.literal_eval(input("xmin = "))
+        config_xmax     = ast.literal_eval(input("xmax = "))
+        config_ymin     = ast.literal_eval(input("ymin = "))
+        config_ymax     = ast.literal_eval(input("ymax = "))
 
         # Override Parameters; n_xticks, xTickInterval, yTickInterval
-        overrideTick_Dict = {
-            " - isotherm":        [3, 10, 5],
-            " - elasticity":      [3, 10, 5],
-            " - pressure":        [3, 10, 5],
-            " - normInjPressure": [3, 10, 5],
-            " - area":            [3, 10, 5],
-            " - compressions":    [3, 10, 5],
-            " - expansions":      [3, 10, 5],
-            " - cycles":          [3, 10, 5],
-
-            " - psi AOI":         [2, 10, 1],
-            " - delta AOI":       [2, 10, 1],
-            " - psi Time":        [2, 10, 1],
-            " - delta Time":      [2, 10, 1],
-
-            " - gammaL":          [3, 10, 1],
-            " - gammaP":          [3, 10, 1],
-        }
-
         overrideTickLocation = True
-        n_xticks             = overrideTick_Dict.get(suffix)[0]  # number of x axis ticks in time plots (s); [n-1]
-        xTickInterval        = overrideTick_Dict.get(suffix)[1]  # x, y axis tick interval for P vs t plots; x is mins plot only
-        yTickInterval        = overrideTick_Dict.get(suffix)[2]
+        n_xticks             = ast.literal_eval(input("Number of x-axis ticks = "))  # number of x axis ticks in time plots (s); [n-1]
+        xTickInterval        = ast.literal_eval(input("xTick interval = "))  # x, y axis tick interval for P vs t plots; x is mins plot only
+        yTickInterval        = ast.literal_eval(input("yTick interval = "))
 
 
     # default parameters, initialise with arbitrary numbers
