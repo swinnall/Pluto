@@ -164,10 +164,10 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
         count += nFilesPerPlot
 
 
-    elif config.plotElasticity == True and suffix == " - elasticity" and col==0:
+    elif suffix == " - elasticity" and col==0:
         x = X[0]
         y = Y; labels = LABELS
-    elif config.plotElasticity == True and suffix == " - elasticity" and col==1:
+    elif suffix == " - elasticity" and col==1:
         x = X[1]
         y = Y; labels = LABELS
 

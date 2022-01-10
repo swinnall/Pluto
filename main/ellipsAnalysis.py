@@ -12,6 +12,31 @@ import config
 import genPlot
 
 
+def modSelection(analysisOptions):
+
+    # ask user to pick one of the analysisOptions
+    print("~~~\nElasticity analysis Options:\n %s" %analysisOptions)
+
+    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to exit:\n  " %(len(analysisOptions)-1) )
+
+    if analysisChoice == 'q':
+        print("Returning to Pluto landing page.\n\n")
+        analysisType    = 'n/a'
+        analysisRunning = False
+
+    elif analysisChoice in [str(i) for i in range(len(analysisOptions))]:
+        analysisType = analysisOptions[int(analysisChoice)]
+        print("You picked %s.py\n" %analysisType)
+        analysisRunning = True
+
+    else:
+        print("Not a valid response. Returning to Pluto landing page.\n\n")
+        analysisType    = 'n/a'
+        analysisRunning = False
+
+    return analysisType, analysisRunning
+
+
 def importSampleInfo(info):
 
     # number of header rows
@@ -129,71 +154,82 @@ def main(info, title, inputDIR, outputPath):
     warnings.filterwarnings("ignore")
 
 
-    # user input & sample instructions information
-    AOI_ID, nAOI, time_ID, nTime = importSampleInfo(info)
+    # give analysis choice to user
+    analysisOptions = ['plotAOIpsi','plotAOIdelta','plotTimePsi','plotTimeDelta']
+
+    analysisRunning = True
+    while analysisRunning:
+        analysisType, analysisRunning = modSelection(analysisOptions)
+
+        if analysisRunning == False:
+            break
 
 
-    # process data
-    if config.plotAOIpsi == True or config.plotAOIdelta == True:
-
-        if nAOI < 1:
-            print("Error: No AOI files in input.")
-            sys.exit()
-
-        # import data
-        AOI, psi_AOI, delta_AOI, label_AOI = importAOIData(inputDIR, AOI_ID, nAOI)
-
-        # converting delta variables to degrees
-        for i in range(nAOI):
-            for j in range(len(delta_AOI.get(i))):
-                delta_AOI[i][j] = delta_AOI.get(i)[j] * 180 / np.pi
+        # user input & sample instructions information
+        AOI_ID, nAOI, time_ID, nTime = importSampleInfo(info)
 
 
-    if config.plotTimePsi == True or config.plotTimeDelta == True:
+        # process data
+        if analysisType == 'plotAOIpsi' or analysisType == 'plotAOIdelta':
 
-        if nTime < 1:
-            print("Error: No Time files in input.")
-            sys.exit()
+            if nAOI < 1:
+                print("Error: No AOI files in input.")
+                sys.exit()
 
-        # import data
-        t, psi_t, delta_t, label_t = importTimeData(inputDIR, time_ID, nTime)
+            # import data
+            AOI, psi_AOI, delta_AOI, label_AOI = importAOIData(inputDIR, AOI_ID, nAOI)
 
-        # converting delta variables to degrees
-        for i in range(nTime):
-            for j in range(len(delta_t.get(i))):
-                delta_t[i][j] = delta_t.get(i)[j] * 180 / np.pi
-
-
-    # plot data
-    equip = 'null'
-    key   = (1,1)
-    if config.plotAOIpsi == True:
-        axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Psi$ (\N{DEGREE SIGN})"}
-        suffix   = " - psi AOI"
-        vars     = (nAOI, equip, label_AOI, axLabels, title, outputPath, (AOI,0), psi_AOI)
-        genPlot.main(key,vars,suffix)
-
-    if config.plotAOIdelta == True:
-        axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Delta$ (\N{DEGREE SIGN})"}
-        suffix   = " - delta AOI"
-        vars     = (nAOI, equip, label_AOI, axLabels, title, outputPath, (AOI,0), delta_AOI)
-        genPlot.main(key,vars,suffix)
-
-    if config.plotTimePsi == True:
-        axLabels = {"x": "Time (s)", "y": "$\Psi$ (\N{DEGREE SIGN})"}
-        suffix   = " - psi Time"
-        vars     = (nTime, equip, label_t, axLabels, title, outputPath, (t,0), psi_t)
-        genPlot.main(key,vars,suffix)
-
-    if config.plotTimeDelta == True:
-        axLabels = {"x": "Time (s)", "y": "$\Delta_{Lipids}$ - $\Delta_{Buffer}$ (\N{DEGREE SIGN})"}
-        suffix   = " - delta Time"
-        vars     = (nTime, equip, label_t, axLabels, title, outputPath, (t,0), delta_t)
-        genPlot.main(key,vars,suffix)
+            # converting delta variables to degrees
+            for i in range(nAOI):
+                for j in range(len(delta_AOI.get(i))):
+                    delta_AOI[i][j] = delta_AOI.get(i)[j] * 180 / np.pi
 
 
-    # program executed
-    print('\nAnalysis Complete!\n')
+        if analysisType == 'plotTimePsi' or analysisType == 'plotTimeDelta':
+
+            if nTime < 1:
+                print("Error: No Time files in input.")
+                sys.exit()
+
+            # import data
+            t, psi_t, delta_t, label_t = importTimeData(inputDIR, time_ID, nTime)
+
+            # converting delta variables to degrees
+            for i in range(nTime):
+                for j in range(len(delta_t.get(i))):
+                    delta_t[i][j] = delta_t.get(i)[j] * 180 / np.pi
+
+
+                # plot data
+        equip = 'null'
+        key   = (1,1)
+        if analysisType == 'plotAOIpsi':
+            axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Psi$ (\N{DEGREE SIGN})"}
+            suffix   = " - psi AOI"
+            vars     = (nAOI, equip, label_AOI, axLabels, title, outputPath, (AOI,0), psi_AOI)
+            genPlot.main(key,vars,suffix)
+
+        if analysisType == 'plotAOIdelta':
+            axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Delta$ (\N{DEGREE SIGN})"}
+            suffix   = " - delta AOI"
+            vars     = (nAOI, equip, label_AOI, axLabels, title, outputPath, (AOI,0), delta_AOI)
+            genPlot.main(key,vars,suffix)
+
+        if analysisType == 'plotTimePsi':
+            axLabels = {"x": "Time (s)", "y": "$\Psi$ (\N{DEGREE SIGN})"}
+            suffix   = " - psi Time"
+            vars     = (nTime, equip, label_t, axLabels, title, outputPath, (t,0), psi_t)
+            genPlot.main(key,vars,suffix)
+
+        if analysisType == 'plotTimeDelta':
+            axLabels = {"x": "Time (s)", "y": "$\Delta_{Lipids}$ - $\Delta_{Buffer}$ (\N{DEGREE SIGN})"}
+            suffix   = " - delta Time"
+            vars     = (nTime, equip, label_t, axLabels, title, outputPath, (t,0), delta_t)
+            genPlot.main(key,vars,suffix)
+
+
+        # program executed
+        print('\nAnalysis Complete!\n')
 
     return
 

@@ -16,7 +16,7 @@ plotMultiPanel = False              # split input data between subplots
 key = [(1,1)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
 
 ## Parameters
-useCycles  = [0,1,2,3,4]                     # list of cycles to be used in isotherm
+useCycles  = [0,1,2,3,4]                # list of cycles to be used in isotherm
 nPoly      = 40                      # order of the elasticity fit
 nth        = 60                      # data reduction; take every 'nth' point
 
@@ -25,13 +25,7 @@ nth        = 60                      # data reduction; take every 'nth' point
 # Ellipsometry Analysis #
 ########################
 
-# plot psi and/or delta against angle of incidence
-plotAOIpsi   = False
-plotAOIdelta = False
 
-# plot psi and/or delta against time
-plotTimePsi   = False
-plotTimeDelta = True
 
 
 #################

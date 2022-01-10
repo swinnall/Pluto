@@ -17,7 +17,7 @@ import SurfaceExcess
 def modSelection(analysisOptions):
 
     # ask user to pick one of the analysisOptions
-    print("Analysis Options: %s" %analysisOptions)
+    print("~~~\nAnalysis Options:\n %s" %analysisOptions)
 
     analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to exit:\n  " %(len(analysisOptions)-1))
 

@@ -19,7 +19,7 @@ import genPlot
 def modSelection(analysisOptions):
 
     # ask user to pick one of the analysisOptions
-    print("Surface pressure analysis Options: %s" %analysisOptions)
+    print("~~~\nSurface pressure analysis Options:\n %s" %analysisOptions)
 
     analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to exit:\n  " %(len(analysisOptions)-1) )
 
@@ -587,7 +587,7 @@ def main(info, title, inputDIR, plotDIR):
 
 
             # calculate percentage area
-            if config.plotArea == True:
+            if analysisType == 'plotArea':
                 percA_list = calcPercArea(A_list)
                 percA[i] = percA_list
 
@@ -665,7 +665,7 @@ def main(info, title, inputDIR, plotDIR):
                 genPlot.main(key,vars,suffix)
 
         # program executed
-        print('\nAnalysis Complete!\n')
+        print('\nAnalysis Complete!\n\n')
 
     return
 
