@@ -49,6 +49,7 @@ def plotParameters(suffix):
 
 
 
+
     elif suffix in [" - psi AOI", " - delta AOI", " - psi Time", " - delta Time"]:
 
             ## Plot Types, default line plot if false
@@ -114,15 +115,15 @@ def plotParameters(suffix):
             config_n0 = [0, 2400, 0, 0]
             config_nf = [600, 17000, 16, 16]
 
-            overrideAxisLim = True
+            overrideAxisLim = False
             config_xmin = 0
             config_xmax = 9000
             config_ymin = 0
             config_ymax = 6
 
-            overrideTickLocation = True
-            n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
-            xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
+            overrideTickLocation = False
+            n_xticks      = 3
+            xTickInterval = 10
             yTickInterval = 1
 
     return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\
