@@ -9,122 +9,113 @@ import config
 
 def plotParameters(suffix):
 
-    if suffix in [" - isotherm", " - elasticity", " - pressure", " - normInjPressure", " - area", " - compressions", " - expansions", " - cycles"]:
+    # ask user to pick one of the analysisOptions
+    analysisChoice = input("Would you like to use default plot parameters (y/n):\n  ")
 
-            ## Plot Types, default line plot if false
-            plotWithScatter    = False
-            plotLineWithMarker = False
-
-            ## Marker Parameters
-            lw            = 3
-            scatterSize   = 50
-            markEdgeWidth = 1
-
-            ## Font Size
-            fs                  = 14
-            legend_fs_reduction = 5
-
-            ## Axis Adjustment Parameters
-            setX_AxInt  = -1
-            setY_AxInt  = 0
-            xAxisMinAdj = 0
-            xAxisMaxAdj = 0
-            yAxisMaxAdj = 0.0000001
-
-            ## Manual Override Parameters
-            overrideNoP = False
-            config_n0 = [0, 2400, 0, 0]
-            config_nf = [600, 17000, 16, 16]
-
-            overrideAxisLim = True
-            config_xmin = 0
-            config_xmax = 9000
-            config_ymin = 0
-            config_ymax = 30
-
-            overrideTickLocation = True
-            n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
-            xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
-            yTickInterval = 5
+    if analysisChoice.upper() == 'Y':
+        pass
+        # implement else: give option to change to override options
 
 
+    ## Plot Types, default line plot if false
+    plotWithScatter    = False
+    plotLineWithMarker = False
+
+    ## Marker Parameters
+    lw            = 3
+    scatterSize   = 50
+    markEdgeWidth = 1
+
+    ## Font Size
+    fs                  = 14
+    legend_fs_reduction = 5
+
+    ## Axis Adjustment Parameters
+    setX_AxInt  = -1
+    setY_AxInt  = 0
+    xAxisMinAdj = 0
+    xAxisMaxAdj = 0
+    yAxisMaxAdj = 0.0000001
 
 
-    elif suffix in [" - psi AOI", " - delta AOI", " - psi Time", " - delta Time"]:
+    # Override Parameters; ovrrideNoP, config_n0, config_nf
+    overrideNoP_Dict = {
+        " - isotherm":        [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - elasticity":      [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - pressure":        [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - normInjPressure": [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - area":            [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - compressions"     [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - expansions"       [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - cycles"           [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
 
-            ## Plot Types, default line plot if false
-            plotWithScatter    = False
-            plotLineWithMarker = False
+        " - psi AOI":         [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - delta AOI":       [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - psi Time":        [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - delta Time":      [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
 
-            ## Marker Parameters
-            lw            = 1
-            scatterSize   = 50
-            markEdgeWidth = 1
+        " - gammaL":          [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+        " - gammaP":          [False, [0, 2400, 0, 0], [600, 17000, 16, 16]],
+    }
 
-            ## Font Size
-            fs                  = 14
-            legend_fs_reduction = 5
+    overrideNoP = overrideNoP_Dict.get(suffix)[0]
+    config_n0   = overrideNoP_Dict.get(suffix)[1]
+    config_nf   = overrideNoP_Dict.get(suffix)[2]
 
-            ## Axis Adjustment Parameters
-            setX_AxInt  = -1
-            setY_AxInt  = 0
-            xAxisMinAdj = 0
-            xAxisMaxAdj = 0
-            yAxisMaxAdj = 0.0000001
 
-            ## Manual Override Parameters
-            overrideNoP = False
-            config_n0 = [0, 2400, 0, 0]
-            config_nf = [600, 17000, 16, 16]
+    # Override Parameters; overrideAxisLim, config_xmin, config_xmax, config_ymin, config_ymax
+    overrideAxis_Dict = {
+        " - isotherm":        [True, 0, 9000, 0, 30],
+        " - elasticity":      [True, 0, 9000, 0, 30],
+        " - pressure":        [True, 0, 9000, 0, 30],
+        " - normInjPressure": [True, 0, 9000, 0, 30],
+        " - area":            [True, 0, 9000, 0, 30],
+        " - compressions"     [True, 0, 9000, 0, 30],
+        " - expansions"       [True, 0, 9000, 0, 30],
+        " - cycles"           [True, 0, 9000, 0, 30],
 
-            overrideAxisLim = True
-            config_xmin = 0
-            config_xmax = 6000
-            config_ymin = 179
-            config_ymax = 180.2
+        " - psi AOI":         [True, 0, 6000, 179, 180.2],
+        " - delta AOI":       [True, 0, 6000, 179, 180.2],
+        " - psi Time":        [True, 0, 6000, 179, 180.2],
+        " - delta Time":      [True, 0, 6000, 179, 180.2],
 
-            overrideTickLocation = True
-            n_xticks      = 2               # number of x axis ticks in time plots (s); [n-1]
-            xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
-            yTickInterval = 1
+        " - gammaL":          [False, 0, 9000, 0, 6],
+        " - gammaP":          [False, 0, 9000, 0, 6],
+    }
 
-    elif suffix in [" - gammaL", " - gammaP"]:
+    overrideAxisLim = overrideAxis_Dict.get(suffix)[0]
+    config_xmin     = overrideAxis_Dict.get(suffix)[1]
+    config_xmax     = overrideAxis_Dict.get(suffix)[2]
+    config_ymin     = overrideAxis_Dict.get(suffix)[3]
+    config_ymax     = overrideAxis_Dict.get(suffix)[4]
 
-            ## Plot Types, default line plot if false
-            plotWithScatter    = False
-            plotLineWithMarker = False
 
-            ## Marker Parameters
-            lw            = 3
-            scatterSize   = 50
-            markEdgeWidth = 1
 
-            ## Font Size
-            fs                  = 14
-            legend_fs_reduction = 5
+    # Override Parameters; overrideTickLocation, n_xticks, xTickInterval, yTickInterval
+    overrideTick_Dict = {
+        " - isotherm":        [True, 3, 10, 5],
+        " - elasticity":      [True, 3, 10, 5],
+        " - pressure":        [True, 3, 10, 5],
+        " - normInjPressure": [True, 3, 10, 5],
+        " - area":            [True, 3, 10, 5],
+        " - compressions"     [True, 3, 10, 5],
+        " - expansions"       [True, 3, 10, 5],
+        " - cycles"           [True, 3, 10, 5],
 
-            ## Axis Adjustment Parameters
-            setX_AxInt  = -1
-            setY_AxInt  = 0
-            xAxisMinAdj = 0
-            xAxisMaxAdj = 0
-            yAxisMaxAdj = 0.0000001
+        " - psi AOI":         [True, 2, 10, 1],
+        " - delta AOI":       [True, 2, 10, 1],
+        " - psi Time":        [True, 2, 10, 1],
+        " - delta Time":      [True, 2, 10, 1],
 
-            ## Manual Override Parameters
-            overrideNoP = False
-            config_n0 = [0, 2400, 0, 0]
-            config_nf = [600, 17000, 16, 16]
+        " - gammaL":          [False, 3, 10, 1],
+        " - gammaP":          [False, 3, 10, 1],
+    }
 
-            overrideAxisLim = False
-            config_xmin = 0
-            config_xmax = 9000
-            config_ymin = 0
-            config_ymax = 6
+    overrideTickLocation = overrideTick_Dict.get(suffix)[0]
+    n_xticks             = overrideTick_Dict.get(suffix)[1]  # number of x axis ticks in time plots (s); [n-1]
+    xTickInterval        = overrideTick_Dict.get(suffix)[2]  # x, y axis tick interval for P vs t plots; x is mins plot only
+    yTickInterval        = overrideTick_Dict.get(suffix)[3]
 
-            overrideTickLocation = False
-            n_xticks      = 3
-            xTickInterval = 10
-            yTickInterval = 1
 
     return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\
             fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj,      \
