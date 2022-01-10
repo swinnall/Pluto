@@ -631,7 +631,7 @@ def main(info, title, inputDIR, plotDIR):
             genPlot.main(key,vars,suffix)
 
     # program executed
-    print('\nAnalysis Complete! Have a nice day :)')
+    print('\nAnalysis Complete!\n')
 
     return
 

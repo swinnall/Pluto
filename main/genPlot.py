@@ -6,6 +6,132 @@ import matplotlib.gridspec as gridspec
 import sys
 import config
 
+
+def plotParameters(suffix):
+
+    if suffix in [" - isotherm", " - elasticity", " - pressure", " - normInjPressure", " - area", " - compressions", " - expansions", " - cycles"]:
+
+            ## Plot Types, default line plot if false
+            plotWithScatter    = False
+            plotLineWithMarker = False
+
+            ## Marker Parameters
+            lw            = 3
+            scatterSize   = 50
+            markEdgeWidth = 1
+
+            ## Font Size
+            fs                  = 14
+            legend_fs_reduction = 5
+
+            ## Axis Adjustment Parameters
+            setX_AxInt  = -1
+            setY_AxInt  = 0
+            xAxisMinAdj = 0
+            xAxisMaxAdj = 0
+            yAxisMaxAdj = 0.0000001
+
+            ## Manual Override Parameters
+            overrideNoP = False
+            config_n0 = [0, 2400, 0, 0]
+            config_nf = [600, 17000, 16, 16]
+
+            overrideAxisLim = True
+            config_xmin = 0
+            config_xmax = 9000
+            config_ymin = 0
+            config_ymax = 30
+
+            overrideTickLocation = True
+            n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
+            xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
+            yTickInterval = 5
+
+
+
+    elif suffix in [" - psi AOI", " - delta AOI", " - psi Time", " - delta Time"]:
+
+            ## Plot Types, default line plot if false
+            plotWithScatter    = False
+            plotLineWithMarker = False
+
+            ## Marker Parameters
+            lw            = 1
+            scatterSize   = 50
+            markEdgeWidth = 1
+
+            ## Font Size
+            fs                  = 14
+            legend_fs_reduction = 5
+
+            ## Axis Adjustment Parameters
+            setX_AxInt  = -1
+            setY_AxInt  = 0
+            xAxisMinAdj = 0
+            xAxisMaxAdj = 0
+            yAxisMaxAdj = 0.0000001
+
+            ## Manual Override Parameters
+            overrideNoP = False
+            config_n0 = [0, 2400, 0, 0]
+            config_nf = [600, 17000, 16, 16]
+
+            overrideAxisLim = True
+            config_xmin = 0
+            config_xmax = 6000
+            config_ymin = 179
+            config_ymax = 180.2
+
+            overrideTickLocation = True
+            n_xticks      = 2               # number of x axis ticks in time plots (s); [n-1]
+            xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
+            yTickInterval = 1
+
+    elif suffix in [" - gammaL", " - gammaP"]:
+
+            ## Plot Types, default line plot if false
+            plotWithScatter    = False
+            plotLineWithMarker = False
+
+            ## Marker Parameters
+            lw            = 3
+            scatterSize   = 50
+            markEdgeWidth = 1
+
+            ## Font Size
+            fs                  = 14
+            legend_fs_reduction = 5
+
+            ## Axis Adjustment Parameters
+            setX_AxInt  = -1
+            setY_AxInt  = 0
+            xAxisMinAdj = 0
+            xAxisMaxAdj = 0
+            yAxisMaxAdj = 0.0000001
+
+            ## Manual Override Parameters
+            overrideNoP = False
+            config_n0 = [0, 2400, 0, 0]
+            config_nf = [600, 17000, 16, 16]
+
+            overrideAxisLim = True
+            config_xmin = 0
+            config_xmax = 9000
+            config_ymin = 0
+            config_ymax = 6
+
+            overrideTickLocation = True
+            n_xticks      = 3               # number of x axis ticks in time plots (s); [n-1]
+            xTickInterval = 10              # x, y axis tick interval for P vs t plots; x is mins plot only
+            yTickInterval = 1
+
+    return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\
+            fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj,      \
+            xAxisMaxAdj, yAxisMaxAdj, overrideNoP, config_n0, config_nf, overrideAxisLim,    \
+            config_xmin, config_xmax, config_ymin, config_ymax, overrideTickLocation, n_xticks,            \
+            xTickInterval, yTickInterval
+
+
 def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
 
     # extract the number of total files to be plotted
@@ -55,6 +181,13 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
 
 def plot(key, vars, suffix):
 
+    plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,       \
+     fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj, xAxisMaxAdj,\
+     yAxisMaxAdj, overrideNoP, config_n0, config_nf, overrideAxisLim, config_xmin, config_xmax, config_ymin,      \
+     config_ymax, overrideTickLocation, n_xticks, xTickInterval, yTickInterval = plotParameters(suffix)
+
+
+
     # unpack key into rows and columns for subplot
     if config.plotMultiPanel == True and suffix == " - isotherm":
         key = config.key
@@ -69,11 +202,6 @@ def plot(key, vars, suffix):
     # initialise figure
     fig = plt.figure()
     ax  = plt.axes()
-
-    # fontsize
-    fs = config.fs
-
-
 
 
     # iterate along subplots, currently just row 0 column 1-2
@@ -113,25 +241,25 @@ def plot(key, vars, suffix):
                     nf.append(len(x.get(i)))
 
             # alt. region of interest, NoP = number of points
-            if config.overrideNoP == True:
-                n0 = config.n0
-                nf = config.nf
+            if overrideNoP == True:
+                n0 = config_n0
+                nf = config_nf
 
 
     ## Plot
             for i in range(N):
 
                 # plots scatter plot with empty circles
-                if config.plotWithScatter == True:
-                    ax.scatter(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), s=config.scatterSize, edgecolors=config.c[i], linewidth=config.lw, facecolors='none')
+                if plotWithScatter == True:
+                    ax.scatter(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), s=scatterSize, edgecolors=config.c[i], linewidth=lw, facecolors='none')
 
                 # line plot with marker
-                elif config.plotLineWithMarker == True:
-                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=config.lw, marker=config.markerType[i], markerfacecolor="None", markeredgewidth=config.markEdgeWidth)
+                elif plotLineWithMarker == True:
+                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=lw, marker=config.markerType[i], markerfacecolor="None", markeredgewidth=markEdgeWidth)
 
                 # default line plot
                 else:
-                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=config.lw)
+                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=lw)
 
 
                 # store minimum and maximum values for axis scales
@@ -146,20 +274,20 @@ def plot(key, vars, suffix):
     ## Set Axis ranges / limits
 
             ymin = 0
-            if int(round(min(min_x_vals),-1)) + config.xAxisMinAdj >= 0:
-                xmin = int(round(min(min_x_vals),-1)) + config.xAxisMinAdj
+            if int(round(min(min_x_vals),-1)) + xAxisMinAdj >= 0:
+                xmin = int(round(min(min_x_vals),-1)) + xAxisMinAdj
             else: xmin = 0
 
-            xmax = int(round(max(max_x_vals),config.setX_AxInt)) + config.xAxisMaxAdj
-            ymax = int(round(max(max_y_vals),config.setY_AxInt)) + config.yAxisMaxAdj
+            xmax = int(round(max(max_x_vals),setX_AxInt)) + xAxisMaxAdj
+            ymax = int(round(max(max_y_vals),setY_AxInt)) + yAxisMaxAdj
 
 
             # alt. region of interest
-            if config.overrideAxisLim == True:
-                xmin = config.xmin
-                xmax = config.xmax
-                ymin = config.ymin
-                ymax = config.ymax
+            if overrideAxisLim == True:
+                xmin = config_xmin
+                xmax = config_xmax
+                ymin = config_ymin
+                ymax = config_ymax
 
             ax.set_xlim([xmin,xmax])
             ax.set_ylim([ymin,ymax])
@@ -175,7 +303,7 @@ def plot(key, vars, suffix):
                 # set axis ticks
                 init_xticks = np.arange(xmin, xmax+1, step=(3600))
                 ax.set_xticks(init_xticks)
-                ax.set_yticks(np.arange(config.ymin, ymax+config.yAxisMaxAdj, step=config.yTickInterval))
+                ax.set_yticks(np.arange(ymin, ymax+yAxisMaxAdj, step=yTickInterval))
 
                 # overwrite tick numbers
                 new_xticks = [i for i in range(0,int(xmax/3600)+1)]
@@ -187,21 +315,21 @@ def plot(key, vars, suffix):
 
                 init_xticks = np.arange(xmin, xmax+1, step=600)
                 ax.set_xticks(init_xticks)
-                ax.set_yticks(np.arange(config.ymin, ymax+config.yAxisMaxAdj, step=config.yTickInterval))
+                ax.set_yticks(np.arange(ymin, ymax+yAxisMaxAdj, step=yTickInterval))
 
-                new_xticks = [i for i in range(0,int(round(xmax/60,-1))+config.xTickInterval,config.xTickInterval)]
+                new_xticks = [i for i in range(0,int(round(xmax/60,-1))+xTickInterval,xTickInterval)]
                 plt.xticks(init_xticks, new_xticks)
 
 
-            elif xmax < 600 and suffix in config.tAxisList:
+            elif xmax < 600 and suffix in tAxisList:
                 axLabels["x"] = "Time (s)"
-                ax.set_xticks(np.arange(xmin, xmax+1, step=int( round(((xmin+xmax)/config.n_xticks),-1) )))
-                ax.set_yticks(np.arange(0, ymax+1, step=config.yTickInterval))
+                ax.set_xticks(np.arange(xmin, xmax+1, step=int( round(((xmin+xmax)/n_xticks),-1) )))
+                ax.set_yticks(np.arange(0, ymax+1, step=yTickInterval))
 
 
-            elif config.overrideTickLocation == True:
-                ax.set_xticks(np.arange(xmin, xmax+1, step=config.xTickInterval))
-                ax.set_yticks(np.arange(config.ymin, ymax+config.yAxisMaxAdj, step=config.yTickInterval))
+            elif overrideTickLocation == True:
+                ax.set_xticks(np.arange(xmin, xmax+1, step=xTickInterval))
+                ax.set_yticks(np.arange(ymin, ymax+yAxisMaxAdj, step=yTickInterval))
 
             else: pass
 
@@ -240,13 +368,13 @@ def plot(key, vars, suffix):
 
 
             # legend; plot along with every figure unless elasticity
-            if config.plotIsotherm == True and config.plotElasticity == True and col == 1:
-                pass
+            #if config.plotIsotherm == True and config.plotElasticity == True and col == 1:
+            #    pass
                 #ax.legend(prop={'size': fs-config.legend_fs_reduction, 'weight':'bold'}, frameon = False)
-            elif config.plotIsotherm == True and config.plotElasticity == True and col == 0:
-                pass
-            else:
-                ax.legend(prop={'size': fs-config.legend_fs_reduction, 'weight':'bold'}, frameon = False)
+            #elif config.plotIsotherm == True and config.plotElasticity == True and col == 0:
+            #    pass
+            #else:
+            #    ax.legend(prop={'size': fs-config.legend_fs_reduction, 'weight':'bold'}, frameon = False)
 
 
     ## Tick label size; legend; layout; show fig; save fig

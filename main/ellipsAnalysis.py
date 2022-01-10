@@ -193,7 +193,7 @@ def main(info, title, inputDIR, outputPath):
 
 
     # program executed
-    print('\nAnalysis Complete! Have a nice day :)')
+    print('\nAnalysis Complete!\n')
 
     return
 
