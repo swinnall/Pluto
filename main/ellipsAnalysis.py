@@ -9,6 +9,7 @@ import numpy as np
 from statistics import mean
 import warnings
 import cmath as cm
+import math
 import scipy.signal as sig
 import scipy.optimize as opt
 import config
@@ -155,15 +156,14 @@ def importTimeData(inputDIR, time_ID, nTime):
 
 
 
-# read in experiment data for AOI sets, Psi and Delta
-# looking to find parameters; par = [n1, d1, n2_0 (water), d2_0 (water)]
+
 
 def ellipsModel(AOI, par):
 
     # convert AOI to radians
     theta = []
     for i in range(len(AOI)):
-        theta = AOI * np.pi / 180
+        theta.append(AOI[i] * np.pi / 180)
 
 
     # wavelength of laser
@@ -179,7 +179,7 @@ def ellipsModel(AOI, par):
     n1 = par[0]
     d1 = par[1]
 
-    Nt1 = n1 - cm.j*k1
+    Nt1 = n1 - 1j*k1
 
 
     # film 2
@@ -187,18 +187,18 @@ def ellipsModel(AOI, par):
     n2 = par[2]
     d2 = par[3]
 
-    Nt1 = n2 - cm.j*k2
+    Nt2 = n2 - 1j*k2
 
 
     # substrate
     k3 = 0
     n3 = 1.337
 
-    Nt3 = n3 - cm.j*k3
+    Nt3 = n3 - 1j*k3
 
 
     # unknown
-    ct2 = -12.5663706143592*cm.j
+    ct2 = -12.5663706143592*1j
 
 
     Rho_model = []
@@ -224,21 +224,25 @@ def ellipsModel(AOI, par):
         crp21 = (rp21 + rp32*T2) / (1 + rp21*rp32*T2)
         crn21 = (rn21 + rn32*T2) / (1 + rn21*rn32*T2)
 
-        T1    = np.exp(ct2*Nt1*C1*d1/lambda);
+        T1    = np.exp(ct2*Nt1*C1*d1/lmbda);
         crp10 = (rp10 + crp21*T1) / (1 + rp10*crp21*T1)
         crn10 = (rn10 + crn21*T1) / (1 + rn10*crn21*T1)
 
-        Rho_model.append(crp10/crn10)
+
+        if math.isnan(crp10/crn10) == True:
+            pass
+        else:
+            Rho_model.append((crp10/crn10).real)
 
 
     Psi = []
-    for i in range(len(Rho)):
-        Psi.append( np.arctan(abs(Rho[i])) )
+    for i in range(len(Rho_model)):
+        Psi.append( np.arctan(abs(Rho_model[i])) )
 
 
     Delta = []
-    for i in range(len(Rho)):
-        Delta.append( np.angle(Rho[i]) * 180/np.pi )
+    for i in range(len(Rho_model)):
+        Delta.append( np.angle(Rho_model[i]) * 180/np.pi )
 
         if Delta[i] < 0:
             Delta[i] == Delta[i] + 360
@@ -250,7 +254,15 @@ def ellipsModel(AOI, par):
 
 # least square condition
 def leastsquare(Rho_exp, Rho_model):
-    return np.sum((Rho_exp - Rho_model)**2)
+
+    diffSq = []
+    for i, j in zip(Rho_exp,Rho_model):
+        #print(i)
+        #print(j)
+        diffSq.append( np.power(i-j,2) )
+        #print(np.power(i-j,2))
+
+    return np.sum(diffSq)
 
 
 
@@ -264,18 +276,45 @@ def residuals(par, AOI, Rho_exp):
 
 
 
+def parameterOptimisation(AOI, psi_AOI, delta_AOI):
 
+    # update variable names for easier processing
+    AOI       = AOI.get(0)
+    Psi_exp   = psi_AOI.get(0)
+    Delta_exp = delta_AOI.get(0)
 
-" In main put the folllowing "
+    # calculate experimental rho
+    Rho_exp = []
+    for i in range(len(Psi_exp)):
+        Rho_exp.append( np.tan(Psi_exp[i]) * cm.exp( 1j * Delta_exp[i] ).real )
 
-# define AOI and Rho_exp in main; # for i in range(len(Psi_exp)): Rho_exp.append(np.tan(Psi_exp[i]*cmath.exp(Delta_exp[i]*1j))
-# par    = [n1, d1, n2, d2]
-# bounds = [(0,2), (0,2), (1.3,1.4), (-0.1,0.1)] # could fix by defining in model function
-# geneticOutput = opt.differential_evolution(residuals, bounds, args=(AOI, Rho_exp), init='sobol', maxiter=10000) # might need args=*par or make par global
-# solution = geneticOutput.x
-# print(solution) # this is the list of output parameters
-# lstsq = residuals(AOI, solution); to check how good solution was
+    # define input parameters; [n1, d1, n2, d2] where x1 are film and x2 are water
+    par = [1, 1, 1.33, 0]
 
+    # associated parameter bounds; could fix pars by defining in model function
+    bounds = [(0,2), (0,2), (1.33,1.33), (0.0,0.0)]
+
+    # genetic algorithm
+    geneticOutput = opt.differential_evolution(residuals, bounds, args=(AOI, Rho_exp), maxiter=1000) # might need args=*par or make par global
+
+    # parameter solution
+    solution = geneticOutput.x
+    print("\nParameter solution (n1, d1, n2, d2):\n %s" %solution)
+
+    # associated cost
+    lstsq = residuals(solution, AOI, Rho_exp)
+    print("\nCost of chosen solution: %f" %lstsq)
+
+    # number of iterations
+    print("\nNumber of iterations: %s" %geneticOutput.nit)
+
+    # bool of success
+    print("\nOptimisation status: %s" %geneticOutput.success)
+
+    # termination message
+    print("\nTermination message: %s" %geneticOutput.message)
+
+    return
 
 
 
@@ -287,7 +326,7 @@ def main(info, title, inputDIR, outputPath):
 
 
     # give analysis choice to user
-    analysisOptions = ['plotAOIpsi','plotAOIdelta','plotTimePsi','plotTimeDelta']
+    analysisOptions = ['plotAOIpsi','plotAOIdelta','plotTimePsi','plotTimeDelta', 'parOpt']
 
     analysisRunning = True
     while analysisRunning:
@@ -302,7 +341,7 @@ def main(info, title, inputDIR, outputPath):
 
 
         # process data
-        if analysisType == 'plotAOIpsi' or analysisType == 'plotAOIdelta':
+        if analysisType == 'plotAOIpsi' or analysisType == 'plotAOIdelta' or analysisType == 'parOpt':
 
             if nAOI < 1:
                 print("Error: No AOI files in input.")
@@ -315,6 +354,12 @@ def main(info, title, inputDIR, outputPath):
             for i in range(nAOI):
                 for j in range(len(delta_AOI.get(i))):
                     delta_AOI[i][j] = delta_AOI.get(i)[j] * 180 / np.pi
+
+
+            if analysisType == 'parOpt':
+                parameterOptimisation(AOI, psi_AOI, delta_AOI)
+
+
 
 
         if analysisType == 'plotTimePsi' or analysisType == 'plotTimeDelta':
