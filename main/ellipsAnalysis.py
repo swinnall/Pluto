@@ -156,25 +156,9 @@ def importTimeData(inputDIR, time_ID, nTime):
 
 
 # read in experiment data for AOI sets, Psi and Delta
-# looking to find parameters; par = [n1, d1, n2, d2]
-# intial conditions: x0 = [n1_0, d1_0, n2_0 (water), d2_0 (water)] = [1, 1, 1.33 0];
-# bounds = [(0,2), (0,2), (1.3,1.4), (-0.1,0.1)]
-# test = opt.differential_evolution(residuals, bounds, init='sobol', maxiter=10000)
-# solution = test.x
-# print(solution)
-# print(test.nit)
-# lstsq = residuals(solution); to check how good solution was
-# out = np.append(solution, lstsq)
-# fit = np.vstack((fit,out))
+# looking to find parameters; par = [n1, d1, n2_0 (water), d2_0 (water)]
 
-
-def ellipsModel(data, par):
-
-    # unpack experimental data
-    AOI       = data[0]
-    Delta_exp = data[1]
-    Psi_exp   = data[2]
-
+def ellipsModel(AOI, par):
 
     # convert AOI to radians
     theta = []
@@ -217,7 +201,7 @@ def ellipsModel(data, par):
     ct2 = -12.5663706143592*cm.j
 
 
-    Rho = []
+    Rho_model = []
     for i in range(len(theta)):
 
         C0    = np.cos(theta[i])
@@ -244,7 +228,7 @@ def ellipsModel(data, par):
         crp10 = (rp10 + crp21*T1) / (1 + rp10*crp21*T1)
         crn10 = (rn10 + crn21*T1) / (1 + rn10*crn21*T1)
 
-        Rho.append(crp10/crn10)
+        Rho_model.append(crp10/crn10)
 
 
     Psi = []
@@ -259,38 +243,38 @@ def ellipsModel(data, par):
         if Delta[i] < 0:
             Delta[i] == Delta[i] + 360
 
-
-
-    return Rho, Psi, Delta
+    return Rho_model
 
 
 
 
 # least square condition
-def leastsquare(y, test):
-    return np.sum((y-test)**2)
+def leastsquare(Rho_exp, Rho_model):
+    return np.sum((Rho_exp - Rho_model)**2)
+
 
 
 # residual function for genetic algorithm
-def residuals(para):
+def residuals(par, AOI, Rho_exp):
 
     # where ellipsModel is the ellipsometry theory function
-    test = ellipsModel(x0, *para)
+    Rho_model = ellipsModel(AOI, par)
 
-    while np.size(y0) > np.size(test):
-        test = np.append(test,120)
-
-        if np.size(y0) == np.size(test):
-            break
-
-    return leastsquare(y0,test)
+    return leastsquare(Rho_exp, Rho_model)
 
 
 
 
 
+" In main put the folllowing "
 
-
+# define AOI and Rho_exp in main; # for i in range(len(Psi_exp)): Rho_exp.append(np.tan(Psi_exp[i]*cmath.exp(Delta_exp[i]*1j))
+# par    = [n1, d1, n2, d2]
+# bounds = [(0,2), (0,2), (1.3,1.4), (-0.1,0.1)] # could fix by defining in model function
+# geneticOutput = opt.differential_evolution(residuals, bounds, args=(AOI, Rho_exp), init='sobol', maxiter=10000) # might need args=*par or make par global
+# solution = geneticOutput.x
+# print(solution) # this is the list of output parameters
+# lstsq = residuals(AOI, solution); to check how good solution was
 
 
 
