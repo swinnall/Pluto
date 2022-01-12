@@ -8,6 +8,9 @@ import matplotlib.gridspec as gridspec
 import numpy as np
 from statistics import mean
 import warnings
+import cmath as cm
+import scipy.signal as sig
+import scipy.optimize as opt
 import config
 import genPlot
 
@@ -149,6 +152,147 @@ def importTimeData(inputDIR, time_ID, nTime):
         label_t[i] = time_ID[i].get('label')
 
     return t, psi_t, delta_t, label_t
+
+
+
+# read in experiment data for AOI sets, Psi and Delta
+# looking to find parameters; par = [n1, d1, n2, d2]
+# intial conditions: x0 = [n1_0, d1_0, n2_0 (water), d2_0 (water)] = [1, 1, 1.33 0];
+# bounds = [(0,2), (0,2), (1.3,1.4), (-0.1,0.1)]
+# test = opt.differential_evolution(residuals, bounds, init='sobol', maxiter=10000)
+# solution = test.x
+# print(solution)
+# print(test.nit)
+# lstsq = residuals(solution); to check how good solution was
+# out = np.append(solution, lstsq)
+# fit = np.vstack((fit,out))
+
+
+def ellipsModel(data, par):
+
+    # unpack experimental data
+    AOI       = data[0]
+    Delta_exp = data[1]
+    Psi_exp   = data[2]
+
+
+    # convert AOI to radians
+    theta = []
+    for i in range(len(AOI)):
+        theta = AOI * np.pi / 180
+
+
+    # wavelength of laser
+    lmbda = 632.8E-9
+
+
+    # refractive index of air
+    N0 = 1
+
+
+    # film 1
+    k1 = 0
+    n1 = par[0]
+    d1 = par[1]
+
+    Nt1 = n1 - cm.j*k1
+
+
+    # film 2
+    k2 = 0
+    n2 = par[2]
+    d2 = par[3]
+
+    Nt1 = n2 - cm.j*k2
+
+
+    # substrate
+    k3 = 0
+    n3 = 1.337
+
+    Nt3 = n3 - cm.j*k3
+
+
+    # unknown
+    ct2 = -12.5663706143592*cm.j
+
+
+    Rho = []
+    for i in range(len(theta)):
+
+        C0    = np.cos(theta[i])
+        S0    = np.sin(theta[i])
+
+        C1    = np.sqrt( 1 - (np.sin(theta[i])*(N0/Nt1))**2  )
+        rp10  = (Nt1*C0 - N0*C1) / (Nt1*C0 + N0*C1)
+        rn10  = (N0*C0 - Nt1*C1) / (N0*C0 + Nt1*C1)
+
+        C2    = np.sqrt( 1 - (np.sin(theta[i])*(N0/Nt2))**2  )
+        rp21  = (Nt2*C1 - Nt1*C2) / (Nt2*C1 + Nt1*C2)
+        rn21  = (Nt1*C1 - Nt2*C2) / (Nt1*C1 + Nt2*C2)
+
+        T2    = np.exp(ct2*Nt2*C2*d2/lmbda)
+
+        C3    = np.sqrt( 1 - (np.sin(theta[i])*(N0/Nt3))**2  )
+        rp32  = (Nt3*C2 - Nt2*C3) / (Nt3*C2 + Nt2*C3)
+        rn32  = (Nt2*C2 - Nt3*C3) / (Nt2*C2 + Nt3*C3)
+
+        crp21 = (rp21 + rp32*T2) / (1 + rp21*rp32*T2)
+        crn21 = (rn21 + rn32*T2) / (1 + rn21*rn32*T2)
+
+        T1    = np.exp(ct2*Nt1*C1*d1/lambda);
+        crp10 = (rp10 + crp21*T1) / (1 + rp10*crp21*T1)
+        crn10 = (rn10 + crn21*T1) / (1 + rn10*crn21*T1)
+
+        Rho.append(crp10/crn10)
+
+
+    Psi = []
+    for i in range(len(Rho)):
+        Psi.append( np.arctan(abs(Rho[i])) )
+
+
+    Delta = []
+    for i in range(len(Rho)):
+        Delta.append( np.angle(Rho[i]) * 180/np.pi )
+
+        if Delta[i] < 0:
+            Delta[i] == Delta[i] + 360
+
+
+
+    return Rho, Psi, Delta
+
+
+
+
+# least square condition
+def leastsquare(y, test):
+    return np.sum((y-test)**2)
+
+
+# residual function for genetic algorithm
+def residuals(para):
+
+    # where ellipsModel is the ellipsometry theory function
+    test = ellipsModel(x0, *para)
+
+    while np.size(y0) > np.size(test):
+        test = np.append(test,120)
+
+        if np.size(y0) == np.size(test):
+            break
+
+    return leastsquare(y0,test)
+
+
+
+
+
+
+
+
+
 
 
 
