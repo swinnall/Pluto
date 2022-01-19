@@ -17,7 +17,7 @@ import SurfaceExcess
 def modSelection(analysisOptions):
 
     # ask user to pick one of the analysisOptions
-    print("~~~\nAnalysis Options:\n %s" %analysisOptions)
+    print("\n~~~\nAnalysis Options:\n %s" %analysisOptions)
 
     analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to exit:\n  " %(len(analysisOptions)-1))
 
@@ -103,7 +103,7 @@ def organisePaths(analysisType, fname, source):
     except:
         print("Instructions Copying Error:\n  Error occurred while copying file.")
 
-    return info, title, inputPath, outputPath
+    return info, title, inputPath, outputPath, new_name
 
 
 
@@ -120,7 +120,7 @@ def main():
         analysisType, fname, source = modSelection(analysisOptions)
 
         # get file and path information
-        info, title, inputPath, outputPath = organisePaths(analysisType, fname, source)
+        info, title, inputPath, outputPath, new_name = organisePaths(analysisType, fname, source)
 
         # calls analysis module
         if analysisType == analysisOptions[0]:
