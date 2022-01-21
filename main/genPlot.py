@@ -53,7 +53,7 @@ def plotParameters(suffix):
     setY_AxInt  = 0
     xAxisMinAdj = 0
     xAxisMaxAdj = 0
-    yAxisMaxAdj = 0.0000001
+    yAxisMaxAdj = 1
 
 
 
@@ -96,7 +96,7 @@ def plotParameters(suffix):
         overrideTickLocation = False
         n_xticks             = 3
         xTickInterval        = 10
-        yTickInterval        = 10
+        yTickInterval        = 0.2
 
 
     return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\

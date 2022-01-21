@@ -176,10 +176,10 @@ lipidStruct = {
     "DOPE": ('N-O8-P','C41-H78'),
     "SM": ('N2-O6-P','C47-H93'),
     "LBPA": ('N-O10-P','C42-H82'),
-    "Cholesterol": ('O-H','C27-H45'),
-    "d45-Cholesterol": ('O-H','C27-D45'),
-    "DLin-MC3-DMA": ('N-O2-C8-H13','C37-H66'),
-    "d-DLin-MC3-DMA": ('N-O2-C8-H13','C37-H4-D62'),
+    "Cholesterol": ('O-H','C27-H45'),                   # full: ('O-H','C27-H45'); upper tail: ('O-H','C4-H4'); lower tail: ('O-H','C23-H41')
+    "d45-Cholesterol": ('O-H','C27-D45'),               # full: ('O-H','C27-D45'); upper tail: ('O-H','C4-D4'); lower tail: ('O-H','C23-D41')
+    "DLin-MC3-DMA": ('N-O2-C8-H13','C37-H66'),          # full: ('N-O2-C8-H13','C37-H66'); upper tail: ('N-O2-C8-H13','C4-H4'); lower tail: ('N-O2-C8-H13','C33-H62')
+    "d-DLin-MC3-DMA": ('N-O2-C8-H13','C37-H4-D62'),     # full: ('N-O2-C8-H13','C37-H4-D62'); upper tail: ('N-O2-C8-H13','C4-H4'); lower tail: ('N-O2-C8-H13','C33-D62')
     "DSPC": ('N-O8-P','C44-H88'),
     "DMG-PEG-2000": ('O50','C122-H242'),
     "PolyA": ('C10-H13-K-N5-O7-P','H')
