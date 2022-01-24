@@ -141,20 +141,20 @@ markerType = markerDict.get("0")
 
 # molecular weight lipid database, [g/mol]
 lipidMw = {
-    "DPPC": 734.039,
-    "d-DPPC": 796.43,
-    "POPC": 760.07,  # 760.076
-    "d31-POPC": 791.07, # 791.267
-    "POPS": 783.99,
-    "Cholesterol": 386.65,  # 386.654
+    "DPPC":            734.039,
+    "d-DPPC":          796.43,
+    "POPC":            760.07,  # 760.076
+    "d31-POPC":        791.07, # 791.267
+    "POPS":            783.99,
+    "Cholesterol":     386.65,  # 386.654
     "d45-Cholesterol": 432,
-    "DLin-KC2-DMA": 642.1,
-    "DLin-MC3-DMA": 642.09,
-    "d-DLin-MC3-DMA": 704.5,
-    "DOPE": 744.034,
-    "SM": 760.223,
-    "LBPA": 792.07,
-    "PolyA": 385.31,
+    "DLin-KC2-DMA":    642.1,
+    "DLin-MC3-DMA":    642.09,
+    "d-DLin-MC3-DMA":  704.5,
+    "DOPE":            744.034,
+    "SM":              760.223,
+    "LBPA":            792.07,
+    "PolyA":           385.31,
     }
 
 # atom coherent scattering lengths [fm], Coh b from https://www.ncnr.nist.gov/resources/n-lengths/
@@ -171,41 +171,62 @@ atomSL = {
 # chemical structures for each lipid: (struct_head, struct_tail)
 # Assumption: only hydrogens and carbons in the tails
 lipidStruct = {
-    "POPC": ('C10-H18-N-O8-P','C32-H64'),
-    "d31-POPC": ('C10-H18-N-O8-P','C32-D31-H33'),
-    "DOPE": ('N-O8-P','C41-H78'),
-    "SM": ('N2-O6-P','C47-H93'),
-    "LBPA": ('N-O10-P','C42-H82'),
-    "Cholesterol": ('O-H','C27-H45'),                   # full: ('O-H','C27-H45'); upper tail: ('O-H','C4-H4'); lower tail: ('O-H','C23-H41')
-    "d45-Cholesterol": ('O-H','C27-D45'),               # full: ('O-H','C27-D45'); upper tail: ('O-H','C4-D4'); lower tail: ('O-H','C23-D41')
-    "DLin-MC3-DMA": ('N-O2-C8-H13','C37-H66'),          # full: ('N-O2-C8-H13','C37-H66'); upper tail: ('N-O2-C8-H13','C4-H4'); lower tail: ('N-O2-C8-H13','C33-H62')
-    "d-DLin-MC3-DMA": ('N-O2-C8-H13','C37-H4-D62'),     # full: ('N-O2-C8-H13','C37-H4-D62'); upper tail: ('N-O2-C8-H13','C4-H4'); lower tail: ('N-O2-C8-H13','C33-D62')
-    "DSPC": ('N-O8-P','C44-H88'),
-    "DMG-PEG-2000": ('O50','C122-H242'),
-    "PolyA": ('C10-H13-K-N5-O7-P','H')
+    "POPC":            ('C10-H18-N-O8-P','C32-H64'),
+    "d31-POPC":        ('C10-H18-N-O8-P','C32-D31-H33'),
+    "DOPE":            ('N-O8-P','C41-H78'),
+    "SM":              ('N2-O6-P','C47-H93'),
+    "LBPA":            ('N-O10-P','C42-H82'),
+    "Cholesterol":     ('O-H','C27-H45'),
+    "d45-Cholesterol": ('O-H','C27-D45'),
+    "DLin-MC3-DMA":    ('N-O2-C6-H12','C37-H67'),
+    "d-DLin-MC3-DMA":  ('N-O2-C6-H12','C37-H5-D62'),
+    "DSPC":            ('N-O8-P','C44-H88'),
+    "DMG-PEG-2000":    ('O50','C122-H242'),
+    "PolyA":           ('C10-H13-K-N5-O7-P','H')
     }
+
+## Modelling MC3 Chol Monolayer (full | split) ##
+
+## C2H4 MC3 Model (full | split)
+#  h-MC3:  ('N-O2-C7-H13', 'C36-H66')     | ('N-O2-C7-H13', 'C2-H4', 'C34-H62')
+#  d-MC3:  ('N-O2-C7-H13', 'C36-H4-D62')  | ('N-O2-C7-H13', 'C2-H4', 'C34-D62')
+
+## C3H5 MC3 Model (full | split)
+#  h-MC3:  ('N-O2-C6-H12', 'C37-H67')     | ('N-O2-C6-H12', 'C3-H5', 'C34-H62')
+#  d-MC3:  ('N-O2-C6-H12', 'C37-H5-D62')  | ('N-O2-C6-H12', 'C3-H5', 'C34-D62')
+
+# C2H3 Cholesterol Model
+#  h-chol:  ('O-H', 'C27-H45')   | ('O-H', 'C2-H3', 'C25-H42')
+#  d-chol:  ('O-H', 'C27-D45')   | ('O-H', 'C2-D3', 'C25-D42')
+
+
 
 # molecular volumes for each lipid (Angstroms cubed): (head, tail)
 lipidMolVol = {
-    "POPC": (344,937),
-    "d31-POPC": (344,937),
-    "DOPE": (236,969),
-    "SM": (274,953),
-    "LBPA": (208,624),
-    "Cholesterol": (5,624),
+    "POPC":            (344,937),
+    "d31-POPC":        (344,937),
+    "DOPE":            (236,969),
+    "SM":              (274,953),
+    "LBPA":            (208,624),
+    "Cholesterol":     (5,624),
     "d45-Cholesterol": (5,624),
-    "DLin-MC3-DMA": (260,1030), # (290,1000)
-    "d-DLin-MC3-DMA": (260,1030),
-    "DSPC": (322,1000),
-    "DMG-PEG-2000": (200,470),
-    "PolyA": (1,1)
+    "DLin-MC3-DMA":    (260,1030), # (290,1000)
+    "d-DLin-MC3-DMA":  (260,1030),
+    "DSPC":            (322,1000),
+    "DMG-PEG-2000":    (200,470),
+    "PolyA":           (1,1)
     }
 
 # dict of input instructions names and output file names
 pathNames = {
-    "isoAnalysis": ('Instructions - Isotherm','Isotherm'),
-    "ellipsAnalysis": ('Instructions - Ellipsometry','Ellipsometry'),
+    "isoAnalysis":      ('Instructions - Isotherm','Isotherm'),
+    "ellipsAnalysis":   ('Instructions - Ellipsometry','Ellipsometry'),
     "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),
-    "sldAnalysis": ('Instructions - SLD','SLD'),
-    "SurfaceExcess": ('Instructions - SurfaceExcess', 'Surface Excess'),
+    "sldAnalysis":      ('Instructions - SLD','SLD'),
+    "SurfaceExcess":    ('Instructions - SurfaceExcess', 'Surface Excess'),
     }
+
+
+
+
+#
