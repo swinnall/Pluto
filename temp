@@ -1,0 +1,169 @@
+
+
+def ellipsModel(AOI, par):
+
+    # convert AOI to radians
+    theta = []
+    for i in range(len(AOI)):
+        theta.append(AOI[i] * np.pi / 180)
+
+
+    # wavelength of laser
+    lmbda = 632.8E-9
+
+
+    # refractive index of air
+    N0 = 1
+
+
+    # film 1
+    k1 = 0
+    n1 = par[0]
+    d1 = par[1]
+
+    Nt1 = n1 - 1j*k1
+
+
+    # film 2
+    k2 = 0
+    n2 = par[2]
+    d2 = par[3]
+
+    Nt2 = n2 - 1j*k2
+
+
+    # substrate
+    k3 = 0
+    n3 = 1.337
+
+    Nt3 = n3 - 1j*k3
+
+
+    # unknown
+    ct2 = -12.5663706143592*1j
+
+
+    Rho_model = []
+    for i in range(len(theta)):
+
+        C0    = np.cos(theta[i])
+        S0    = np.sin(theta[i])
+
+        C1    = np.sqrt( 1 - (np.sin(theta[i])*(N0/Nt1))**2  )
+        rp10  = (Nt1*C0 - N0*C1) / (Nt1*C0 + N0*C1)
+        rn10  = (N0*C0 - Nt1*C1) / (N0*C0 + Nt1*C1)
+
+        C2    = np.sqrt( 1 - (np.sin(theta[i])*(N0/Nt2))**2  )
+        rp21  = (Nt2*C1 - Nt1*C2) / (Nt2*C1 + Nt1*C2)
+        rn21  = (Nt1*C1 - Nt2*C2) / (Nt1*C1 + Nt2*C2)
+
+        T2    = np.exp(ct2*Nt2*C2*d2/lmbda)
+
+        C3    = np.sqrt( 1 - (np.sin(theta[i])*(N0/Nt3))**2  )
+        rp32  = (Nt3*C2 - Nt2*C3) / (Nt3*C2 + Nt2*C3)
+        rn32  = (Nt2*C2 - Nt3*C3) / (Nt2*C2 + Nt3*C3)
+
+        crp21 = (rp21 + rp32*T2) / (1 + rp21*rp32*T2)
+        crn21 = (rn21 + rn32*T2) / (1 + rn21*rn32*T2)
+
+        T1    = np.exp(ct2*Nt1*C1*d1/lmbda);
+        crp10 = (rp10 + crp21*T1) / (1 + rp10*crp21*T1)
+        crn10 = (rn10 + crn21*T1) / (1 + rn10*crn21*T1)
+
+
+        if math.isnan(crp10/crn10) == True:
+            pass
+        else:
+            Rho_model.append((crp10/crn10).real)
+
+
+    Psi = []
+    for i in range(len(Rho_model)):
+        Psi.append( np.arctan(abs(Rho_model[i])) )
+
+
+    Delta = []
+    for i in range(len(Rho_model)):
+        Delta.append( np.angle(Rho_model[i]) * 180/np.pi )
+
+        if Delta[i] < 0:
+            Delta[i] == Delta[i] + 360
+
+    return Rho_model
+
+
+
+
+# least square condition
+def leastsquare(Rho_exp, Rho_model):
+
+    diffSq = []
+    for i, j in zip(Rho_exp,Rho_model):
+        diffSq.append( np.power(i-j,2) )
+
+    return np.sum(diffSq)
+
+
+
+# residual function for genetic algorithm
+def residuals(par, AOI, Rho_exp):
+
+    # where ellipsModel is the ellipsometry theory function
+    Rho_model = ellipsModel(AOI, par)
+
+    return leastsquare(Rho_exp, Rho_model)
+
+
+
+def parameterOptimisation(AOI, psi_AOI, delta_AOI):
+
+    # update variable names for easier processing
+    AOI       = AOI.get(0)
+    Psi_exp   = psi_AOI.get(0)
+    Delta_exp = delta_AOI.get(0)
+
+    # calculate experimental rho
+    Rho_exp = []
+    for i in range(len(Psi_exp)):
+        Rho_exp.append( np.tan(Psi_exp[i]) * cm.exp( 1j * Delta_exp[i] ).real )
+
+    # define input parameters; [n1, d1, n2, d2] where x1 are film and x2 are water
+    par = [1, 1, 1.33, 0]
+
+    # associated parameter bounds; could fix pars by defining in model function
+    bounds = [(0,2), (0,2), (1.33,1.33), (0.0,0.0)]
+
+    # genetic algorithm
+    geneticOutput = opt.differential_evolution(residuals, bounds, args=(AOI, Rho_exp), maxiter=1000) # might need args=*par or make par global
+
+    # parameter solution
+    solution = geneticOutput.x
+    print("\nParameter solution (n1, d1, n2, d2):\n %s" %solution)
+
+    # associated cost
+    lstsq = residuals(solution, AOI, Rho_exp)
+    print("\nCost of chosen solution: %f" %lstsq)
+
+    # number of iterations
+    print("\nNumber of iterations: %s" %geneticOutput.nit)
+
+    # bool of success
+    print("\nOptimisation status: %s" %geneticOutput.success)
+
+    # termination message
+    print("\nTermination message: %s" %geneticOutput.message)
+
+    return
+
+
+
+A, lmbda1, phi1, B, lmbda2, phi2, c
+
+## Parameters of petri dish test
+# A      = 0.2
+# Lmbda1 = 6475
+# phi1   = -0.972
+# B      = 0.1040
+# lmbda2 = 79744
+# phi2   = 3.140
+# c      = 180.23
