@@ -1,3 +1,0 @@
-filename,deltaP
-KC2-chol PBS 2 cycles,0.912187
-KC2-chol PBS polyA 2 cycles,0.35265

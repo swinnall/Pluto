@@ -1,5 +1,0 @@
-filename,deltaP
-100 ul h-MC3 ACMW PBS,0.00735885
-100 ul h-MC3 h-Chol ACMW PBS,0.0588498
-100 ul h-MC3 ACMW Citrate,0.209453
-100 ul h-MC3 h-Chol ACMW Citrate,1.08479

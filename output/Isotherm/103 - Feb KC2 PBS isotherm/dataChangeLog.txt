@@ -1,3 +1,0 @@
-filename,deltaP
-KC2-PBS buffer 4 cycles - scaled - reduced,0.0
-KC2-PBS polyA buffer 4 cycles - scaled - reduced,0.0

@@ -1,4 +1,0 @@
-title=MC3 injection prelim study reduced
-filename,equipment,nLipids,lipidType,lipidRatio,conc,volAdded,label
-120ul MC3 PBS stability and injection - reduced,Nima,1,DLin-MC3-DMA,1,0.1,120.0E-6,MC3
-120ul MC3 chol PBS stability and injection - reduced,Nima,2,DLin-MC3-DMA:Cholesterol,75:25,0.1,120.0E-6,MC3:Chol (75:25)

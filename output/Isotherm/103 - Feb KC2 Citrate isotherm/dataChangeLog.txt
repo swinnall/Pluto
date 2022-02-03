@@ -1,3 +1,0 @@
-filename,deltaP
-KC2-citrate buffer 3 cycles - scaled - reduced,0.8514720000000002
-KC2-citrate polyA buffer 4 cycles - reduced to last cycle,0.204579

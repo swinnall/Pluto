@@ -1,3 +1,0 @@
-filename,deltaP
-KC2-chol citrate 2nd cycle - scaled,0.05189400000000033
-KC2-chol citrate polyA 2 cycles - 2nd cycle,0.916889

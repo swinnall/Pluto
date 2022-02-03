@@ -1,4 +1,0 @@
-title=endosome sldInfo
-membranes,lipidRatios,label
-POPC:Cholesterol,8:0,h-test
-d-POPC:Cholesterol,8:0,d-test

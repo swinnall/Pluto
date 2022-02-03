@@ -1,9 +1,0 @@
-title=d-MC3 d-Chol (75-25)
-lipidType,lipidAmount,stockConc,weightTot=0.1,finConc=0.1,ratioType=ratio
-d-DLin-MC3-DMA,75,1.0
-d-Cholesterol,25,1.0
-
-Calculated Quantities:
-83.03 uL of d-DLin-MC3-DMA
-16.97 uL of d-Cholesterol
-900.00 uL of chloroform
