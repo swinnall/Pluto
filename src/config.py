@@ -1,6 +1,31 @@
 " Module that defines global variables for Pluto"
 
 
+##############
+# File Paths #
+##############
+
+inputDir  = "../UoM-Data-Repository/input/"
+outputDir = "../UoM-Data-Repository/output/"
+
+# dict of input instructions names and output file names
+pathNames = {
+    "isoAnalysis":      ('Instructions - Isotherm','Isotherm'),
+    "ellipsAnalysis":   ('Instructions - Ellipsometry','Ellipsometry'),
+    "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),
+    "sldAnalysis":      ('Instructions - SLD','SLD'),
+    "SurfaceExcess":    ('Instructions - SurfaceExcess', 'Surface Excess'),
+    }
+
+
+#################
+# Print Options #
+#################
+
+verbose      = True
+very_verbose = False
+
+
 ################
 # IAP Analysis #
 ################
@@ -19,13 +44,6 @@ key = [(1,1)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
 useCycles  = [0,1,2,3,4]                # list of cycles to be used in isotherm
 nPoly      = 40                      # order of the elasticity fit
 nth        = 60                      # data reduction; take every 'nth' point
-
-
-##########################
-# Ellipsometry Analysis #
-########################
-
-
 
 
 #################
@@ -60,24 +78,15 @@ overPlotGammaLP = False
 
 
 #############
-# Printing #
-############
-
-# print extra info
-verbose      = True
-very_verbose = False
-
-
-#############
 # Plotting #
 ############
-
-# List of plot types that use the time axis
-tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time"]
 
 ## Save Options
 saveAsPNG = True
 saveAsPDF = True
+
+# List of plot types that use the time axis
+tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time"]
 
 ## Colours
 colourDict = {
@@ -216,17 +225,3 @@ lipidMolVol = {
     "DMG-PEG-2000":    (200,470),
     "PolyA":           (1,1)
     }
-
-# dict of input instructions names and output file names
-pathNames = {
-    "isoAnalysis":      ('Instructions - Isotherm','Isotherm'),
-    "ellipsAnalysis":   ('Instructions - Ellipsometry','Ellipsometry'),
-    "chemFormulations": ('Instructions - ChemFormulation','Chem Formulations'),
-    "sldAnalysis":      ('Instructions - SLD','SLD'),
-    "SurfaceExcess":    ('Instructions - SurfaceExcess', 'Surface Excess'),
-    }
-
-
-
-
-#

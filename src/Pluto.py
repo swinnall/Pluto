@@ -1,6 +1,5 @@
 " Pluto "
 " Author: @S.Winnall "
-# Reads config input and prepares information for subsequent analysis
 
 import glob, os, sys
 import csv
@@ -17,10 +16,10 @@ import SurfaceExcess
 def modSelection(analysisOptions):
 
     # root input directory
-    inputDir  = "../UoM-Data-Repository/input/"
+    inputDir  = config.inputDir
 
     # root output directory
-    outputDir = "../UoM-Data-Repository/output/"
+    outputDir = config.outputDir
 
 
     # ask user to pick one of the analysisOptions
