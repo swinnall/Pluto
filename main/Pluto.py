@@ -16,6 +16,13 @@ import SurfaceExcess
 
 def modSelection(analysisOptions):
 
+    # root input directory
+    inputDir  = "../../UoM-Data-Repository/input/"
+
+    # root output directory
+    outputDir = "../../UoM-Data-Repository/output/"
+
+
     # ask user to pick one of the analysisOptions
     print("\n~~~\nAnalysis Options:\n %s" %analysisOptions)
 
@@ -34,23 +41,26 @@ def modSelection(analysisOptions):
         sys.exit()
 
 
-    # root input directory
-    root = "../input/"
-
     # calls from config database
-    fname = config.pathNames.get(analysisType)[0]
+    instructionsName = config.pathNames.get(analysisType)[0]
+
 
     # instructions file path
-    source = "" + root + fname + ".txt"
-
-    return analysisType, fname, source
+    instructionsPath = "" + inputDir + instructionsName + ".txt"
 
 
+    # create input path for data source
+    inputDataPath = '' + inputDir + '/00 - ' + config.pathNames.get(analysisType)[1] + ''
 
-def organisePaths(analysisType, fname, source):
+
+    return analysisType, outputDir, instructionsName, instructionsPath, inputDataPath
+
+
+
+def organisePaths(analysisType, outputDir, instructionsName, instructionsPath, inputDataPath):
 
     # read instructions
-    with open(source, newline = '') as f:
+    with open(instructionsPath, newline = '') as f:
         reader = csv.reader(f, delimiter=",")
         info = list(reader)
 
@@ -63,12 +73,8 @@ def organisePaths(analysisType, fname, source):
     title = info[0][0].split('=')[1]
 
 
-    # create input path for data source
-    inputPath = '../input/00 - ' + config.pathNames.get(analysisType)[1] + ''
-
-
     # create output path for analysis
-    outputPath = '../output/' + config.pathNames.get(analysisType)[1] + '/' + title + ''
+    outputPath = '' + outputDir + '/' + config.pathNames.get(analysisType)[1] + '/' + title + ''
 
 
     # delete folder if exists and create it again
@@ -79,12 +85,14 @@ def organisePaths(analysisType, fname, source):
         os.mkdir(outputPath)
 
 
-    # copy input analysis information to outputPath
     try:
-        shutil.copyfile(source, outputPath + '/' + fname + '.txt')
-        old_name = outputPath + '/' + fname + '.txt'
-        new_name = outputPath + '/' + title + ' - ' + fname + '.txt'
-        os.rename(old_name, new_name)
+        # copy input instructions information to outputPath directory
+        shutil.copyfile(instructionsPath, outputPath + '/' + instructionsName + '.txt')
+
+        # rename the copied instructions file to include the title of the analysis
+        old_name           = outputPath + '/' + instructionsName + '.txt'
+        outputDataFilePath = outputPath + '/' + title + ' - ' + instructionsName + '.txt'
+        os.rename(old_name, outputDataFilePath)
 
 
     # if source and destination are same
@@ -103,7 +111,7 @@ def organisePaths(analysisType, fname, source):
     except:
         print("Instructions Copying Error:\n  Error occurred while copying file.")
 
-    return info, title, inputPath, outputPath, new_name
+    return info, title, outputPath, outputDataFilePath
 
 
 
@@ -117,26 +125,26 @@ def main():
     while PlutoRunning:
 
         # get name of instructions file
-        analysisType, fname, source = modSelection(analysisOptions)
+        analysisType, outputDir, instructionsName, instructionsPath, inputDataPath = modSelection(analysisOptions)
 
         # get file and path information
-        info, title, inputPath, outputPath, new_name = organisePaths(analysisType, fname, source)
+        info, title, outputPath, outputDataFilePath = organisePaths(analysisType, outputDir, instructionsName, instructionsPath)
 
         # calls analysis module
         if analysisType == analysisOptions[0]:
-            isoAnalysis.main(info, title, inputPath, outputPath)
+            isoAnalysis.main(info, title, inputDataPath, outputPath)
 
         if analysisType == analysisOptions[1]:
-            ellipsAnalysis.main(info, title, inputPath, outputPath)
+            ellipsAnalysis.main(info, title, inputDataPath, outputPath)
 
         if analysisType == analysisOptions[2]:
-            chemFormulations.main(info, new_name)
+            chemFormulations.main(info, outputDataFilePath)
 
         if analysisType == analysisOptions[3]:
-            sldAnalysis.main(info, new_name)
+            sldAnalysis.main(info, outputDataFilePath)
 
         if analysisType == analysisOptions[4]:
-            SurfaceExcess.main(info, title, inputPath, outputPath)
+            SurfaceExcess.main(info, title, inputDataPath, outputPath)
 
     return
 
