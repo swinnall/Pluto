@@ -8,7 +8,7 @@ import config
 
 class Membrane:
 
-    def __init__(self, lipidNames, molRatios, thickness, outputPath):
+    def __init__(self, lipidNames, molRatios, thickness, outputFilePath):
         self.lipidNames  = lipidNames
         self.molRatios   = molRatios
         self.thickness   = thickness
@@ -20,7 +20,7 @@ class Membrane:
         self.lipidMolVol = config.lipidMolVol
 
         # import filepath
-        self.outputPath = outputPath
+        self.outputFilePath = outputFilePath
 
         # initialise new variables
         self.headVolFrac   = 0
@@ -264,7 +264,7 @@ class Membrane:
     def appendFile(self):
 
         ## Write to file
-        with open(self.outputPath, 'a', newline = '') as f:
+        with open(self.outputFilePath, 'a', newline = '') as f:
 
             f.write('\nCalculated Membrane: %s\n' %self.lipidNames)
             f.write("Average SL;  Head = %.4f; Tail = %.4f\n" %(self.avSL.get("head"),self.avSL.get("tails")))
@@ -281,13 +281,13 @@ class Membrane:
 
 
 
-def importSampleData(info):
+def importSampleData(instructionsFile):
 
     # number of header rows
     nHeader = 2
 
     # number of membranes to analyse
-    nMemb  = len(info) - nHeader
+    nMemb  = len(instructionsFile) - nHeader
 
     # variable initialisations
     membranes   = {init: 0 for init in range(nMemb)}
@@ -298,16 +298,16 @@ def importSampleData(info):
 
 
     # assign data
-    for i in range(nHeader,len(info)):
+    for i in range(nHeader,len(instructionsFile)):
 
         # correct for indexing
         j = i - nHeader
 
-        membranes[j]   = info[i][0]
-        lipidRatios[j] = info[i][1]
-        t_thick[j]     = info[i][2]
-        h_thick[j]     = info[i][3]
-        labels[j]      = info[i][4]
+        membranes[j]   = instructionsFile[i][0]
+        lipidRatios[j] = instructionsFile[i][1]
+        t_thick[j]     = instructionsFile[i][2]
+        h_thick[j]     = instructionsFile[i][3]
+        labels[j]      = instructionsFile[i][4]
 
 
 
@@ -321,7 +321,7 @@ def hasNumbers(inputString):
 
 
 
-def main(info, outputPath):
+def main(instructionsFile, outputFilePath):
 
     # initialise global variables for averageAgain func
     global monolayerMolVol
@@ -334,7 +334,7 @@ def main(info, outputPath):
 
 
     # import txt instructions
-    nMemb, membranes, lipidRatios, t_thick, h_thick, labels = importSampleData(info)
+    nMemb, membranes, lipidRatios, t_thick, h_thick, labels = importSampleData(instructionsFile)
 
 
     # calculate component volumes
@@ -351,7 +351,7 @@ def main(info, outputPath):
 
 
         # create class instance with input variables
-        m = Membrane(lipids, ratios, thickness, outputPath)
+        m = Membrane(lipids, ratios, thickness, outputFilePath)
 
         # converts 3:5 to 3/8:5/8
         m.normaliseMolarRatios()
@@ -385,7 +385,7 @@ def main(info, outputPath):
             lipids = ["Monolayer", "DLin-MC3-DMA"]
             ratios = [80, 20]
 
-            m = Membrane(lipids, ratios, thicknesses, outputPath)
+            m = Membrane(lipids, ratios, thicknesses, outputFilePath)
             m.normaliseMolarRatios()
             if config.useVolFrac == True: m.calcVolFrac()
             m.calcSL()

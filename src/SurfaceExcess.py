@@ -46,26 +46,26 @@ def modSelection(analysisOptions):
 
 
 ## Import Functions
-def importSampleData(info):
+def importSampleData(instructionsFile):
 
     # number of header rows
     nHeaders = 2
 
     # number of isotherms to plot
-    nFiles  = len(info) - nHeaders
+    nFiles  = len(instructionsFile) - nHeaders
 
     # variable initialisations
     fileNames  = {init: 0 for init in range(nFiles)}
     l          = {init: 0 for init in range(nFiles)}
 
     # assign data
-    for i in range(nHeaders,len(info)):
+    for i in range(nHeaders,len(instructionsFile)):
 
         # correct for indexing
         j = i - nHeaders
 
-        fileNames[j]  = info[i][0]
-        l[j]          = info[i][1]
+        fileNames[j]  = instructionsFile[i][0]
+        l[j]          = instructionsFile[i][1]
 
     return nFiles, fileNames, l
 
@@ -161,7 +161,7 @@ def smoothData(genList):
 
 
 # Main
-def main(info, title, inputDIR, plotDIR):
+def main(instructionsFile, title, inputDIR, plotDIR):
 
     # filter warnings
     warnings.filterwarnings("ignore")
@@ -179,7 +179,7 @@ def main(info, title, inputDIR, plotDIR):
 
 
         # user input & sample instructions information
-        nFiles, fileNames, l = importSampleData(info)
+        nFiles, fileNames, l = importSampleData(instructionsFile)
 
 
         # initialise dicts, store 1 file in each list

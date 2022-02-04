@@ -46,13 +46,13 @@ def modSelection(analysisOptions):
 
 
 ## Import Functions
-def importSampleData(info):
+def importSampleData(instructionsFile):
 
     # number of header rows
     nHeaders = 2
 
     # number of isotherms to plot
-    nFiles  = len(info) - nHeaders
+    nFiles  = len(instructionsFile) - nHeaders
 
     # variable initialisations
     fileNames  = {init: 0 for init in range(nFiles)}
@@ -65,19 +65,19 @@ def importSampleData(info):
     l          = {init: 0 for init in range(nFiles)}
 
     # assign data
-    for i in range(nHeaders,len(info)):
+    for i in range(nHeaders,len(instructionsFile)):
 
         # correct for indexing
         j = i - nHeaders
 
-        fileNames[j]  = info[i][0]
-        equip[j]      = info[i][1]
-        nLipids[j]    = info[i][2]
-        lipidType[j]  = info[i][3]
-        lipidRatio[j] = info[i][4]
-        conc[j]       = info[i][5]
-        volAdded[j]   = info[i][6]
-        l[j]          = info[i][7]
+        fileNames[j]  = instructionsFile[i][0]
+        equip[j]      = instructionsFile[i][1]
+        nLipids[j]    = instructionsFile[i][2]
+        lipidType[j]  = instructionsFile[i][3]
+        lipidRatio[j] = instructionsFile[i][4]
+        conc[j]       = instructionsFile[i][5]
+        volAdded[j]   = instructionsFile[i][6]
+        l[j]          = instructionsFile[i][7]
 
     return nFiles, fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l
 
@@ -456,7 +456,7 @@ def splitCycles(type, cycleX, cycleY, l):
 
 
 # Main
-def main(info, title, inputDIR, plotDIR):
+def main(instructionsFile, title, inputDIR, plotDIR):
 
     # filter warnings
     warnings.filterwarnings("ignore")
@@ -467,7 +467,7 @@ def main(info, title, inputDIR, plotDIR):
 
 
     # user input & sample instructions information
-    nFiles, fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l = importSampleData(info)
+    nFiles, fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l = importSampleData(instructionsFile)
 
 
     # give analysis choice to user

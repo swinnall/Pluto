@@ -4,13 +4,13 @@ import csv
 import glob, os
 import config
 
-def importSampleData(info):
+def importSampleData(instructionsFile):
 
     # number of header rows
     nHeader = 2
 
     # number of isotherms to plot
-    nLipids  = len(info) - nHeader
+    nLipids  = len(instructionsFile) - nHeader
 
     # variable initialisations
     lipidType   = {init: 0 for init in range(nLipids)}
@@ -18,19 +18,19 @@ def importSampleData(info):
     stockConc   = {init: 0 for init in range(nLipids)}
 
     # assign data
-    for i in range(nHeader,len(info)):
+    for i in range(nHeader,len(instructionsFile)):
 
         # correct for indexing
         j = i - nHeader
 
-        lipidType[j]   =       info[i][0]
-        lipidAmount[j] =       info[i][1]
-        stockConc[j]   = float(info[i][2])
+        lipidType[j]   =       instructionsFile[i][0]
+        lipidAmount[j] =       instructionsFile[i][1]
+        stockConc[j]   = float(instructionsFile[i][2])
 
     # different info location for weight total and final concentration
-    wTotal    = float(info[1][3].split('=')[1])
-    finConc   = float(info[1][4].split('=')[1])
-    ratioType =       info[1][5].split('=')[1]
+    wTotal    = float(instructionsFile[1][3].split('=')[1])
+    finConc   = float(instructionsFile[1][4].split('=')[1])
+    ratioType =       instructionsFile[1][5].split('=')[1]
 
 
     return nLipids, lipidType, lipidAmount, stockConc, wTotal, finConc, ratioType
@@ -93,10 +93,10 @@ def calc(nLipids, lipidMW, lipidType, lipidFrac, stockConc, wTotal, finConc):
     return volAdd, V_CHCl3
 
 
-def output(nLipids, lipidType, stockConc, wTotal, finConc, volAdd, V_CHCl3, outputPath):
+def output(nLipids, lipidType, stockConc, wTotal, finConc, volAdd, V_CHCl3, outputFilePath):
 
     ## Write to file
-    with open(outputPath, 'a', newline = '') as f:
+    with open(outputFilePath, 'a', newline = '') as f:
 
         f.write('\nCalculated Quantities:\n')
         for i in range(nLipids):
@@ -126,14 +126,14 @@ def output(nLipids, lipidType, stockConc, wTotal, finConc, volAdd, V_CHCl3, outp
     return
 
 
-def main(info, outputPath):
+def main(instructionsFile, outputFilePath):
 
     # import molecular weight database
     lipidMW = config.lipidMw
 
 
     # import chemical analysis info
-    nLipids, lipidType, lipidAmount, stockConc, wTotal, finConc, ratioType = importSampleData(info)
+    nLipids, lipidType, lipidAmount, stockConc, wTotal, finConc, ratioType = importSampleData(instructionsFile)
 
 
     # if lipids are given in ratio (molar percentage) convert to fractional
@@ -151,7 +151,7 @@ def main(info, outputPath):
 
 
     # print output of program to terminal
-    output(nLipids, lipidType, stockConc, wTotal, finConc, volAdd, V_CHCl3, outputPath)
+    output(nLipids, lipidType, stockConc, wTotal, finConc, volAdd, V_CHCl3, outputFilePath)
 
     return
 

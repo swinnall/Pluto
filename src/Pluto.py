@@ -32,7 +32,7 @@ def modSelection(analysisOptions):
         sys.exit()
 
     elif analysisChoice in [str(i) for i in range(len(analysisOptions))]:
-        analysisType   = analysisOptions[int(analysisChoice)]
+        analysisType = analysisOptions[int(analysisChoice)]
         print("You picked %s.py\n" %analysisType)
 
     else:
@@ -44,54 +44,64 @@ def modSelection(analysisOptions):
     instructionsName = config.pathNames.get(analysisType)[0]
 
 
+    # input/output folder names to be accessed within root in/output directory
+    inputOutputStem  = config.pathNames.get(analysisType)[1]
+
+
     # instructions file path
     instructionsPath = "" + inputDir + instructionsName + ".txt"
 
 
-    # create input path for data source
-    inputDataPath = '' + inputDir + '/00 - ' + config.pathNames.get(analysisType)[1] + ''
+    # input data files path
+    inputDataPath    = '' + inputDir + '/' + inputOutputStem + ''
 
 
-    return analysisType, outputDir, instructionsName, instructionsPath, inputDataPath
+    # output data files path
+    outputDataPath   = '' + outputDir + '/' + inputOutputStem + ''
+
+
+    return analysisType, instructionsName, instructionsPath, inputDataPath, outputDataPath
 
 
 
-def organisePaths(analysisType, outputDir, instructionsName, instructionsPath, inputDataPath):
+def organisePaths(analysisType, instructionsName, instructionsPath, outputDataPath):
 
     # read instructions
     with open(instructionsPath, newline = '') as f:
         reader = csv.reader(f, delimiter=",")
-        info = list(reader)
+        instructionsFile = list(reader)
 
 
     # filter out rows that start with '#'
-    info = [x for x in info if not x[0].startswith('#')]
+    instructionsFile = [x for x in instructionsFile if not x[0].startswith('#')]
 
 
-    # gets title of the analysis
-    title = info[0][0].split('=')[1]
+    # gets title of the analysis stated in the instructions file
+    title = instructionsFile[0][0].split('=')[1]
 
 
-    # create output path for analysis
-    outputPath = '' + outputDir + '/' + config.pathNames.get(analysisType)[1] + '/' + title + ''
+    # update output path to include title of chosen analysis
+    # this is a folder name; eg output/chemFormulations/analysisTitle/
+    outputDataPath = '' outputDataPath + '/' + title + ''
 
 
-    # delete folder if exists and create it again
     try:
-        shutil.rmtree(outputPath)
-        os.mkdir(outputPath)
+        # delete folder if exists and create it again
+        shutil.rmtree(outputDataPath)
+        os.mkdir(outputDataPath)
     except FileNotFoundError:
-        os.mkdir(outputPath)
+        os.mkdir(outputDataPath)
 
 
     try:
-        # copy input instructions information to outputPath directory
-        shutil.copyfile(instructionsPath, outputPath + '/' + instructionsName + '.txt')
+        # copy input instructions instructionsFilermation to outputDataPath directory
+        shutil.copyfile(instructionsPath, outputDataPath + '/' + instructionsName + '.txt')
 
-        # rename the copied instructions file to include the title of the analysis
-        old_name           = outputPath + '/' + instructionsName + '.txt'
-        outputDataFilePath = outputPath + '/' + title + ' - ' + instructionsName + '.txt'
-        os.rename(old_name, outputDataFilePath)
+        # rename copied instructions file to include analysis title
+        # this is the file which will be appended in the relevant analysis
+        old_name              = outputDataPath + '/' + instructionsName + '.txt'
+        outputInstructionFile = outputDataPath + '/' + title + ' - ' + instructionsName + '.txt'
+        os.rename(old_name, outputInstructionFile)
 
 
     # if source and destination are same
@@ -110,7 +120,8 @@ def organisePaths(analysisType, outputDir, instructionsName, instructionsPath, i
     except:
         print("Instructions Copying Error:\n  Error occurred while copying file.")
 
-    return info, title, outputPath, outputDataFilePath
+
+    return instructionsFile, title, outputDataPath, outputInstructionFile
 
 
 
@@ -123,27 +134,27 @@ def main():
     PlutoRunning = True
     while PlutoRunning:
 
-        # get name of instructions file
-        analysisType, outputDir, instructionsName, instructionsPath, inputDataPath = modSelection(analysisOptions)
+        # selects module and creates relevant file paths
+        analysisType, instructionsName, instructionsPath, inputDataPath, outputDataPath = modSelection(analysisOptions)
 
-        # get file and path information
-        info, title, outputPath, outputDataFilePath = organisePaths(analysisType, outputDir, instructionsName, instructionsPath)
+        # reads instructions instructionsFile, gets title and paths
+        instructionsFile, title, outputDataPath, outputInstructionFile = organisePaths(analysisType, instructionsName, instructionsPath, outputDataPath)
 
         # calls analysis module
         if analysisType == analysisOptions[0]:
-            isoAnalysis.main(info, title, inputDataPath, outputPath)
+            isoAnalysis.main(instructionsFile, title, inputDataPath, outputDataPath)
 
         if analysisType == analysisOptions[1]:
-            ellipsAnalysis.main(info, title, inputDataPath, outputPath)
+            ellipsAnalysis.main(instructionsFile, title, inputDataPath, outputDataPath)
 
         if analysisType == analysisOptions[2]:
-            chemFormulations.main(info, outputDataFilePath)
+            chemFormulations.main(instructionsFile, outputInstructionFile)
 
         if analysisType == analysisOptions[3]:
-            sldAnalysis.main(info, outputDataFilePath)
+            sldAnalysis.main(instructionsFile, outputInstructionFile)
 
         if analysisType == analysisOptions[4]:
-            SurfaceExcess.main(info, title, inputDataPath, outputPath)
+            SurfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
 
     return
 

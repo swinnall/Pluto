@@ -45,13 +45,13 @@ def modSelection(analysisOptions):
     return analysisType, analysisRunning
 
 
-def importSampleInfo(info):
+def importSampleInfo(instructionsFile):
 
     # number of header rows
     nHeaders = 2
 
     # number of isotherms to plot
-    nFiles  = len(info) - nHeaders
+    nFiles  = len(instructionsFile) - nHeaders
 
     # create ID and count structures for later parsing
     AOI_ID  = []; nAOI  = 0
@@ -60,12 +60,12 @@ def importSampleInfo(info):
     # separate input data into relevant ID lists of dicts
     for i in range(nHeaders,nHeaders+nFiles):
 
-        if info[i][1].upper() == "NULL":
-            AOI_ID.append({'fname': info[i][0], 'label': info[i][2]})
+        if instructionsFile[i][1].upper() == "NULL":
+            AOI_ID.append({'fname': instructionsFile[i][0], 'label': instructionsFile[i][2]})
             nAOI += 1
 
         else:
-            time_ID.append({'fname': info[i][0], 'refname': info[i][1], 'label': info[i][2]})
+            time_ID.append({'fname': instructionsFile[i][0], 'refname': instructionsFile[i][1], 'label': instructionsFile[i][2]})
             nTime += 1
 
     return AOI_ID, nAOI, time_ID, nTime
@@ -263,7 +263,7 @@ def fitSine(t, delta_t):
 
 
 
-def main(info, title, inputDIR, outputPath):
+def main(instructionsFile, title, inputDIR, outputPath):
 
     ## this is to calibrate the periodicity subtraction of the data
     ## Create simpleFit option that analyses the periodicity of sample data - could extend to comparison between multiple fits
@@ -295,7 +295,7 @@ def main(info, title, inputDIR, outputPath):
 
 
         # user input & sample instructions information
-        AOI_ID, nAOI, time_ID, nTime = importSampleInfo(info)
+        AOI_ID, nAOI, time_ID, nTime = importSampleInfo(instructionsFile)
 
 
         # process data
