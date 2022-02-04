@@ -281,37 +281,15 @@ class Membrane:
 
 
 
-def importSampleData(instructionsFile):
+def importSampleData(instructionsFile, sampleNum):
 
-    # number of header rows
-    nHeader = 2
+    membrane   = instructionsFile["membranes"][sampleNum]
+    lipidRatio = instructionsFile["lipidRatios"][sampleNum]
+    t_thick    = instructionsFile["d1"][sampleNum]
+    h_thick    = instructionsFile["d2"][sampleNum]
+    label      = instructionsFile["label"][sampleNum]
 
-    # number of membranes to analyse
-    nMemb  = len(instructionsFile) - nHeader
-
-    # variable initialisations
-    membranes   = {init: 0 for init in range(nMemb)}
-    lipidRatios = {init: 0 for init in range(nMemb)}
-    t_thick     = {init: 0 for init in range(nMemb)}
-    h_thick     = {init: 0 for init in range(nMemb)}
-    labels      = {init: 0 for init in range(nMemb)}
-
-
-    # assign data
-    for i in range(nHeader,len(instructionsFile)):
-
-        # correct for indexing
-        j = i - nHeader
-
-        membranes[j]   = instructionsFile[i][0]
-        lipidRatios[j] = instructionsFile[i][1]
-        t_thick[j]     = instructionsFile[i][2]
-        h_thick[j]     = instructionsFile[i][3]
-        labels[j]      = instructionsFile[i][4]
-
-
-
-    return nMemb, membranes, lipidRatios, t_thick, h_thick, labels
+    return membrane, lipidRatio, t_thick, h_thick, label
 
 
 
@@ -332,22 +310,27 @@ def main(instructionsFile, outputFilePath):
     monolayerSL     = {'head': 0, 'tails': 0}
     monolayerSLD    = {'head': 0, 'tails': 0}
 
-
-    # import txt instructions
-    nMemb, membranes, lipidRatios, t_thick, h_thick, labels = importSampleData(instructionsFile)
-
+    # number of membranes to calculate
+    nMemb = len(instructionsFile)
 
     # calculate component volumes
-    for i in range(nMemb):
+    for sampleNum in range(nMemb):
 
-        print("\n\n\nMembrane %d - %s" %(i+1,labels.get(i)))
+        # import sample data
+        membrane, lipidRatio, t_thick, h_thick, label = importSampleData(instructionsFile, sampleNum)
 
-        lipids = re.split(':',membranes.get(i))
-        ratios = re.split(':',lipidRatios.get(i))
+        # print membrane label to terminal
+        print("\n\n\nMembrane %d - %s" %(sampleNum+1,label))
 
-        thickness = {'head': 0, 'tails': 0}
-        thickness['tails'] = float(t_thick.get(i))
-        thickness['head']  = float(h_thick.get(i))
+        # get list of lipids within membrane with ratio
+        lipids = re.split(':',membrane)
+        ratios = re.split(':',str(lipidRatio))
+
+        # structure thickness information into dict
+        thickness = {
+            'head':  float(h_thick),
+            'tails': float(t_thick)
+        }
 
 
         # create class instance with input variables

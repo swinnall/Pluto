@@ -19,9 +19,12 @@ import genPlot
 def modSelection(analysisOptions):
 
     # ask user to pick one of the analysisOptions
-    print("~~~\nSurface pressure analysis Options:\n %s" %analysisOptions)
-
-    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to reutrn to landing page:\n  " %(len(analysisOptions)-1) )
+    print("\n~~~\nAnalysis Options:")
+    for i,option in enumerate(analysisOptions):
+        print("%d: %s" %(i+1,option))
+    print("~~~\n")
+    
+    analysisChoice = input("Which analysis would you like to do? Pick the associated number (1-%d) or 'q' to reutrn to landing page:\n  " %len(analysisOptions) )
 
     if analysisChoice == 'q':
         print("Returning to Pluto landing page.\n\n")
@@ -32,8 +35,8 @@ def modSelection(analysisOptions):
         print("Session closed.")
         sys.exit()
 
-    elif analysisChoice in [str(i) for i in range(len(analysisOptions))]:
-        analysisType = analysisOptions[int(analysisChoice)]
+    elif analysisChoice in [str(i) for i in range(len(analysisOptions)+1)]:
+        analysisType = analysisOptions[int(analysisChoice)-1]
         print("You picked %s.py\n" %analysisType)
         analysisRunning = True
 
@@ -46,13 +49,7 @@ def modSelection(analysisOptions):
 
 
 ## Import Functions
-def importSampleData(instructionsFile):
-
-    # number of header rows
-    nHeaders = 2
-
-    # number of isotherms to plot
-    nFiles  = len(instructionsFile) - nHeaders
+def importSampleData(instructionsFile, nFiles):
 
     # variable initialisations
     fileNames  = {init: 0 for init in range(nFiles)}
@@ -65,21 +62,18 @@ def importSampleData(instructionsFile):
     l          = {init: 0 for init in range(nFiles)}
 
     # assign data
-    for i in range(nHeaders,len(instructionsFile)):
+    for i in range(nFiles):
 
-        # correct for indexing
-        j = i - nHeaders
+        fileNames[i]  = instructionsFile["filename"][i]
+        equip[i]      = instructionsFile["equipment"][i]
+        nLipids[i]    = instructionsFile["nLipids"][i]
+        lipidType[i]  = instructionsFile["lipidType"][i]
+        lipidRatio[i] = instructionsFile["lipidRatio"][i]
+        conc[i]       = instructionsFile["conc"][i]
+        volAdded[i]   = instructionsFile["volAdded"][i]
+        l[i]          = instructionsFile["label"][i]
 
-        fileNames[j]  = instructionsFile[i][0]
-        equip[j]      = instructionsFile[i][1]
-        nLipids[j]    = instructionsFile[i][2]
-        lipidType[j]  = instructionsFile[i][3]
-        lipidRatio[j] = instructionsFile[i][4]
-        conc[j]       = instructionsFile[i][5]
-        volAdded[j]   = instructionsFile[i][6]
-        l[j]          = instructionsFile[i][7]
-
-    return nFiles, fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l
+    return fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l
 
 
 
@@ -219,7 +213,10 @@ def smoothData(genList):
 
 
 ## Calculation Functions
-def calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc, volAdded):
+def calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdded):
+
+    # import molecular weight database
+    lipidMW = config.lipidMw
 
     # Aoagadro's Number
     NA = 6.0221409E23
@@ -230,7 +227,7 @@ def calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc
     Am       = []
 
     # extract lipid types and ratios from string, returns list of one tuple per var
-    if int(nLipids.get(i)[0]) > 1:
+    if nLipids.get(i) > 1:
         types  = re.split(':',lipidType.get(i))
         ratios = re.split(':',lipidRatio.get(i))
 
@@ -243,7 +240,7 @@ def calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc
             Mw += lipidMW.get(types[j]) * int(ratios[j]) / ratioTot
 
     # different condition if there is only one input lipid
-    elif int(nLipids.get(i)[0]) == 1:
+    elif nLipids.get(i) == 1:
         types = lipidType.get(i)
 
         # lipids are singular
@@ -256,7 +253,7 @@ def calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc
 
     # calculate area per molecule
     for j in range(0,len(A_list)):
-        Am.append(   ( A_list[j] / (ast.literal_eval(conc.get(i)) * ast.literal_eval(volAdded.get(i))) ) * (Mw/NA) )
+        Am.append(   ( A_list[j] / (conc.get(i) * volAdded.get(i)) ) * (Mw/NA) )
 
     return Am
 
@@ -462,12 +459,12 @@ def main(instructionsFile, title, inputDIR, plotDIR):
     warnings.filterwarnings("ignore")
 
 
-    # import molecular weight database
-    lipidMW = config.lipidMw
+    # number of isotherms to plot
+    nFiles  = len(instructionsFile)
 
 
     # user input & sample instructions information
-    nFiles, fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l = importSampleData(instructionsFile)
+    fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l = importSampleData(instructionsFile, nFiles)
 
 
     # give analysis choice to user
@@ -528,7 +525,7 @@ def main(instructionsFile, title, inputDIR, plotDIR):
         ## Essential calculations
 
             # calculates area per molecule for given file i
-            Am_list = calcAreaPerMolecule(i, A_list, lipidMW, lipidType, nLipids, lipidRatio, conc, volAdded)
+            Am_list = calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdded)
 
             # converts list units to Angstroms and stores in dict
             for j in range(len(Am_list)):

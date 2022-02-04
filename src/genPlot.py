@@ -295,7 +295,7 @@ def plot(key, vars, suffix):
                 plt.xticks(init_xticks, new_xticks)
 
 
-            elif xmax < 600 and suffix in tAxisList:
+            elif xmax < 600 and suffix in config.tAxisList:
                 axLabels["x"] = "Time (s)"
                 ax.set_xticks(np.arange(xmin, xmax+1, step=int( round(((xmin+xmax)/n_xticks),-1) )))
                 ax.set_yticks(np.arange(0, ymax+1, step=yTickInterval))

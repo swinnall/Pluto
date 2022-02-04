@@ -19,9 +19,12 @@ import genPlot
 def modSelection(analysisOptions):
 
     # ask user to pick one of the analysisOptions
-    print("~~~\nElasticity analysis Options:\n %s" %analysisOptions)
-
-    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to reutrn to landing page:\n  " %(len(analysisOptions)-1) )
+    print("\n~~~\nAnalysis Options:")
+    for i,option in enumerate(analysisOptions):
+        print("%d: %s" %(i+1,option))
+    print("~~~\n")
+    
+    analysisChoice = input("Which analysis would you like to do? Pick the associated number (1-%d) or 'q' to reutrn to landing page:\n  " %len(analysisOptions))
 
     if analysisChoice == 'q':
         print("Returning to Pluto landing page.\n\n")
@@ -32,8 +35,8 @@ def modSelection(analysisOptions):
         print("Session closed.")
         sys.exit()
 
-    elif analysisChoice in [str(i) for i in range(len(analysisOptions))]:
-        analysisType = analysisOptions[int(analysisChoice)]
+    elif analysisChoice in [str(i) for i in range(len(analysisOptions)+1)]:
+        analysisType = analysisOptions[int(analysisChoice)-1]
         print("You picked %s.\n" %analysisType)
         analysisRunning = True
 
@@ -47,25 +50,22 @@ def modSelection(analysisOptions):
 
 def importSampleInfo(instructionsFile):
 
-    # number of header rows
-    nHeaders = 2
-
     # number of isotherms to plot
-    nFiles  = len(instructionsFile) - nHeaders
+    nFiles  = len(instructionsFile)
 
     # create ID and count structures for later parsing
     AOI_ID  = []; nAOI  = 0
     time_ID = []; nTime = 0
 
     # separate input data into relevant ID lists of dicts
-    for i in range(nHeaders,nHeaders+nFiles):
+    for i in range(nFiles):
 
-        if instructionsFile[i][1].upper() == "NULL":
-            AOI_ID.append({'fname': instructionsFile[i][0], 'label': instructionsFile[i][2]})
+        if instructionsFile["refname"][i].upper() == "NULL":
+            AOI_ID.append({'fname': instructionsFile["filename"][i], 'label': instructionsFile["label"][i]})
             nAOI += 1
 
         else:
-            time_ID.append({'fname': instructionsFile[i][0], 'refname': instructionsFile[i][1], 'label': instructionsFile[i][2]})
+            time_ID.append({'fname': instructionsFile["filename"][i], 'refname': instructionsFile["refname"][i], 'label': instructionsFile["label"][i]})
             nTime += 1
 
     return AOI_ID, nAOI, time_ID, nTime

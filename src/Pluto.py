@@ -2,6 +2,7 @@
 " Author: @S.Winnall "
 
 import glob, os, sys
+import pandas as pd
 import csv
 import shutil
 from shutil import copyfile
@@ -23,16 +24,19 @@ def modSelection(analysisOptions):
 
 
     # ask user to pick one of the analysisOptions
-    print("\n~~~\nAnalysis Options:\n %s" %analysisOptions)
+    print("\n~~~\nAnalysis Options:")
+    for i,option in enumerate(analysisOptions):
+        print("%d: %s" %(i+1,option))
+    print("~~~\n")
 
-    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to exit:\n  " %(len(analysisOptions)-1))
+    analysisChoice = input("Which analysis would you like to do? Pick the associated number (1-%d) or 'q' to exit:\n  " %len(analysisOptions))
 
     if analysisChoice == 'q':
         print("Session closed.")
         sys.exit()
 
-    elif analysisChoice in [str(i) for i in range(len(analysisOptions))]:
-        analysisType = analysisOptions[int(analysisChoice)]
+    elif analysisChoice in [str(i) for i in range(len(analysisOptions)+1)]:
+        analysisType = analysisOptions[int(analysisChoice)-1]
         print("You picked %s.py\n" %analysisType)
 
     else:
@@ -66,23 +70,18 @@ def modSelection(analysisOptions):
 
 def organisePaths(analysisType, instructionsName, instructionsPath, outputDataPath):
 
-    # read instructions
+    # get analysis title
     with open(instructionsPath, newline = '') as f:
-        reader = csv.reader(f, delimiter=",")
-        instructionsFile = list(reader)
+        title = list(csv.reader(f))[0][0].split('=')[1]
 
 
-    # filter out rows that start with '#'
-    instructionsFile = [x for x in instructionsFile if not x[0].startswith('#')]
+    # read instructions file with pandas
+    instructionsFile = pd.read_csv(instructionsPath, header=1, comment='#')
 
 
-    # gets title of the analysis stated in the instructions file
-    title = instructionsFile[0][0].split('=')[1]
-
-
-    # update output path to include title of chosen analysis
-    # this is a folder name; eg output/chemFormulations/analysisTitle/
-    outputDataPath = '' outputDataPath + '/' + title + ''
+    # update output path folder dir to include title of chosen analysis
+    # e.g. output/chemFormulations/analysisTitle/
+    outputDataPath = '' + outputDataPath + '/' + title + ''
 
 
     try:
@@ -128,8 +127,8 @@ def organisePaths(analysisType, instructionsName, instructionsPath, outputDataPa
 
 def main():
 
-    analysisOptions = ['isoAnalysis','ellipsAnalysis','chemFormulations',      \
-                        'sldAnalysis','SurfaceExcess']
+    analysisOptions = ['isoAnalysis','ellipsAnalysis', 'SurfaceExcess',        \
+                        'chemFormulations', 'sldAnalysis']
 
     PlutoRunning = True
     while PlutoRunning:
@@ -148,13 +147,13 @@ def main():
             ellipsAnalysis.main(instructionsFile, title, inputDataPath, outputDataPath)
 
         if analysisType == analysisOptions[2]:
-            chemFormulations.main(instructionsFile, outputInstructionFile)
+            SurfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
 
         if analysisType == analysisOptions[3]:
-            sldAnalysis.main(instructionsFile, outputInstructionFile)
+            chemFormulations.main(instructionsFile, outputInstructionFile)
 
         if analysisType == analysisOptions[4]:
-            SurfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
+            sldAnalysis.main(instructionsFile, outputInstructionFile)
 
     return
 

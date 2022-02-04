@@ -19,9 +19,12 @@ import genPlot
 def modSelection(analysisOptions):
 
     # ask user to pick one of the analysisOptions
-    print("~~~\nElasticity analysis Options:\n %s" %analysisOptions)
-
-    analysisChoice = input("Which analysis would you like to do? Pick the associated number (0-%d) or 'q' to reutrn to landing page:\n  " %(len(analysisOptions)-1) )
+    print("\n~~~\nAnalysis Options:")
+    for i,option in enumerate(analysisOptions):
+        print("%d: %s" %(i+1,option))
+    print("~~~\n")
+    
+    analysisChoice = input("Which analysis would you like to do? Pick the associated number (1-%d) or 'q' to reutrn to landing page:\n  " %len(analysisOptions) )
 
     if analysisChoice == 'q':
         print("Returning to Pluto landing page.\n\n")
@@ -32,8 +35,8 @@ def modSelection(analysisOptions):
         print("Session closed.")
         sys.exit()
 
-    elif analysisChoice in [str(i) for i in range(len(analysisOptions))]:
-        analysisType = analysisOptions[int(analysisChoice)]
+    elif analysisChoice in [str(i) for i in range(len(analysisOptions)+1)]:
+        analysisType = analysisOptions[int(analysisChoice)-1]
         print("You picked %s.py\n" %analysisType)
         analysisRunning = True
 
@@ -46,28 +49,19 @@ def modSelection(analysisOptions):
 
 
 ## Import Functions
-def importSampleData(instructionsFile):
-
-    # number of header rows
-    nHeaders = 2
-
-    # number of isotherms to plot
-    nFiles  = len(instructionsFile) - nHeaders
+def importSampleData(instructionsFile, nFiles):
 
     # variable initialisations
     fileNames  = {init: 0 for init in range(nFiles)}
     l          = {init: 0 for init in range(nFiles)}
 
     # assign data
-    for i in range(nHeaders,len(instructionsFile)):
+    for i in range(nFiles):
 
-        # correct for indexing
-        j = i - nHeaders
+        fileNames[i]  = instructionsFile["fname"][i]
+        l[i]          = instructionsFile["label"][i]
 
-        fileNames[j]  = instructionsFile[i][0]
-        l[j]          = instructionsFile[i][1]
-
-    return nFiles, fileNames, l
+    return fileNames, l
 
 
 
@@ -177,10 +171,11 @@ def main(instructionsFile, title, inputDIR, plotDIR):
         if analysisRunning == False:
             break
 
+        # number of files to plot
+        nFiles  = len(instructionsFile)
 
         # user input & sample instructions information
-        nFiles, fileNames, l = importSampleData(instructionsFile)
-
+        fileNames, l = importSampleData(instructionsFile, nFiles)
 
         # initialise dicts, store 1 file in each list
         t      = {new_list: [] for new_list in range(nFiles)}

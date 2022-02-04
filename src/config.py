@@ -5,8 +5,8 @@
 # File Paths #
 ##############
 
-inputDir  = "../UoM-Data-Repository/input/"
-outputDir = "../UoM-Data-Repository/output/"
+inputDir  = "../../UoM-Data-Repository/input/"
+outputDir = "../../UoM-Data-Repository/output/"
 
 # dict of input instructions names and output file names
 pathNames = {
@@ -86,7 +86,7 @@ saveAsPNG = True
 saveAsPDF = True
 
 # List of plot types that use the time axis
-tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time"]
+tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time", " - gammaL", " - gammaP"]
 
 ## Colours
 colourDict = {
