@@ -14,7 +14,7 @@ pathNames = {
     "ellipsAnalysis":   ('Instructions - Ellipsometry',    'Ellipsometry'),
     "chemFormulations": ('Instructions - ChemFormulation', 'Chem Formulations'),
     "sldAnalysis":      ('Instructions - SLD',             'SLD'),
-    "SurfaceExcess":    ('Instructions - SurfaceExcess',   'Surface Excess'),
+    "surfaceExcess":    ('Instructions - SurfaceExcess',   'Surface Excess'),
     }
 
 

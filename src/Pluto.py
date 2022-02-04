@@ -11,7 +11,7 @@ import isoAnalysis
 import ellipsAnalysis
 import chemFormulations
 import sldAnalysis
-import SurfaceExcess
+import surfaceExcess
 
 
 def modSelection(analysisOptions):
@@ -127,7 +127,7 @@ def organisePaths(analysisType, instructionsName, instructionsPath, outputDataPa
 
 def main():
 
-    analysisOptions = ['isoAnalysis','ellipsAnalysis', 'SurfaceExcess',        \
+    analysisOptions = ['isoAnalysis','ellipsAnalysis', 'surfaceExcess',        \
                         'chemFormulations', 'sldAnalysis']
 
     PlutoRunning = True
@@ -147,7 +147,7 @@ def main():
             ellipsAnalysis.main(instructionsFile, title, inputDataPath, outputDataPath)
 
         if analysisType == analysisOptions[2]:
-            SurfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
+            surfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
 
         if analysisType == analysisOptions[3]:
             chemFormulations.main(instructionsFile, outputInstructionFile)
