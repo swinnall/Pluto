@@ -14,38 +14,7 @@ import scipy.signal as sig
 import scipy.optimize as opt
 import config
 import genPlot
-
-
-def modSelection(analysisOptions):
-
-    # ask user to pick one of the analysisOptions
-    print("\n~~~\nAnalysis Options:")
-    for i,option in enumerate(analysisOptions):
-        print("%d: %s" %(i+1,option))
-    print("~~~\n")
-    
-    analysisChoice = input("Which analysis would you like to do? Pick the associated number (1-%d) or 'q' to reutrn to landing page:\n  " %len(analysisOptions))
-
-    if analysisChoice == 'q':
-        print("Returning to Pluto landing page.\n\n")
-        analysisType    = 'n/a'
-        analysisRunning = False
-
-    elif analysisChoice == 'Q':
-        print("Session closed.")
-        sys.exit()
-
-    elif analysisChoice in [str(i) for i in range(len(analysisOptions)+1)]:
-        analysisType = analysisOptions[int(analysisChoice)-1]
-        print("You picked %s.\n" %analysisType)
-        analysisRunning = True
-
-    else:
-        print("Not a valid response. Returning to Pluto landing page.\n\n")
-        analysisType    = 'n/a'
-        analysisRunning = False
-
-    return analysisType, analysisRunning
+from genFunc import modSelection, getEllipsometryFile
 
 
 def importSampleInfo(instructionsFile):
@@ -72,21 +41,6 @@ def importSampleInfo(instructionsFile):
 
 
 
-def getFile(fileDIR):
-
-    df = []
-    with open(fileDIR, newline = '') as f:
-
-        # ignore rows starting with '#'
-        rdr = csv.DictReader(filter(lambda row: row[0]!='#', f))
-
-        for row in rdr:
-            df.append( row[None][0].split())
-
-    return df
-
-
-
 def importAOIData(inputDIR, AOI_ID, nAOI):
 
     # initialise y axis variables for angle of incidence plots
@@ -99,7 +53,7 @@ def importAOIData(inputDIR, AOI_ID, nAOI):
     for i in range(nAOI):
 
         fileDIR = inputDIR + '/' + AOI_ID[i].get('fname') +".txt"
-        AOI_df  = getFile(fileDIR)
+        AOI_df  = getEllipsometryFile(fileDIR)
 
         # for each element in AOI data frame, parse data
         for j in range(0,len(AOI_df)):
@@ -128,7 +82,7 @@ def importTimeData(inputDIR, time_ID, nTime):
 
         ## Extract reference data
         fileDIR = inputDIR + '/' + time_ID[i].get('refname') +".txt"
-        ref_df  = getFile(fileDIR)
+        ref_df  = getEllipsometryFile(fileDIR)
 
         # extract raw ref data from dataframe
         for j in range(0,len(ref_df)):
@@ -142,7 +96,7 @@ def importTimeData(inputDIR, time_ID, nTime):
 
         ## Extract time series data
         fileDIR = inputDIR + '/' + time_ID[i].get('fname') +".txt"
-        time_df = getFile(fileDIR)
+        time_df = getEllipsometryFile(fileDIR)
 
         # subtract ref data from these to give lipid-only data
         for j in range(0,len(time_df)):

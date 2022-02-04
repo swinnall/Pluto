@@ -14,38 +14,7 @@ import sys
 import math as mt
 import config
 import genPlot
-
-
-def modSelection(analysisOptions):
-
-    # ask user to pick one of the analysisOptions
-    print("\n~~~\nAnalysis Options:")
-    for i,option in enumerate(analysisOptions):
-        print("%d: %s" %(i+1,option))
-    print("~~~\n")
-    
-    analysisChoice = input("Which analysis would you like to do? Pick the associated number (1-%d) or 'q' to reutrn to landing page:\n  " %len(analysisOptions) )
-
-    if analysisChoice == 'q':
-        print("Returning to Pluto landing page.\n\n")
-        analysisType    = 'n/a'
-        analysisRunning = False
-
-    elif analysisChoice == 'Q':
-        print("Session closed.")
-        sys.exit()
-
-    elif analysisChoice in [str(i) for i in range(len(analysisOptions)+1)]:
-        analysisType = analysisOptions[int(analysisChoice)-1]
-        print("You picked %s.py\n" %analysisType)
-        analysisRunning = True
-
-    else:
-        print("Not a valid response. Returning to Pluto landing page.\n\n")
-        analysisType    = 'n/a'
-        analysisRunning = False
-
-    return analysisType, analysisRunning
+from genFunc import modSelection, getFile
 
 
 ## Import Functions
@@ -74,19 +43,6 @@ def importSampleData(instructionsFile, nFiles):
         l[i]          = instructionsFile["label"][i]
 
     return fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l
-
-
-
-def getFile(fileDIR,equipParams):
-
-    with open(fileDIR, newline = '') as f:
-        reader = csv.reader(f, delimiter=equipParams[2])
-        data = list(reader)
-
-    # filter out empty lines (seemingly randomly introduced in Nima files)
-    data = [x for x in data if x != []]
-
-    return data
 
 
 

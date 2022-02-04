@@ -12,9 +12,10 @@ import ellipsAnalysis
 import chemFormulations
 import sldAnalysis
 import surfaceExcess
+from genFunc import modSelection
 
 
-def modSelection(analysisOptions):
+def programSelection(analysisOptions):
 
     # root input directory
     inputDir  = config.inputDir
@@ -22,26 +23,8 @@ def modSelection(analysisOptions):
     # root output directory
     outputDir = config.outputDir
 
-
     # ask user to pick one of the analysisOptions
-    print("\n~~~\nAnalysis Options:")
-    for i,option in enumerate(analysisOptions):
-        print("%d: %s" %(i+1,option))
-    print("~~~\n")
-
-    analysisChoice = input("Which analysis would you like to do? Pick the associated number (1-%d) or 'q' to exit:\n  " %len(analysisOptions))
-
-    if analysisChoice == 'q':
-        print("Session closed.")
-        sys.exit()
-
-    elif analysisChoice in [str(i) for i in range(len(analysisOptions)+1)]:
-        analysisType = analysisOptions[int(analysisChoice)-1]
-        print("You picked %s.py\n" %analysisType)
-
-    else:
-        print("Not a valid response. Session closed.")
-        sys.exit()
+    analysisType, analysisRunning = modSelection(analysisOptions)
 
 
     # calls from config database
@@ -134,7 +117,7 @@ def main():
     while PlutoRunning:
 
         # selects module and creates relevant file paths
-        analysisType, instructionsName, instructionsPath, inputDataPath, outputDataPath = modSelection(analysisOptions)
+        analysisType, instructionsName, instructionsPath, inputDataPath, outputDataPath = programSelection(analysisOptions)
 
         # reads instructions instructionsFile, gets title and paths
         instructionsFile, title, outputDataPath, outputInstructionFile = organisePaths(analysisType, instructionsName, instructionsPath, outputDataPath)
