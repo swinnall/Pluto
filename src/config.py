@@ -194,7 +194,7 @@ lipidStruct = {
     "PolyA":           ('C10-H13-K-N5-O7-P','H')
     }
 
-## Modelling MC3 Chol Monolayer (full | split) ##
+## Modelling MC3 Chol Monolayer (full | split) 
 
 ## C2H4 MC3 Model (full | split)
 #  h-MC3:  ('N-O2-C7-H13', 'C36-H66')     | ('N-O2-C7-H13', 'C2-H4', 'C34-H62')
@@ -204,11 +204,13 @@ lipidStruct = {
 #  h-MC3:  ('N-O2-C6-H12', 'C37-H67')     | ('N-O2-C6-H12', 'C3-H5', 'C34-H62')
 #  d-MC3:  ('N-O2-C6-H12', 'C37-H5-D62')  | ('N-O2-C6-H12', 'C3-H5', 'C34-D62')
 
-# C2H3 Cholesterol Model
+## C2H3 Cholesterol Model
 #  h-chol:  ('O-H', 'C27-H45')   | ('O-H', 'C2-H3', 'C25-H42')
 #  d-chol:  ('O-H', 'C27-D45')   | ('O-H', 'C2-D3', 'C25-D42')
 
-
+## C2H4 in MC3 Head Model (full | split)
+#  h-MC3:  ('N-O2-C9-H17', 'C34-H62')
+#  d-MC3:  ('N-O2-C9-H17', 'C34-D62')
 
 # molecular volumes for each lipid (Angstroms cubed): (head, tail)
 lipidMolVol = {
@@ -219,9 +221,27 @@ lipidMolVol = {
     "LBPA":            (208,624),
     "Cholesterol":     (5,624),
     "d45-Cholesterol": (5,624),
-    "DLin-MC3-DMA":    (260,1030), # (290,1000)
-    "d-DLin-MC3-DMA":  (260,1030),
+    "DLin-MC3-DMA":    (296.13, 993.87),
+    "d-DLin-MC3-DMA":  (296.13, 993.87),
     "DSPC":            (322,1000),
     "DMG-PEG-2000":    (200,470),
     "PolyA":           (1,1)
     }
+
+## Modelling MC3 Chol Monolayer (full | split) ##
+
+## C2H4 MC3 Model (full | split); Thickness = 2.75 A
+#  h-MC3:  (260, 1030)  | (260, 36.13, 993.87)
+#  d-MC3:  (260, 1030)  | (260, 36.13, 993.87)
+
+## C3H5 MC3 Model (full | split); Thickness = 3.28 A
+#  h-MC3:  (253.03, 1036.97)  | (253.03, 43.10, 993.87)
+#  d-MC3:  (253.03, 1036.97)  | (253.03, 43.10, 993.87)
+
+# C2H3 Cholesterol Model (full | split); Thickness = 2.00 A
+#  h-chol:  (5,624)  | (5, 23.5, 600.5)
+#  d-chol:  (5,624)  | (5, 23.5, 600.5)
+
+## C2H4 in MC3 Head Model (full | split)
+#  h-MC3:  (296.13, 993.87)
+#  d-MC3:  (296.13, 993.87)

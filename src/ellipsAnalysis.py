@@ -201,11 +201,17 @@ def fitSine(t, delta_t):
 
 
     # generate second sine set
-    sinY_Model = sinModel(t,solution)
+    sinY_Model = sinModel(smoothT,solution)
+
+    # generate subtracted data
+    DeltaSmoothSubtracted = []
+    for i in range(len(smoothT)):
+        DeltaSmoothSubtracted.append( smoothList[i] - sinY_Model[i] + solution[6])
 
     plt.plot(t, Delta_exp, '.', label='Raw Data', c='#1643A2')
     plt.plot(smoothT, smoothList, '-', label='Smoothed Data', c='#3CA8AB')
-    plt.plot(t, sinY_Model, label='Fit', linewidth=3, c='#E9BC5D')
+    plt.plot(smoothT, sinY_Model, label='Fit', linewidth=3, c='#E9BC5D')
+    #plt.plot(smoothT, DeltaSmoothSubtracted, label='Subtracted', linewidth=1.5, c='red') # , c='#E9BC5D'
     plt.legend()
     plt.xlabel('Time (s)')
     plt.ylabel('Delta (deg)')
