@@ -7,7 +7,6 @@ import sys
 import ast
 import config
 
-
 def plotParameters(suffix):
 
     # ask user to pick one of the analysisOptions
@@ -96,7 +95,7 @@ def plotParameters(suffix):
         overrideTickLocation = False
         n_xticks             = 3
         xTickInterval        = 10
-        yTickInterval        = 0.2
+        yTickInterval        = 5
 
 
     return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\
@@ -170,6 +169,7 @@ def plot(key, vars, suffix):
     else:
         nRow, nCol = key
 
+
     # Create key x 1 subplot grid
     gs = gridspec.GridSpec(nRow, nCol)
 
@@ -178,10 +178,13 @@ def plot(key, vars, suffix):
     ax  = plt.axes()
 
 
+
+
     # iterate along subplots, currently just row 0 column 1-2
     count = 0
     for row in range(nRow):
         for col in range(nCol):
+
 
             # unpack variables evertime to prevent overwriting within plot code
             N, equip, LABELS, axLabels, title, plotDIR, X, Y = vars
@@ -193,6 +196,10 @@ def plot(key, vars, suffix):
 
             # initialise the subplot
             ax = plt.subplot(gs[row, col]) # row 0, col 0
+
+            # set line width of each spine of given subplot
+            for axis in ['top','bottom','left','right']:
+                ax.spines[axis].set_linewidth(2)
 
             # initialise lists for axis range params
             min_x_vals = []; max_x_vals = []
@@ -357,9 +364,13 @@ def plot(key, vars, suffix):
             ax.tick_params(axis='x', labelsize=fs-1)
             ax.tick_params(axis='y', labelsize=fs-1)
 
+            ax.xaxis.set_tick_params(which='major', size=5, width=2, direction='in', top='on')
+            ax.yaxis.set_tick_params(which='major', size=5, width=2, direction='in', right='on')
+            #ax.xaxis.set_tick_params(which='minor', size=7, width=2, direction='in', top='on')
+            #ax.yaxis.set_tick_params(which='minor', size=7, width=2, direction='in', right='on')
 
 
-    #
+    # merge axis of multipanel isotherm plots 
     if config.plotMultiPanel == True and suffix == " - isotherm":
         fig.text(0.5, -0.03, axLabels.get("x"), ha='center', fontsize=fs, fontweight='bold')
         fig.text(-0.03, 0.5, axLabels.get("y"), va='center', rotation='vertical', fontsize=fs, fontweight='bold')
@@ -367,6 +378,7 @@ def plot(key, vars, suffix):
 
     # plot vertical line
     #plt.axvline(900, 0, 6, label='pyplot vertical line', c='r')
+
 
     # tight layout function
     plt.tight_layout()

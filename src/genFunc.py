@@ -3,6 +3,7 @@
 
 import csv
 import sys
+import pandas as pd
 
 
 def modSelection(analysisOptions):
@@ -39,17 +40,11 @@ def modSelection(analysisOptions):
 
 
 # general function for isotherm and surface excess modules
-def getFile(fileDIR,equipParams):
+def getFile(fileDIR):
 
-    with open(fileDIR, newline = '') as f:
-        reader = csv.reader(f, delimiter=equipParams[2])
-        data = list(reader)
+    df = pd.read_csv(fileDIR, sep='\t', na_values =' ')
 
-    # filter out empty lines (seemingly randomly introduced in Nima files)
-    data = [x for x in data if x != []]
-
-    return data
-
+    return df
 
 
 # eventually combine with the more general getFile

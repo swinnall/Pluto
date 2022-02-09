@@ -73,9 +73,6 @@ gammaNth = 1
 # smooth function
 gamma_nPoly = 10
 
-# overplot L and P; to be implemented
-overPlotGammaLP = False
-
 
 #############
 # Plotting #
@@ -194,7 +191,7 @@ lipidStruct = {
     "PolyA":           ('C10-H13-K-N5-O7-P','H')
     }
 
-## Modelling MC3 Chol Monolayer (full | split) 
+## Modelling MC3 Chol Monolayer (full | split)
 
 ## C2H4 MC3 Model (full | split)
 #  h-MC3:  ('N-O2-C7-H13', 'C36-H66')     | ('N-O2-C7-H13', 'C2-H4', 'C34-H62')

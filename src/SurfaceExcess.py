@@ -34,21 +34,18 @@ def importSampleData(instructionsFile, nFiles):
 
 
 
-def importData(equipParams, fname, inputDIR, plotDIR):
-
-    # initialise variables
-    t      = []
-    gammaL = []
-    gammaP = []
+def importData(fname, inputDIR, plotDIR):
 
     # read file into memory data
-    fileDIR = inputDIR + '/' + fname + equipParams[1]
-    data = getFile(fileDIR,equipParams)
+    fileDIR = inputDIR + '/' + fname + '.txt'
 
-    for j in range(equipParams[0],len(data)):
-        t.append(float(data[j][0]))
-        gammaL.append(float(data[j][1]))
-        gammaP.append(float(data[j][2]))
+    # get sample data as pandas df
+    data   = getFile(fileDIR)
+
+    # parse variables
+    t      = data[data.columns.values[0]]
+    gammaL = data[data.columns.values[1]]
+    gammaP = data[data.columns.values[2]]
 
     return t, gammaL, gammaP
 
@@ -144,11 +141,9 @@ def main(instructionsFile, title, inputDIR, plotDIR):
             # get filename
             fname = fileNames.get(i)
 
-            # organise equipment
-            equipParams = (1,".txt","\t")
 
             # import data from given file i
-            t_list, gammaL_list, gammaP_list = importData(equipParams, fname, inputDIR, plotDIR)
+            t_list, gammaL_list, gammaP_list = importData(fname, inputDIR, plotDIR)
 
 
             # smooth data
