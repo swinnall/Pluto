@@ -40,7 +40,7 @@ def importData(fname, inputDIR, plotDIR):
     fileDIR = inputDIR + '/' + fname + '.txt'
 
     # get sample data as pandas df
-    data   = getFile(fileDIR)
+    data = getFile(path=fileDIR, nSkip=0, delim='\t')
 
     # parse variables
     t      = data[data.columns.values[0]]

@@ -48,28 +48,23 @@ def importSampleData(instructionsFile, nFiles):
 
 def importData(equipParams, fname, inputDIR, plotDIR):
 
-
     # read file into memory data
     fileDIR = inputDIR + '/' + fname + equipParams[1]
-    data = getFile(fileDIR)
 
-    # Kibron
+    # get data file as pandas dataframe
+    data = getFile(path=fileDIR,nSkip=equipParams[0],delim=equipParams[2])
+
+    # Kibron; extracting relevant column data from df
     if equipParams[1] == ".NTB":
-
-        # extracting relevant data; key: [row][column]
-        for j in range(equipParams[0],len(data)):
-            t = data[data.columns.values[8]]
-            A = data[data.columns.values[1]] * (10**-6)
-            P = data[data.columns.values[5]]
-
+        t = data[data.columns.values[8]]
+        A = data[data.columns.values[1]] * (10**-6)
+        P = data[data.columns.values[5]]
 
     # Nima
-    if equipParams[1] == ".txt":      ##### Mightn not be accounting for different delimiter 
-
-        for j in range(equipParams[0],len(data)):
-            t = data[data.columns.values[0]]
-            A = data[data.columns.values[1]] * (10**-4)
-            P = data[data.columns.values[5]]
+    if equipParams[1] == ".txt":
+        t = data[data.columns.values[0]]
+        A = data[data.columns.values[1]] * (10**-4)
+        P = data[data.columns.values[5]]
 
 
     # set tStart to 0

@@ -1,6 +1,5 @@
 " Module that defines global variables for Pluto"
 
-
 ##############
 # File Paths #
 ##############
@@ -31,19 +30,19 @@ very_verbose = False
 ################
 
 ## Functions
-checkT0   = False                     # ensures T0 = 0
-shiftP    = False                     # shift to P_min = 0
-smoothIso = False                     # reduces number of points for final plot
-overplot  = False                    # not yet functional
+checkT0   = False  # ensures T0 = 0
+shiftP    = False  # shift to P_min = 0
+smoothIso = False  # reduces number of points for final plot
+overplot  = False  # not yet functional
 
 ## Override Normal Keys
-plotMultiPanel = False              # split input data between subplots
-key = [(1,1)]                 # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
+plotMultiPanel = False  # split input data between subplots
+key = [(1,1)]  # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
 
 ## Parameters
-useCycles  = [0,1,2,3,4]                # list of cycles to be used in isotherm
-nPoly      = 40                      # order of the elasticity fit
-nth        = 60                      # data reduction; take every 'nth' point
+useCycles  = [0]  # list of cycles to be used in isotherm
+nPoly      = 40  # order of the elasticity fit
+nth        = 60  # data reduction; take every 'nth' point
 
 
 #################

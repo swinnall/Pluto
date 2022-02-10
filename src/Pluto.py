@@ -12,7 +12,7 @@ import ellipsAnalysis
 import chemFormulations
 import sldAnalysis
 import surfaceExcess
-from genFunc import modSelection
+from genFunc import modSelection, getFile
 
 
 def programSelection(analysisOptions):
@@ -59,7 +59,7 @@ def organisePaths(analysisType, instructionsName, instructionsPath, outputDataPa
 
 
     # read instructions file with pandas
-    instructionsFile = pd.read_csv(instructionsPath, header=1, comment='#')
+    instructionsFile = getFile(path=instructionsPath,nSkip=1,delim=',')
 
 
     # update output path folder dir to include title of chosen analysis

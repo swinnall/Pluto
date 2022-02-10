@@ -34,28 +34,21 @@ def modSelection(analysisOptions):
         print("Not a valid response. Session closed.")
         sys.exit()
 
-
     return analysisType, analysisRunning
 
 
 
-# general function for isotherm and surface excess modules
-def getFile(fileDIR):
-
-    df = pd.read_csv(fileDIR, sep='\t', na_values =' ')
-
-    return df
+# general function for Pluto, isotherm and surface excess modules
+def getFile(path,nSkip,delim):
+    return pd.read_csv(path, skiprows=nSkip, sep=delim, comment='#', na_values =' ', on_bad_lines='skip', skip_blank_lines=True)
 
 
-# eventually combine with the more general getFile
+# just for getting BeagleHole ellipsometry files, each row needs to be split so don't integrate with getFile
 def getEllipsometryFile(fileDIR):
 
     df = []
     with open(fileDIR, newline = '') as f:
-
-        # ignore rows starting with '#'
         rdr = csv.DictReader(filter(lambda row: row[0]!='#', f))
-
         for row in rdr:
             df.append( row[None][0].split())
 
