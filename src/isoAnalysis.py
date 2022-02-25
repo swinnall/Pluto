@@ -161,7 +161,7 @@ def smoothData(genList):
 
 ## Calculation Functions
 def calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdded):
-
+    
     # import molecular weight database
     lipidMW = config.lipidMw
 
@@ -183,7 +183,7 @@ def calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdde
             ratioTot += int(ratios[j])
 
         # call Mw of each lipid type, multiply by fraction, sum weights for total
-        for j in range(int(nLipids.get(i)[0])):
+        for j in range(int(nLipids.get(i))):
             Mw += lipidMW.get(types[j]) * int(ratios[j]) / ratioTot
 
     # different condition if there is only one input lipid

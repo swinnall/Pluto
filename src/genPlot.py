@@ -39,12 +39,12 @@ def plotParameters(suffix):
         plotWithScatter    = False
         plotLineWithMarker = False
 
-        lw            = 3
+        lw            = 4
         scatterSize   = 0
         markEdgeWidth = 0
 
-        fs                  = 14
-        legend_fs_reduction = 5
+        fs                  = 18
+        legend_fs_reduction = 0
 
 
     ## Axis Adjustment Parameters
@@ -93,7 +93,7 @@ def plotParameters(suffix):
         config_ymax     = 1E6
 
         overrideTickLocation = False
-        n_xticks             = 3
+        n_xticks             = 1
         xTickInterval        = 10
         yTickInterval        = 5
 
@@ -348,14 +348,15 @@ def plot(key, vars, suffix):
                     plt.setp(ax.get_yticklabels(), visible=False)
 
 
-            # legend; plot along with every figure unless elasticity
+            # legend; plot along with every figure unless elasticity - no property plotIsotherm...
             #if config.plotIsotherm == True and config.plotElasticity == True and col == 1:
             #    pass
-                #ax.legend(prop={'size': fs-config.legend_fs_reduction, 'weight':'bold'}, frameon = False)
+                #ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
             #elif config.plotIsotherm == True and config.plotElasticity == True and col == 0:
             #    pass
             #else:
-            #    ax.legend(prop={'size': fs-config.legend_fs_reduction, 'weight':'bold'}, frameon = False)
+            #    ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
+            ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
 
 
     ## Tick label size; legend; layout; show fig; save fig
@@ -370,7 +371,7 @@ def plot(key, vars, suffix):
             #ax.yaxis.set_tick_params(which='minor', size=7, width=2, direction='in', right='on')
 
 
-    # merge axis of multipanel isotherm plots 
+    # merge axis of multipanel isotherm plots
     if config.plotMultiPanel == True and suffix == " - isotherm":
         fig.text(0.5, -0.03, axLabels.get("x"), ha='center', fontsize=fs, fontweight='bold')
         fig.text(-0.03, 0.5, axLabels.get("y"), va='center', rotation='vertical', fontsize=fs, fontweight='bold')
