@@ -183,8 +183,8 @@ lipidStruct = {
     "LBPA":            ('N-O10-P','C42-H82'),
     "Cholesterol":     ('O-H','C27-H45'),
     "d45-Cholesterol": ('O-H','C27-D45'),
-    "DLin-MC3-DMA":    ('N-O2-C6-H12','C37-H67'),
-    "d-DLin-MC3-DMA":  ('N-O2-C6-H12','C37-H5-D62'),
+    "DLin-MC3-DMA":    ('N-O2-C7-H13', 'C36-H66'),   ### capillary layer test ('C2-H4-C1-H3','C33-H59')
+    "d-DLin-MC3-DMA":  ('N-O2-C7-H13', 'C36-H66'),   ### capillary layer test ('C2-H4-C1-D3','C33-D59')
     "DSPC":            ('N-O8-P','C44-H88'),
     "DMG-PEG-2000":    ('O50','C122-H242'),
     "PolyA":           ('C10-H13-K-N5-O7-P','H')
@@ -217,8 +217,8 @@ lipidMolVol = {
     "LBPA":            (208,624),
     "Cholesterol":     (5,624),
     "d45-Cholesterol": (5,624),
-    "DLin-MC3-DMA":    (296.13, 993.87),
-    "d-DLin-MC3-DMA":  (296.13, 993.87),
+    "DLin-MC3-DMA":    (260, 1030),     ### capillary layer test: (55.83, 974.17)
+    "d-DLin-MC3-DMA":  (260, 1030),
     "DSPC":            (322,1000),
     "DMG-PEG-2000":    (200,470),
     "PolyA":           (1,1)
