@@ -1,0 +1,54 @@
+Modelling Parameters for config.py
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* For each system different models are presented with the chemical structure of
+the head and tail of the lipid, as well as the associated volumes [A^3] and
+thicknesses [A] of the inner layer where relevant.
+
+* A general assumption is that the volume of layers of the hydrogenous and
+deuterated layers are equivalent.
+
+
+1. MC3:Chol System
+
+Default Model [(struct) | (vol.)]
+#  h-MC3:    ('N-O2-C7-H13', 'C36-H66')     | (260, 1030)
+#  d-MC3:    ('N-O2-C7-H13', 'C36-H4-D62')  | (260, 1030)
+#  chol:     ('O-H','C27-H45')              | (5,624)
+#  d45-chol: ('O-H','C27-D45')              | (5,624)
+
+
+## C2H4 inner MC3 tail [(full) | (split)]; Thickness = 2.75 A
+#  h-MC3:  ('N-O2-C7-H13', 'C36-H66')     | ('N-O2-C7-H13', 'C2-H4', 'C34-H62')
+#  d-MC3:  ('N-O2-C7-H13', 'C36-H4-D62')  | ('N-O2-C7-H13', 'C2-H4', 'C34-D62')
+#  vol.:   (260, 1030)                    | (260, 36.13, 993.87)
+
+
+## C3H5 inner MC3 tail (CH from head) [(full) | (split)]; Thickness = 3.28 A
+#  h-MC3:  ('N-O2-C6-H12', 'C37-H67')     | ('N-O2-C6-H12', 'C3-H5', 'C34-H62')
+#  d-MC3:  ('N-O2-C6-H12', 'C37-H5-D62')  | ('N-O2-C6-H12', 'C3-H5', 'C34-D62')
+#  vol.:   (253.03, 1036.97)              | (253.03, 43.10, 993.87)
+
+
+## C2H4 in MC3 head; No inner layer (moved to head)
+#  h-MC3:  ('N-O2-C9-H17', 'C34-H62')
+#  d-MC3:  ('N-O2-C9-H17', 'C34-D62')
+#  vol.:   (296.13, 993.87)
+
+
+## Capillary C2-H4-C1-D3 inner tail [(full) | (split)]; Thickness = 4.25 A
+#  h-MC3: ('N-O2-C7-H13', 'C36-H66')    | ('N-O2-C7-H13', 'C2-H4-C1-H3', 'C33-H59')
+#  d-MC3: ('N-O2-C7-H13', 'C36-H4-D62') | ('N-O2-C7-H13', 'C2-H4-C1-D3', 'C33-D59')
+#  vol.:  (260, 1030)                   | (260, 55.83, 974.17)
+
+
+## C2H3 inner cholesterol tail; Thickness = 2.00 A
+#  h-chol:  ('O-H', 'C27-H45')   | ('O-H', 'C2-H3', 'C25-H42')
+#  d-chol:  ('O-H', 'C27-D45')   | ('O-H', 'C2-D3', 'C25-D42')
+#  vol.:    (5,624)              | (5, 23.5, 600.5)
+
+
+
+2. Early Endosomal Membrane
+
+3. Late Endosomal Membrane
