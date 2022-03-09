@@ -176,17 +176,17 @@ atomSL = {
 # chemical structures for each lipid: (struct_head, struct_tail)
 # Default assumption: only hydrogens and carbons in the tails
 lipidStruct = {
-    "POPC":            ('C10-H18-N-O8-P','C32-H64'),
-    "d31-POPC":        ('C10-H18-N-O8-P','C32-D31-H33'),
-    "DOPE":            ('N-O8-P','C41-H78'),
-    "SM":              ('N2-O6-P','C47-H93'),
-    "LBPA":            ('N-O10-P','C42-H82'),
+    "POPC":            ('C11-H20-N-O8-P', 'C31-H62'),
+    "d31-POPC":        ('C11-H20-N-O8-P', 'C31-D31-H31'),
+    "DOPE":            ('C8-H14-N-O8-P', 'C33-H64'),
+    "SM":              ('C10-H20-N2-O6-P', 'C31-H63'),
+    "LBPA":            ('C4-H11-N-O4-P', 'O6-C38-H71'),
     "Cholesterol":     ('O-H','C27-H45'),
     "d45-Cholesterol": ('O-H','C27-D45'),
     "DLin-MC3-DMA":    ('N-O2-C7-H13', 'C36-H66'),
     "d-DLin-MC3-DMA":  ('N-O2-C7-H13', 'C36-H4-D62'),
-    "DSPC":            ('N-O8-P','C44-H88'),
-    "DMG-PEG-2000":    ('O50','C122-H242'),
+    "DSPC":            ('N-O8-P','C44-H88'), # clarify
+    "DMG-PEG-2000":    ('O50','C122-H242'),  # clarify
     "PolyA":           ('C10-H13-K-N5-O7-P','H')
     }
 

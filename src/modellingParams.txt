@@ -8,8 +8,14 @@ thicknesses [A] of the inner layer where relevant.
 * A general assumption is that the volume of layers of the hydrogenous and
 deuterated layers are equivalent.
 
+* Note that d31-POPC has one tail fully deuterated and the other hydrogenous.
 
-1. MC3:Chol System
+* d62-MC3 has both tails fully deuterated.
+
+* Review molecular volumes for head and tail regions of the endosomal lipids.
+
+
+1. MC3:Chol (75:25)
 
 Default Model [(struct) | (vol.)]
 #  h-MC3:    ('N-O2-C7-H13', 'C36-H66')     | (260, 1030)
@@ -49,6 +55,22 @@ Default Model [(struct) | (vol.)]
 
 
 
-2. Early Endosomal Membrane
+2. Early Endosomal Membrane (40:20:6:34)
 
-3. Late Endosomal Membrane
+Default Model [(struct) | (vol.)]
+#  h-POPC:  ('C11-H20-N-O8-P', 'C31-H62')     | (344,937)
+#  d-POPC:  ('C11-H20-N-O8-P', 'C31-D31-H31') | (344,937)
+#  DOPE:    ('C8-H14-N-O8-P', 'C33-H64')      | (236,969)
+#  SM:      ('C10-H20-N2-O6-P', 'C31-H63')    | (274,953)
+#  h-chol:  ('O-H', 'C27-H45')                | (5,624)
+
+
+
+3. Late Endosomal Membrane (61:16:6:17)
+
+Default Model [(struct) | (vol.)]
+#  h-POPC:  ('C10-H18-N-O8-P', 'C32-H64')     | (344,937)
+#  d-POPC:  ('C10-H18-N-O8-P', 'C32-D31-H33') | (344,937)
+#  DOPE:    ('C8-H14-N-O8-P', 'C33-H64')      | (236,969)
+#  LBPA:    ('C4-H11-N-O4-P', 'O6-C38-H71')   | (208,624)
+#  h-chol:  ('O-H', 'C27-H45')                | (5,624)
