@@ -1,6 +1,6 @@
-## Pluto ##
+Pluto
 Author: Samuel Winnall
-
+~~~~~~~~~~~~~~~~~~~~~~
 
 KEY POINTS
 

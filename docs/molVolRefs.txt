@@ -1,0 +1,39 @@
+Molecular Volume References
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Lipids
+
+* DOPC + DOPS
+  https://www.sciencedirect.com/science/article/pii/S0009308410000605
+
+* Sphingomyelin
+  https://pubs.acs.org/doi/10.1021/acs.jpcb.0c03389
+
+* LBPA:
+  https://www.lipidmaps.org/databases/lmsd/LMGP04100003?LMID=LMGP04100003
+
+* MC3, cholesterol [Marianna; SI]
+  https://www.pnas.org/content/pnas/suppl/2018/03/26/1720542115.DCSupplemental/pnas.201720542SI.pdf
+
+
+### Polyadenylic acid
+
+* calf-thymus DNA - NR SLD (10^-6 A^-2):
+  3.67 (H2O)
+  4.46 (D2O)
+  https://hal.archives-ouvertes.fr/hal-01572907/document
+  https://pubs.rsc.org/en/content/articlelanding/2014/SM/c3sm52747f
+
+* calf-thymus DNA - thickness
+  20 +- 2 angstroms
+  https://www.researchgate.net/publication/310624745_Effect_of_Helper_Lipids_on_the_Interaction_of_DNA_with_Cationic_Lipid_Monolayers_Studied_by_Specular_Neutron_Reflection_Biomacromolsuppl_2012
+  https://indico.nbi.ku.dk/event/431/sessions/460/attachments/575/877/aug15_reading1.pdf
+    sub ref: Cárdenas et al. Ref. 23
+
+* PolyA chemical structure and MW
+  https://agscientific.com/polyadenylic-acid.html
+
+* RNA molecular volume = 325 A^3
+  https://www.pnas.org/content/pnas/suppl/2018/03/26/1720542115.DCSupplemental/pnas.201720542SI.pdf
+
+* pH dependent thickness and SLD?

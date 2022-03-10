@@ -1,0 +1,50 @@
+Record of Injection Manifold Volumes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+V = L * pi * (d/2)^2
+
+Lengths in mm
+
+1. MAY BEAMTIME
+-- Same as September beamtime but without the electronic switcher
+
+
+2. SEPTEMBER BEAMTIME
+-- Same as generation 2 but with the electronic syringe switcher
+
+
+3. MIT GENERATION 2 / WINTER 2021 MEASUREMENTS
+(gen1 was a prototype for testing and not used)
+
+L_inject   = 1025
+L_manifold = 690
+d = 0.5
+
+V = (690+1025)*pi*(0.5/2)^2 = 336.74 mm3 = 0.33674 ml ~ 0.337 ml
+-- Must retrospectively account for teflon length
+
+4. MIT GENERATION 3 / 2022 onwards
+
+L_syringeConnector = 15
+d_syringeConnector = 1
+V_syringeConnector = 15*pi*(1/2)^2 = 11.78097 mm3
+
+L_inject = 980
+d_inject = 0.5
+V_inject = 980*pi*(0.5/2)^2 = 192.42255 mm3
+
+L_innerValve = 35*7 (open valves) + 20 (closed valve) = 265
+d_innerValve = ???
+V_innerValve = 265*pi*(???/2)^2 = ??? mm3
+
+L_valveWires = 90
+d_valveWires = 0.5
+V_valveWires = 6*90*pi*(0.5/2)^2 = 106.02875 mm3
+
+L_teflon = ???
+d_teflon = ???
+V_teflon = ???
+
+V_total = V_syringeConnector + V_inject + V_innerValve + V_valveWires + V_teflon
+        = 11.781             + 192.422  + ???          + 106.029      + ???  mm3
+        = ml

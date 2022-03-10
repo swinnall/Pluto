@@ -179,7 +179,7 @@ lipidStruct = {
     "POPC":            ('C11-H20-N-O8-P', 'C31-H62'),
     "d31-POPC":        ('C11-H20-N-O8-P', 'C31-D31-H31'),
     "DOPE":            ('C8-H14-N-O8-P', 'C33-H64'),
-    "SM":              ('C10-H20-N2-O6-P', 'C31-H63'),
+    "SM":              ('C8-H19-N2-O5-P', 'O1-C33-H64'),
     "LBPA":            ('C4-H11-N-O4-P', 'O6-C38-H71'),
     "Cholesterol":     ('O-H','C27-H45'),
     "d45-Cholesterol": ('O-H','C27-D45'),
