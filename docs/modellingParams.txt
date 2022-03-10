@@ -12,8 +12,6 @@ deuterated layers are equivalent.
 
 * d62-MC3 has both tails fully deuterated.
 
-* Review molecular volumes for head and tail regions of the endosomal lipids.
-
 
 1. MC3:Chol (75:25)
 
