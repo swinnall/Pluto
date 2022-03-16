@@ -26,6 +26,7 @@ class Membrane:
         self.headVolFrac   = 0
         self.twoSolv       = 0
         self.d3            = 0
+        self.threeSolv     = 0
         self.twoSLD_H2O    = 0
         self.twoSLD_D2O    = 0
         self.normMolRatios = []
@@ -228,10 +229,17 @@ class Membrane:
             d1 = self.thickness.get("tails")
             d2 = self.thickness.get("head")
 
-        # set new membrane thickness
+        # set new membrane thickness if intended
         elif "Monolayer" in self.lipidNames:
-            d1 = 15
-            d2 = 10
+            if config.updateMonolayerThickness == True:
+                d1 = config.new_d1
+                d2 = config.new_d2
+                print("\nYou have selected to update the monolayer thickness such that d1 = %.3f and d2 = %.3f." %(d1,d2))
+
+            else:
+                d1 = self.thickness.get("tails")
+                d2 = self.thickness.get("head")
+                print("\nMonolayer thicknesses are as in instructions file; d1 = %.3f and d2 = %.3f." %(d1,d2))
 
         # calculate volume fraction
         self.headVolFrac = (rho1 * d1 * SL2 ) / ( rho2 * d2 * SL1)
@@ -242,22 +250,34 @@ class Membrane:
         print("\n2-solv = %f" %self.twoSolv)
 
 
-    # calculates SLD2 for Igor Motofit; used when merging L3 with L2
-    def calcSLD2(self):
 
-        self.d3 = 20 - self.thickness.get("head")
+    # calculates 2-SLD for Igor Motofit; used when merging L3 drug with L2 headgroup
+    def calcSLDMergedL2_L3(self):
 
-        threeSolv     = 91.374
-        vf_polyA      = (100 - threeSolv) / 100
-        SLD_polyA_H2O = 3.67
-        SLD_polyA_D2O = 4.46
+        # update thickness as part of the drug enters the second layer
+        self.d3 = config.drugSize - self.thickness.get("head")
 
-        self.twoSLD_H2O = (self.headVolFrac*self.avSLD.get("head") + vf_polyA*SLD_polyA_H2O ) / (self.headVolFrac + vf_polyA)
-        self.twoSLD_D2O = (self.headVolFrac*self.avSLD.get("head") + vf_polyA*SLD_polyA_D2O ) / (self.headVolFrac + vf_polyA)
+        # get solvent amount in third layer from neutron fit, set in config
+        self.threeSolv = config.threeSolv
 
-        print("\n3-thick = %f" %self.d3)
-        print("twoSLD_H2O = %f" %self.twoSLD_H2O)
-        print("twoSLD_D2O = %f" %self.twoSLD_D2O)
+        # calculate the volume fraction of drug in the third layer
+        vf_drug = (100 - self.threeSolv) / 100
+
+        # get SLD values of drug in H2O and D2O
+        SLD_drug_H2O  = config.SLD_drug_H2O
+        SLD_drug_D2O  = config.SLD_drug_D2O
+
+        # averages the existing SLDs of layer 2 (headgroup layer) with the added drug
+        self.twoSLD_H2O = (self.headVolFrac*self.avSLD.get("head") + vf_drug*SLD_drug_H2O ) / (self.headVolFrac + vf_drug)
+        self.twoSLD_D2O = (self.headVolFrac*self.avSLD.get("head") + vf_drug*SLD_drug_D2O ) / (self.headVolFrac + vf_drug)
+
+        # print values to terminal
+        print("\nYou have chosen to add the drug to the second layer:")
+        print("3-thick = %f" %self.d3)
+        print("\n3-solv = %f" %self.threeSolv)
+        print("\n2-SLD_H2O = %f\n2-SLD_D2O = %f" %(self.twoSLD_H2O, self.twoSLD_D2O))
+        print("\n3-SLD_H2O = %f\n3-SLD_D2O = %f \n(as in config, but this actually should be lower as not whole structure is in the layer)" %(SLD_drug_H2O, SLD_drug_D2O))
+
 
 
     # write output to file
@@ -273,11 +293,12 @@ class Membrane:
             f.write("Head vol frac = %.4f\n" %self.headVolFrac)
             f.write("2-solv = %.4f\n" %self.twoSolv)
 
-            if config.useL2_L3 == True:
-                f.write("3-thick = %f\n" %self.d3)
-                f.write("twoSLD_H2O = %f\n" %self.twoSLD_H2O)
-                f.write("twoSLD_D2O = %f\n" %self.twoSLD_D2O)
-
+            if config.addDrugToMonolayer == True:
+                f.write("Drug added to layer 2 of monolayer:")
+                f.write("d3 = %f\n" %self.d3)
+                f.write("3-solv = %.4f\n" %self.threeSolv)
+                f.write("2-SLD_H2O = %f\n" %self.twoSLD_H2O)
+                f.write("2-SLD_D2O = %f\n" %self.twoSLD_D2O)
 
 
 
@@ -332,7 +353,6 @@ def main(instructionsFile, outputFilePath):
             'tails': float(t_thick)
         }
 
-
         # create class instance with input variables
         m = Membrane(lipids, ratios, thickness, outputFilePath)
 
@@ -354,21 +374,31 @@ def main(instructionsFile, outputFilePath):
         # calculate volume fraction of the headgroups
         m.calcHeadVolumeFraction()
 
-        # calculates SLD2 for mixings layers 2 and 3
-        if config.useL2_L3 == True: m.calcSLD2()
+        # calculates SLD for mixing drug in layer 3 to layer 2
+        if config.addDrugToMonolayer == True: m.calcSLDMergedL2_L3()
 
         # update copied input instructions with output
         m.appendFile()
 
         # repeat for incorporating an injected lipid component into the membrane
-        if config.addLipid == True:
+        if config.addLipidToMonolayer == True:
 
-            print("\n\n\nAdding injected component -")
+            # get added lipids and associated ratios from config file
+            lipids = config.injectedComponents
+            ratios = config.injectedRatios
 
-            lipids = ["Monolayer", "DLin-MC3-DMA"]
-            ratios = [80, 20]
+            print("\n\n\nYou have chosen to add components from injected sample to the monolayer at the following ratios:")
+            sumRatiosTest = 0
+            for ele, lipid in enumerate(lipids):
+                sumRatiosTest += ratios[ele]
+                if lipid == "Monolayer": print("Averaged %s: %d%%." %(lipid, ratios[ele]))
+                else: print("Added Lipid: %s: %d%%." %(lipid, ratios[ele]))
 
-            m = Membrane(lipids, ratios, thicknesses, outputFilePath)
+            if sumRatiosTest != 100:
+                print("Fatal Error: Ratios defined in config do not equal 100.")
+                sys.exit()
+
+            m = Membrane(lipids, ratios, thickness, outputFilePath)
             m.normaliseMolarRatios()
             if config.useVolFrac == True: m.calcVolFrac()
             m.calcSL()
@@ -377,9 +407,7 @@ def main(instructionsFile, outputFilePath):
             m.calcHeadVolumeFraction()
             m.appendFile()
 
-
     return
-
 
 
 if __name__ == '__main__':

@@ -52,15 +52,23 @@ nth        = 60  # data reduction; take every 'nth' point
 # multiplies average chain vol by 0.85 to model lipid chain compaction
 compactChains = False
 
-# for mixing drug uptake to second and third layers
-useL2_L3 = False
+# include drug sample from third to second (headgroup) layer
+addDrugToMonolayer = True
+drugSize           = 20
+threeSolv          = 91.374
+SLD_drug_H2O       = 3.67
+SLD_drug_D2O       = 4.46
+
+# include an injected lipid into the existing monolayer
+addLipidToMonolayer      = False
+injectedComponents       = ["Monolayer", "DLin-MC3-DMA"]
+injectedRatios           = [80, 20]
+updateMonolayerThickness = False
+new_d1 = 1
+new_d2 = 1
 
 # use vol frac (molar ratio = default); True is more accurate
 useVolFrac = True
-
-# include an injected lipid into the system
-addLipid = False
-
 
 ###################
 # Surface Excess #
