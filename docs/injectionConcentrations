@@ -1,0 +1,30 @@
+Injection Concentrations
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. SEPTEMBER BEAMIME
+
+50 ml in trough
+Extract 6.43 ml = 43.57 ml
+Inject 7.86 ml sample
+Due to 0.49 ml injection manifold volume, actual injection is 7.86 - 0.49 = 7.37 ml
+0.56 mg/ml * 7.37 ml = 4.1272 mg polyA in trough
+Trough volume is 43.57 + 7.37 = 50.94 ml
+Therefore, concentration = 4.1272 / 50.94 = 0.081 mg/ml
+
+
+2. COMPLEMENTARY MEASUREMENTS (Gen3 MIT)
+
+50 ml in trough
+Extract 6.35 ml = 43.65 ml
+Inject 7.7 ml sample
+Due to 0.84 ml injection manifold volume, actual injection is 7.7 - 0.84 = 6.86 ml
+0.56 mg/ml * 6.86 ml = 3.8416 mg polyA in trough
+Trough volume is 43.65 + 6.86 = 50.51 ml
+Therefore, trough concentration = 3.8416 / 50.51 = 0.076 mg/ml
+
+
+~~~
+Average = (0.081 + 0.076) / 2 = 0.0785 mg/ml
+S.D.    = |0.081 - 0.076| / 2 = 0.0025 mg/ml
+
+c = 0.0785 +/- 0.0025 [mg/ml]
