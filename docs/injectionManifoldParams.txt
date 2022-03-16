@@ -1,50 +1,111 @@
 Record of Injection Manifold Volumes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-V = L * pi * (d/2)^2
-
-Lengths in mm
-
-1. MAY BEAMTIME
--- Same as September beamtime but without the electronic switcher
+- [reverse chronological order]
+- Vol. equation: V = L * pi * (d/2)^2
+- Length, L, and diameter, d, in mm
 
 
-2. SEPTEMBER BEAMTIME
--- Same as generation 2 but with the electronic syringe switcher
+1. MIT GENERATION 3 / 2022 onwards
+## this trough version has updated manifold (8-way valve)
+
+  L_syringeConnector = 15
+  d_syringeConnector = 1
+  V_syringeConnector = 15*pi*(1/2)^2 = 11.78097 mm3 ==> 0.01178097 ml
+
+  L_inject = 980
+  d_inject = 0.5
+  V_inject = 980*pi*(0.5/2)^2 = 192.42255 mm3 ==> 0.19242255 ml
+
+  L_innerValve   = 35*7 (open valves) + 20 (closed valve) = 265
+  d_innerValve   = Unknown; therefore estimate vol. by weighing water
+  m_waterInValve = 0.337 g water in valve
+  V_innerValve   = 0.337 ml
+
+  L_valveWires = 90
+  d_valveWires = 0.5
+  V_valveWires = 6*90*pi*(0.5/2)^2 = 106.02875 mm3 ==> 0.10602875 ml
+
+  L_peek = 3
+  d_peek = 2
+  V_peek = 6*3*pi*(2/2)^2 = 56.5486677646 mm3 ==> 0.05654866776460001 ml
+
+  L_teflon = 7
+  d_teflon = 2
+  V_teflon = 6*7*pi*(2/2)^2 = 131.946891451 mm3 ==> 0.131946891451 ml
 
 
-3. MIT GENERATION 2 / WINTER 2021 MEASUREMENTS
-(gen1 was a prototype for testing and not used)
+  V_total = V_syringeConnector + V_inject + V_innerValve + V_valveWires + V_peek + V_teflon
+          = 0.01178097 + 0.19242255 + 0.337 + 0.10602875 + 0.0565486677646 +  0.13194689
+          = 0.83572782776
+          = 0.84 ml
 
-L_inject   = 1025
-L_manifold = 690
-d = 0.5
 
-V = (690+1025)*pi*(0.5/2)^2 = 336.74 mm3 = 0.33674 ml ~ 0.337 ml
--- Must retrospectively account for teflon length
 
-4. MIT GENERATION 3 / 2022 onwards
+2. MIT GENERATION 2 / WINTER 2021 MEASUREMENTS
+## used for ellipsometry measurements which will be redone in 2022
+## gen2 had a three 3-way valves and a 4-way connector piece
+## gen1 was a prototype for testing and not used
 
-L_syringeConnector = 15
-d_syringeConnector = 1
-V_syringeConnector = 15*pi*(1/2)^2 = 11.78097 mm3
+# small connector piece from syringe to injection wire [as above in 1]
+  V_syringeConnector = 0.01178097 ml
 
-L_inject = 980
-d_inject = 0.5
-V_inject = 980*pi*(0.5/2)^2 = 192.42255 mm3
+# injection wire from syringe connector to manifold
+  L_inject = 1025
+  d_inject = 0.5
+  V_inject = 1025*pi*(0.5/2)^2 = 201.258279371 mm3 ==> 0.201258279371 ml
 
-L_innerValve = 35*7 (open valves) + 20 (closed valve) = 265
-d_innerValve = ???
-V_innerValve = 265*pi*(???/2)^2 = ??? mm3
+# this manifold was three 3-way valves and a 4-way connector
+  L_manifold = 690
+  d_manifold = 0.5
+  V_manifold = 690*pi*(0.5/2)^2 = 135.481183186 mm3 ==> 0.135481183186 ml
 
-L_valveWires = 90
-d_valveWires = 0.5
-V_valveWires = 6*90*pi*(0.5/2)^2 = 106.02875 mm3
+# peek base connecting manifold to teflon trough [as above in 1]
+  V_peek = 0.05654866776460001 ml
 
-L_teflon = ???
-d_teflon = ???
-V_teflon = ???
+# the teflon trough itself [as above in 1]
+  V_teflon = 0.131946891451 ml
 
-V_total = V_syringeConnector + V_inject + V_innerValve + V_valveWires + V_teflon
-        = 11.781             + 192.422  + ???          + 106.029      + ???  mm3
-        = ml
+# total volume
+  V_total = V_syringeConnector + V_inject + V_manifold + V_peek + V_teflon
+          = 0.01178097 + 0.201258279371 + 0.135481183186 + 0.0565486677646 + 0.13194689
+          = 0.53701599032
+          = 0.54 ml
+
+
+
+3. SEPTEMBER BEAMTIME
+## same system as MIT gen2 but with the electronic syringe switcher
+## potentially different teflon thickness as it's a different trough
+
+# small connector piece from syringe to injection wire [as above in 1&2]
+  V_syringeConnector = 0.01178097 ml
+
+# electronic pump switch volume
+  L_switch = 140
+  d_switch = 0.5
+  V_switch = 140*pi*(0.5/2)^2 = 27.4889357189 mm3 ==> 0.0274889357189 ml
+
+# injection wire from syringe connector to manifold [as above in 2]
+  V_inject = 0.201258279371 ml
+
+# this manifold was three 3-way valves and a 4-way connector [as above in 2]
+  V_manifold = 0.135481183186 ml
+
+# peek base connecting manifold to teflon trough [as above in 1&2]
+  V_peek = 0.05654866776460001 ml
+
+# the teflon trough itself [thinner than MIT]
+  L_teflon = 3
+  d_teflon = 2
+  V_teflon = 6*3*pi*(2/2)^2 = 56.5486677646 mm3 ==> 0.05654866776460001 ml
+
+# total volume
+  V_total = V_syringeConnector + V_switch + V_inject + V_manifold + V_peek + V_teflon
+          = 0.01178097 + 0.0274889357189 + 0.201258279371 + 0.135481183186 + 0.0565486677646 + 0.0565486677646
+          = 0.4891067038
+          = 0.49 ml
+
+
+
+4. MAY BEAMTIME
+## same as September beamtime but without the electronic switcher
