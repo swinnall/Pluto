@@ -263,6 +263,9 @@ class Membrane:
         # calculate the volume fraction of drug in the third layer
         vf_drug = (100 - self.threeSolv) / 100
 
+        # update 2-Solv where it is assumed the vol.frac. of drug is the same in both layers
+        self.twoSolv = self.twoSolv - (vf_drug*100)
+
         # get SLD values of drug in H2O and D2O
         SLD_drug_H2O  = config.SLD_drug_H2O
         SLD_drug_D2O  = config.SLD_drug_D2O
@@ -273,6 +276,7 @@ class Membrane:
 
         # print values to terminal
         print("\nYou have chosen to add the drug to the second layer:")
+        print("\n2-solv = %f" %self.twoSolv)
         print("3-thick = %f" %self.d3)
         print("\n3-solv = %f" %self.threeSolv)
         print("\n2-SLD_H2O = %f\n2-SLD_D2O = %f" %(self.twoSLD_H2O, self.twoSLD_D2O))
@@ -295,6 +299,7 @@ class Membrane:
 
             if config.addDrugToMonolayer == True:
                 f.write("Drug added to layer 2 of monolayer:")
+                f.write("2-solv = %f" %self.twoSolv)
                 f.write("d3 = %f\n" %self.d3)
                 f.write("3-solv = %.4f\n" %self.threeSolv)
                 f.write("2-SLD_H2O = %f\n" %self.twoSLD_H2O)

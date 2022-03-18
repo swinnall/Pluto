@@ -52,14 +52,14 @@ nth        = 60  # data reduction; take every 'nth' point
 # multiplies average chain vol by 0.85 to model lipid chain compaction
 compactChains = False
 
-# include drug sample from third to second (headgroup) layer
+# add drug sample from third to second (headgroup) layer
 addDrugToMonolayer = True
 drugSize           = 20
 threeSolv          = 91.374
-SLD_drug_H2O       = 3.67
-SLD_drug_D2O       = 4.46
+SLD_drug_H2O       = 3.67 # polyA in H2O
+SLD_drug_D2O       = 4.46 # polyA in D2O
 
-# include an injected lipid into the existing monolayer
+# add an injected lipid into the existing monolayer
 addLipidToMonolayer      = False
 injectedComponents       = ["Monolayer", "DLin-MC3-DMA"]
 injectedRatios           = [80, 20]
@@ -152,6 +152,17 @@ markerType = markerDict.get("0")
 # Databases #
 #############
 
+# atom coherent scattering lengths [fm], Coh b from https://www.ncnr.nist.gov/resources/n-lengths/
+atomSL = {
+    "H": -3.739,
+    "D": 6.671,
+    "C": 6.646,
+    "N": 9.36,
+    "O": 5.803,
+    "P": 5.13,
+    "K": 3.67,
+    }
+
 # molecular weight lipid database, [g/mol]
 lipidMw = {
     "DPPC":            734.039,
@@ -168,34 +179,23 @@ lipidMw = {
     "SM":              760.223,
     "LBPA":            792.07,
     "PolyA":           385.31,
-    }
-
-# atom coherent scattering lengths [fm], Coh b from https://www.ncnr.nist.gov/resources/n-lengths/
-atomSL = {
-    "H": -3.739,
-    "D": 6.671,
-    "C": 6.646,
-    "N": 9.36,
-    "O": 5.803,
-    "P": 5.13,
-    "K": 3.67,
+    "DMG-PEG-2000":    2509.200,
     }
 
 # chemical structures for each lipid: (struct_head, struct_tail)
-# Default assumption: only hydrogens and carbons in the tails
 lipidStruct = {
-    "POPC":            ('C11-H20-N-O8-P', 'C31-H62'),
-    "d31-POPC":        ('C11-H20-N-O8-P', 'C31-D31-H31'),
-    "DOPE":            ('C8-H14-N-O8-P', 'C33-H64'),
-    "SM":              ('C8-H19-N2-O5-P', 'O1-C33-H64'),
-    "LBPA":            ('C4-H11-N-O4-P', 'O6-C38-H71'),
+    "POPC":            ('N-O8-P-C11-H20', 'C31-H62'),
+    "d31-POPC":        ('N-O8-P-C11-H20', 'C31-D31-H31'),
+    "DOPE":            ('N-O8-P-C8-H14', 'C33-H64'),
+    "SM":              ('N2-O5-P-C8-H19', 'O1-C33-H64'),
+    "LBPA":            ('N-O4-P-C4-H11', 'O6-C38-H71'),
     "Cholesterol":     ('O-H','C27-H45'),
     "d45-Cholesterol": ('O-H','C27-D45'),
     "DLin-MC3-DMA":    ('N-O2-C7-H13', 'C36-H66'),
     "d-DLin-MC3-DMA":  ('N-O2-C7-H13', 'C36-H4-D62'),
-    "DSPC":            ('N-O8-P','C44-H88'), # clarify
+    "DSPC":            ('N-O8-P-C11-H20','C33-H68'),
     "DMG-PEG-2000":    ('O50','C122-H242'),  # clarify
-    "PolyA":           ('C10-H13-K-N5-O7-P','H')
+    "PolyA":           ('C10-H13-K-N5-O7-P','H'),
     }
 
 # molecular volumes for each lipid (Angstroms cubed): (head, tail)
@@ -211,5 +211,5 @@ lipidMolVol = {
     "d-DLin-MC3-DMA":  (260, 1030),
     "DSPC":            (322,1000),
     "DMG-PEG-2000":    (200,470),
-    "PolyA":           (1,1)
+    "PolyA":           (1,1),
     }
