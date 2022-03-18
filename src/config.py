@@ -21,7 +21,7 @@ pathNames = {
 # Print Options #
 #################
 
-verbose      = True
+verbose      = False
 very_verbose = False
 
 
@@ -52,13 +52,6 @@ nth        = 60  # data reduction; take every 'nth' point
 # multiplies average chain vol by 0.85 to model lipid chain compaction
 compactChains = False
 
-# add drug sample from third to second (headgroup) layer
-addDrugToMonolayer = True
-drugSize           = 20
-threeSolv          = 91.374
-SLD_drug_H2O       = 3.67 # polyA in H2O
-SLD_drug_D2O       = 4.46 # polyA in D2O
-
 # add an injected lipid into the existing monolayer
 addLipidToMonolayer      = False
 injectedComponents       = ["Monolayer", "DLin-MC3-DMA"]
@@ -66,6 +59,14 @@ injectedRatios           = [80, 20]
 updateMonolayerThickness = False
 new_d1 = 1
 new_d2 = 1
+
+# add drug sample from third to second (headgroup) layer
+addDrugToMonolayer = False 
+drugName           = "PolyA"
+drugSize           = 20
+threeSolv          = 91.374
+SLD_drug_H2O       = 3.67 # polyA in H2O
+SLD_drug_D2O       = 4.46 # polyA in D2O
 
 # use vol frac (molar ratio = default); True is more accurate
 useVolFrac = True
@@ -210,6 +211,6 @@ lipidMolVol = {
     "DLin-MC3-DMA":    (260, 1030),
     "d-DLin-MC3-DMA":  (260, 1030),
     "DSPC":            (322,1000),
-    "DMG-PEG-2000":    (200,470),
+    "DMG-PEG-2000":    (200,470), ## this was just for Marianna PEG unit
     "PolyA":           (1,1),
     }

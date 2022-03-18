@@ -12,7 +12,7 @@ Molecular Volume References
 * LBPA:
   https://www.lipidmaps.org/databases/lmsd/LMGP04100003?LMID=LMGP04100003
 
-* MC3, cholesterol [Marianna; SI]
+* MC3, cholesterol, PEG [Marianna; SI]
   https://www.pnas.org/content/pnas/suppl/2018/03/26/1720542115.DCSupplemental/pnas.201720542SI.pdf
 
 

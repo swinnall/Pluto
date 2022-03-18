@@ -14,7 +14,7 @@ mRNA: 13 +- 2  = 0.13
 MC3  = 0.09
 Chol = 0.21 (hydrogenous; deuterated form is 1.4)
 DSPC = 0.18 (hydrogenous; deuterated form is 6.7)
-PEG  = ???
+PEG  = ??? (0.62 was for PEG unit, DPME part was 0.31)
 
 
 

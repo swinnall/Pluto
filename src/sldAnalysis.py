@@ -90,10 +90,7 @@ class Membrane:
             monolayerMolVol['head']  = self.totalLipidVol.get('head')
             monolayerMolVol['tails'] = self.totalLipidVol.get('tails')
 
-        if config.verbose == True and "Monolayer" not in self.lipidNames:
-            print('\nTotal Volume:\n%s' %self.totalLipidVol)
-
-        if config.verbose == True and "Monolayer" in self.lipidNames:
+        if config.verbose == True:
             print('\nTotal Volume:\n%s' %self.totalLipidVol)
 
         if config.verbose == True:
@@ -208,8 +205,7 @@ class Membrane:
         if config.very_verbose == True:
             print("\nLipid scattering length densities:\n%s" %self.lipidSLD)
 
-        if config.verbose == True:
-            print("\nAverage SLD:\n%s" %self.avSLD)
+        print("\nAverage SLD:\n%s" %self.avSLD)
 
 
 
@@ -246,7 +242,8 @@ class Membrane:
         self.twoSolv     = (1-self.headVolFrac)*100
 
         # solvent volume in head group
-        print("\nHead volume fraction: %f" %self.headVolFrac)
+        if config.verbose == True:
+            print("\nHead volume fraction: %f" %self.headVolFrac)
         print("\n2-solv = %f" %self.twoSolv)
 
 
@@ -275,21 +272,30 @@ class Membrane:
         self.twoSLD_D2O = (self.headVolFrac*self.avSLD.get("head") + vf_drug*SLD_drug_D2O ) / (self.headVolFrac + vf_drug)
 
         # print values to terminal
-        print("\nYou have chosen to add the drug to the second layer:")
+        print("\n\nYou have chosen to add the drug (%s) to the second layer:" %config.drugName)
+        print("\n3-thick = %f" %self.d3)
         print("\n2-solv = %f" %self.twoSolv)
-        print("3-thick = %f" %self.d3)
-        print("\n3-solv = %f" %self.threeSolv)
+        print("3-solv = %f" %self.threeSolv)
         print("\n2-SLD_H2O = %f\n2-SLD_D2O = %f" %(self.twoSLD_H2O, self.twoSLD_D2O))
-        print("\n3-SLD_H2O = %f\n3-SLD_D2O = %f \n(as in config, but this actually should be lower as not whole structure is in the layer)" %(SLD_drug_H2O, SLD_drug_D2O))
+        print("\n3-SLD_H2O = %f\n3-SLD_D2O = %f" %(SLD_drug_H2O, SLD_drug_D2O))
 
 
 
     # write output to file
-    def appendFile(self):
+    def appendFile_Membrane(self):
 
-        ## Write to file
         with open(self.outputFilePath, 'a', newline = '') as f:
+            f.write('\n~~~~\nCalculated Membrane: %s\n' %self.lipidNames)
+            f.write("Average SL;  Head = %.4f; Tail = %.4f\n" %(self.avSL.get("head"),self.avSL.get("tails")))
+            f.write("Average SLD; Head = %.4f; Tail = %.4f\n" %(self.avSLD.get("head"),self.avSLD.get("tails")))
+            f.write("Thickness;   Head = %.4f; Tail = %.4f\n" %(self.thickness.get("head"),self.thickness.get("tails")))
+            f.write("Head vol frac = %.4f\n" %self.headVolFrac)
+            f.write("2-solv = %.4f\n" %self.twoSolv)
 
+
+    def appendFile_lipidExchangedMembrane(self):
+
+        with open(self.outputFilePath, 'a', newline = '') as f:
             f.write('\nCalculated Membrane: %s\n' %self.lipidNames)
             f.write("Average SL;  Head = %.4f; Tail = %.4f\n" %(self.avSL.get("head"),self.avSL.get("tails")))
             f.write("Average SLD; Head = %.4f; Tail = %.4f\n" %(self.avSLD.get("head"),self.avSLD.get("tails")))
@@ -297,13 +303,16 @@ class Membrane:
             f.write("Head vol frac = %.4f\n" %self.headVolFrac)
             f.write("2-solv = %.4f\n" %self.twoSolv)
 
-            if config.addDrugToMonolayer == True:
-                f.write("Drug added to layer 2 of monolayer:")
-                f.write("2-solv = %f" %self.twoSolv)
-                f.write("d3 = %f\n" %self.d3)
-                f.write("3-solv = %.4f\n" %self.threeSolv)
-                f.write("2-SLD_H2O = %f\n" %self.twoSLD_H2O)
-                f.write("2-SLD_D2O = %f\n" %self.twoSLD_D2O)
+
+    def appendFile_bindingToMembrane(self):
+
+        with open(self.outputFilePath, 'a', newline = '') as f:
+            f.write("\nDrug (%s) added to layer 2 of monolayer:\n" %config.drugName)
+            f.write("d3 = %f\n" %self.d3)
+            f.write("2-solv = %f\n" %self.twoSolv)
+            f.write("3-solv = %.4f\n" %self.threeSolv)
+            f.write("2-SLD_H2O = %f\n" %self.twoSLD_H2O)
+            f.write("2-SLD_D2O = %f\n" %self.twoSLD_D2O)
 
 
 
@@ -346,7 +355,7 @@ def main(instructionsFile, outputFilePath):
         membrane, lipidRatio, t_thick, h_thick, label = importSampleData(instructionsFile, sampleNum)
 
         # print membrane label to terminal
-        print("\n\n\nMembrane %d - %s" %(sampleNum+1,label))
+        print("\n\n\n~~~\nMembrane %d - %s" %(sampleNum+1,label))
 
         # get list of lipids within membrane with ratio
         lipids = re.split(':',membrane)
@@ -379,11 +388,9 @@ def main(instructionsFile, outputFilePath):
         # calculate volume fraction of the headgroups
         m.calcHeadVolumeFraction()
 
-        # calculates SLD for mixing drug in layer 3 to layer 2
-        if config.addDrugToMonolayer == True: m.calcSLDMergedL2_L3()
+        # append file with initial monolayer calculation information
+        m.appendFile_Membrane()
 
-        # update copied input instructions with output
-        m.appendFile()
 
         # repeat for incorporating an injected lipid component into the membrane
         if config.addLipidToMonolayer == True:
@@ -403,14 +410,32 @@ def main(instructionsFile, outputFilePath):
                 print("Fatal Error: Ratios defined in config do not equal 100.")
                 sys.exit()
 
+            # creates a new class instance to pass new config params to
+            # monolayer properties from initial monolayer are stored in global variables
             m = Membrane(lipids, ratios, thickness, outputFilePath)
+
             m.normaliseMolarRatios()
+
             if config.useVolFrac == True: m.calcVolFrac()
+
             m.calcSL()
+
             m.calcAvLipidVol()
+
             m.calcSLD()
+
             m.calcHeadVolumeFraction()
-            m.appendFile()
+
+            m.appendFile_lipidExchangedMembrane()
+
+
+        # calculates SLD for mixing drug in layer 3 to layer 2
+        if config.addDrugToMonolayer == True:
+
+            # uses existing class instance from either initial monolayer or updated
+            m.calcSLDMergedL2_L3()
+
+            m.appendFile_bindingToMembrane()
 
     return
 
