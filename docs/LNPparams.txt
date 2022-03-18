@@ -1,0 +1,53 @@
+## Shell volume fractions (averaged from ACS Nano Marianna paper)
+DSPC: 26 +- 4  = 0.26
+Chol: 33 +- 3  = 0.33
+MC3: 38 +- 7   = 0.38
+PEG: 3 +- 0.5  = 0.03
+
+## Dry core volume fractions (note molar fractions are 75:25 MC3:Chol)
+Chol: 12 +- 1  = 0.12
+MC3: 75 +- 1   = 0.75
+mRNA: 13 +- 2  = 0.13
+
+
+## SLD_neutron per component
+MC3  = 0.09
+Chol = 0.21 (hydrogenous; deuterated form is 1.4)
+DSPC = 0.18 (hydrogenous; deuterated form is 6.7)
+PEG  = ???
+
+
+
+## Monolayer-LNP models to consider
+
+- Lipid exchange/addition to the monolayer
+(1) DMG-PEG-2000 [up to 80:20]
+(2) DLin-MC3-DMA
+
+- Material binding as a third layer
+(1) DMG-PEG-2000
+(2) PolyA
+(3) LNPs (for completion)
+
+- Material merging between layers 3 and 2
+(1) DMG-PEG-2000
+(2) PolyA
+
+- Future: Combining lipid exchange and polyA binding?
+
+
+
+## Jayne Email - RC comments
+fully extended tail is irrelevant
+only works if you negelcts the roughness, data from 90s had zero roughness therefore needed thicker layers (length of layer and added air)
+
+
+
+## September data
+Only consider lengths proportional number of carbons, e.g. 3/15 of the carbons in this region
+3/15 of what was fitted (12 angstroms)
+-- count how many carbons
+
+
+
+## Setup next meeting

@@ -194,7 +194,7 @@ lipidStruct = {
     "DLin-MC3-DMA":    ('N-O2-C7-H13', 'C36-H66'),
     "d-DLin-MC3-DMA":  ('N-O2-C7-H13', 'C36-H4-D62'),
     "DSPC":            ('N-O8-P-C11-H20','C33-H68'),
-    "DMG-PEG-2000":    ('O50','C122-H242'),  # clarify
+    "DMG-PEG-2000":    ('O50','C122-H242'),                           # clarify
     "PolyA":           ('C10-H13-K-N5-O7-P','H'),
     }
 
