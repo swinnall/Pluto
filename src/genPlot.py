@@ -86,11 +86,11 @@ def plotParameters(suffix):
         config_n0   = 0
         config_nf   = 1E6
 
-        overrideAxisLim = False
+        overrideAxisLim = False 
         config_xmin     = 0
-        config_xmax     = 1E6
+        config_xmax     = 30000
         config_ymin     = 0
-        config_ymax     = 1E6
+        config_ymax     = 45
 
         overrideTickLocation = False
         n_xticks             = 1

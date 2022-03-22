@@ -9,11 +9,11 @@ outputDir = "../../UoM-Data-Repository/output/"
 
 # dict of input instructions names and output file names
 pathNames = {
-    "isoAnalysis":      ('Instructions - Isotherm',        'Isotherm'),
-    "ellipsAnalysis":   ('Instructions - Ellipsometry',    'Ellipsometry'),
-    "chemFormulations": ('Instructions - ChemFormulation', 'Chem Formulations'),
-    "sldAnalysis":      ('Instructions - SLD',             'SLD'),
-    "surfaceExcess":    ('Instructions - SurfaceExcess',   'Surface Excess'),
+    "isoAnalysis":      ('Instructions - Surface Pressure', 'Isotherm'),
+    "ellipsAnalysis":   ('Instructions - Ellipsometry',     'Ellipsometry'),
+    "chemFormulations": ('Instructions - ChemFormulation',  'Chem Formulations'),
+    "sldAnalysis":      ('Instructions - SLD',              'SLD'),
+    "surfaceExcess":    ('Instructions - SurfaceExcess',    'Surface Excess'),
     }
 
 
@@ -55,13 +55,13 @@ compactChains = False
 # add an injected lipid into the existing monolayer
 addLipidToMonolayer      = False
 injectedComponents       = ["Monolayer", "DLin-MC3-DMA"]
-injectedRatios           = [80, 20]
+injectedRatios           = [90, 10]
 updateMonolayerThickness = False
 new_d1 = 1
 new_d2 = 1
 
 # add drug sample from third to second (headgroup) layer
-addDrugToMonolayer = False 
+addDrugToMonolayer = False
 drugName           = "PolyA"
 drugSize           = 20
 threeSolv          = 91.374

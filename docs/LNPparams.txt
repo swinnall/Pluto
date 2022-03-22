@@ -14,7 +14,7 @@ mRNA: 13 +- 2  = 0.13
 MC3  = 0.09
 Chol = 0.21 (hydrogenous; deuterated form is 1.4)
 DSPC = 0.18 (hydrogenous; deuterated form is 6.7)
-PEG  = ??? (0.62 was for PEG unit, DPME part was 0.31)
+PEG  = ??? (0.62 was for PEG unit, DPME part was 0.31, need DMG)
 
 
 
@@ -36,6 +36,8 @@ PEG  = ??? (0.62 was for PEG unit, DPME part was 0.31)
 - Future: Combining lipid exchange and polyA binding?
 
 
+### calculate LNP SLD, make LNP and polyA (assumes LNP degrades) plots
+
 
 ## Jayne Email - RC comments
 fully extended tail is irrelevant
@@ -47,6 +49,11 @@ only works if you negelcts the roughness, data from 90s had zero roughness there
 Only consider lengths proportional number of carbons, e.g. 3/15 of the carbons in this region
 3/15 of what was fitted (12 angstroms)
 -- count how many carbons
+
+19 carbons from tail to connecting point
+Therefore 18 on each tail
+C18 has been fitted to 12 A
+3/18 * 12 = 2 A.... but this is less than capillary wave roughness too small to resolve
 
 
 
