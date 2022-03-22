@@ -103,6 +103,12 @@ def organisePaths(analysisType, instructionsName, instructionsPath, outputDataPa
         print("Instructions Copying Error:\n  Error occurred while copying file.")
 
 
+    # clean output file by getting file (auto skips commented lines)
+    File = getFile(path=outputInstructionFile,nSkip=0,delim=',')
+
+    # write new file without the comments (isolates just the files that were run)
+    File.to_csv(outputInstructionFile)
+
     return instructionsFile, title, outputDataPath, outputInstructionFile
 
 

@@ -53,7 +53,7 @@ nth        = 60  # data reduction; take every 'nth' point
 compactChains = False
 
 # add an injected lipid into the existing monolayer
-addLipidToMonolayer      = False
+addLipidToMonolayer      = True
 injectedComponents       = ["Monolayer", "DLin-MC3-DMA"]
 injectedRatios           = [90, 10]
 updateMonolayerThickness = False
@@ -195,7 +195,7 @@ lipidStruct = {
     "DLin-MC3-DMA":    ('N-O2-C7-H13', 'C36-H66'),
     "d-DLin-MC3-DMA":  ('N-O2-C7-H13', 'C36-H4-D62'),
     "DSPC":            ('N-O8-P-C11-H20','C33-H68'),
-    "DMG-PEG-2000":    ('O50','C122-H242'),                           # clarify
+    "DMG-PEG-2000":    ('O5-C6-H7','C25-H52'), # polymer: ([O-C2-H4]_44 + O-C3-H7); total: O50-C122-H242
     "PolyA":           ('C10-H13-K-N5-O7-P','H'),
     }
 
@@ -211,6 +211,6 @@ lipidMolVol = {
     "DLin-MC3-DMA":    (260, 1030),
     "d-DLin-MC3-DMA":  (260, 1030),
     "DSPC":            (322,1000),
-    "DMG-PEG-2000":    (200,470), ## this was just for Marianna PEG unit
+    "DMG-PEG-2000":    (256,767), # From Marianna: DMPE (head 0.25% total vol. 1023) PEG unit = 670
     "PolyA":           (1,1),
     }

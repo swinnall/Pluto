@@ -336,21 +336,21 @@ def hasNumbers(inputString):
 
 def main(instructionsFile, outputFilePath):
 
-    # initialise global variables for averageAgain func
-    global monolayerMolVol
-    global monolayerSL
-    global monolayerSLD
-    monolayerMolVol = {'head': 0, 'tails': 0}
-    monolayerMolVol = {'head': 0, 'tails': 0}
-    monolayerSL     = {'head': 0, 'tails': 0}
-    monolayerSLD    = {'head': 0, 'tails': 0}
-
     # number of membranes to calculate
     nMemb = len(instructionsFile)
 
     # calculate component volumes
     for sampleNum in range(nMemb):
 
+        # initialise global variables for averageAgain func
+        global monolayerMolVol
+        global monolayerSL
+        global monolayerSLD
+        monolayerMolVol = {'head': 0, 'tails': 0}
+        monolayerMolVol = {'head': 0, 'tails': 0}
+        monolayerSL     = {'head': 0, 'tails': 0}
+        monolayerSLD    = {'head': 0, 'tails': 0}
+        
         # import sample data
         membrane, lipidRatio, t_thick, h_thick, label = importSampleData(instructionsFile, sampleNum)
 

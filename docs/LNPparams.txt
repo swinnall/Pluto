@@ -21,19 +21,20 @@ PEG  = ??? (0.62 was for PEG unit, DPME part was 0.31, need DMG)
 ## Monolayer-LNP models to consider
 
 - Lipid exchange/addition to the monolayer
-(1) DMG-PEG-2000 [up to 80:20]
+(1) DMG-PEG-2000 [up to 90:10]
 (2) DLin-MC3-DMA
+(3) Combination of lipids
 
 - Material binding as a third layer
-(1) DMG-PEG-2000
-(2) PolyA
-(3) LNPs (for completion)
+(1) PolyA (with MC3 inserted)
+(2) PolyA (with PEG inserted at different polymer lengths (persistent length?))
+(3) PolyA (with PEG and MC3 inserted)
+(4) LNPs (for completion)
 
 - Material merging between layers 3 and 2
-(1) DMG-PEG-2000
-(2) PolyA
-
-- Future: Combining lipid exchange and polyA binding?
+(1) PolyA (with MC3 inserted)
+(2) PolyA (with PEG inserted at different polymer lengths (persistent length?))
+(3) PolyA (with PEG and MC3 inserted)
 
 
 ### calculate LNP SLD, make LNP and polyA (assumes LNP degrades) plots
