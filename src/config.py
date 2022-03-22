@@ -49,8 +49,9 @@ nth        = 60  # data reduction; take every 'nth' point
 # SLD Analysis #
 ################
 
-# multiplies average chain vol by 0.85 to model lipid chain compaction
-compactChains = False
+# multiplies average chain vol by factor to model lipid chain compaction
+compactChains      = False
+chainCompactFactor = 0.85
 
 # add an injected lipid into the existing monolayer
 addLipidToMonolayer      = True
@@ -60,8 +61,10 @@ updateMonolayerThickness = False
 new_d1 = 1
 new_d2 = 1
 
+#### need to average SLD with two components (e.g. polyA and PEG)
+
 # add drug sample from third to second (headgroup) layer
-addDrugToMonolayer = False
+addDrugToMonolayer = True
 drugName           = "PolyA"
 drugSize           = 20
 threeSolv          = 91.374

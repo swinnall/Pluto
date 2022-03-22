@@ -108,14 +108,12 @@ class Membrane:
 
             for j, struct in enumerate(['head','tails']):
 
-                # if Monolayer isn't in lipidStruct (it's not)
-                # store data from global variable and break loop
                 if lipid == "Monolayer":
+                    #print(self.volFrac[lipid][struct])
                     self.lipidSL[lipid][struct] = monolayerSL.get(struct)
-                    #if struct == 'tails': break
 
                 else:
-                    # splits head/tail into list of constituent
+                    # splits head/tail into list of constituent atoms
                     splitStruct = re.split('-', self.lipidStruct.get(lipid)[j])
 
                     # this loop iterates across elements in a given head/tail and sums the atomic scattering lengths
@@ -135,12 +133,12 @@ class Membrane:
                             self.lipidSL[lipid][struct] += self.atomSL.get(ele[0])
 
 
-                    # multiply total lipid scattering length of a given lipid's head/tail by corresponding vol frac
-                    if config.useVolFrac == True:
-                        self.avSL[struct] += self.volFrac[lipid][struct] * self.lipidSL[lipid][struct]
-                    else:
-                        self.avSL[struct] += self.normMolRatios[i] * self.lipidSL[lipid][struct]
-
+                # multiply total lipid scattering length of a given lipid's head/tail by corresponding vol frac
+                if config.useVolFrac == True:
+                    #print(self.volFrac[lipid][struct])
+                    self.avSL[struct] += self.volFrac[lipid][struct] * self.lipidSL[lipid][struct]
+                else:
+                    self.avSL[struct] += self.normMolRatios[i] * self.lipidSL[lipid][struct]
 
 
         # save Monolayer monolayer struct volumes on the first iteration
@@ -157,6 +155,8 @@ class Membrane:
 
 
     def calcAvLipidVol(self):
+
+        global monolayerMolVol
 
         for i, lipid in enumerate(self.lipidNames):
 
@@ -178,7 +178,7 @@ class Membrane:
 
         # if accounting for chain compaction
         if config.compactChains == True:
-            chainCompactFactor = 0.85
+            chainCompactFactor = config.chainCompactFactor
             self.avLipidVol['tails'] = chainCompactFactor * self.avLipidVol['tails']
 
 
@@ -350,7 +350,7 @@ def main(instructionsFile, outputFilePath):
         monolayerMolVol = {'head': 0, 'tails': 0}
         monolayerSL     = {'head': 0, 'tails': 0}
         monolayerSLD    = {'head': 0, 'tails': 0}
-        
+
         # import sample data
         membrane, lipidRatio, t_thick, h_thick, label = importSampleData(instructionsFile, sampleNum)
 
@@ -407,7 +407,7 @@ def main(instructionsFile, outputFilePath):
                 else: print("Added Lipid: %s: %d%%." %(lipid, ratios[ele]))
 
             if sumRatiosTest != 100:
-                print("Fatal Error: Ratios defined in config do not equal 100.")
+                print("Fatal Error: Molar ratios defined in config do not equal 100.")
                 sys.exit()
 
             # creates a new class instance to pass new config params to
@@ -437,6 +437,7 @@ def main(instructionsFile, outputFilePath):
 
             m.appendFile_bindingToMembrane()
 
+    sys.exit()
     return
 
 
