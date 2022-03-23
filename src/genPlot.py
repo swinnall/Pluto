@@ -10,9 +10,9 @@ import config
 def plotParameters(suffix):
 
     # ask user to pick one of the analysisOptions
-    analysisChoice = input("Would you like to use default plot parameters (y/n): ")
+    analysisChoice = input("Would you like to override default plot parameters (y/n): ")
 
-    if analysisChoice.upper() == 'N':
+    if analysisChoice.upper() == 'Y':
 
         ## Plot Types, default line plot if false
         scatterPlot = (input("Plot as scatter plot (y/n)?: "))
@@ -36,15 +36,15 @@ def plotParameters(suffix):
 
     # default parameters
     else:
-        plotWithScatter    = False
-        plotLineWithMarker = False
+        plotWithScatter    = config.plotWithScatter
+        plotLineWithMarker = config.plotLineWithMarker
 
-        lw            = 4
-        scatterSize   = 0
-        markEdgeWidth = 0
+        lw            = config.defaultLw
+        scatterSize   = config.scatterSize
+        markEdgeWidth = config.markEdgeWidth
 
-        fs                  = 18
-        legend_fs_reduction = 0
+        fs                  = config.fs
+        legend_fs_reduction = config.legend_fs_reduction
 
 
     ## Axis Adjustment Parameters
@@ -57,7 +57,7 @@ def plotParameters(suffix):
 
 
     # ask user to pick one of the analysisOptions
-    analysisChoice = input("Would you like to override plot region (y/n): ")
+    analysisChoice = input("Would you like to override default plot region (y/n): ")
 
     if analysisChoice.upper() == 'Y':
 
@@ -82,20 +82,20 @@ def plotParameters(suffix):
 
     # default parameters, initialise with arbitrary numbers
     else:
-        overrideNoP = False
-        config_n0   = 0
-        config_nf   = 1E6
+        overrideNoP = config.overrideNoP
+        config_n0   = config.config_n0
+        config_nf   = config.config_nf
 
-        overrideAxisLim = False 
-        config_xmin     = 0
-        config_xmax     = 30000
-        config_ymin     = 0
-        config_ymax     = 45
+        overrideAxisLim = config.overrideAxisLim
+        config_xmin     = config.config_xmin
+        config_xmax     = config.config_xmax
+        config_ymin     = config.config_ymin
+        config_ymax     = config.config_ymax
 
-        overrideTickLocation = False
-        n_xticks             = 1
-        xTickInterval        = 10
-        yTickInterval        = 5
+        overrideTickLocation = config.overrideTickLocation
+        n_xticks             = config.n_xticks
+        xTickInterval        = config.xTickInterval
+        yTickInterval        = config.yTickInterval
 
 
     return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\

@@ -1,4 +1,4 @@
-"Reads ellipsometry data"
+" Plots ellipsometry data from beaglehole ellipsometer "
 
 import sys
 import csv
@@ -101,8 +101,13 @@ def importTimeData(inputDIR, time_ID, nTime):
         # subtract ref data from these to give lipid-only data
         for j in range(0,len(time_df)):
             t[i]      .append(float(time_df[j][6]))
-            psi_t[i]  .append(float(time_df[j][0]) )#- avRefPsi) ## for now subtract psi ref
-            delta_t[i].append(float(time_df[j][1]) )#- avRefDel) ## comment for bare interface
+
+            if config.ellipSubtractBufferRef == True:
+                psi_t[i]  .append(float(time_df[j][0]) - avRefPsi)
+                delta_t[i].append(float(time_df[j][1]) - avRefDel)
+            else:
+                psi_t[i]  .append(float(time_df[j][0]) )
+                delta_t[i].append(float(time_df[j][1]) )
 
         label_t[i] = time_ID[i].get('label')
 
@@ -110,141 +115,14 @@ def importTimeData(inputDIR, time_ID, nTime):
 
 
 
-
-def sinModel(x,par):
-
-    # initial guess parameters; amplitude, wavenumber, phase
-    A      = par[0]
-    lmbda1 = par[1]
-    phi1   = par[2]
-    B      = par[3]
-    lmbda2 = par[4]
-    phi2   = par[5]
-    c      = par[6]
-
-    # basic model, might add second sine function and/or time dependence
-    sinY_Model = A*np.sin(2*np.pi*np.array(x)/lmbda1 + phi1) + B*np.sin(2*np.pi*np.array(x)/lmbda2 + phi2) + c
-
-    return sinY_Model
-
-
-# least square condition
-def leastsquare(delta_exp, sinY_Model):
-
-    diffSq = []
-    for i, j in zip(delta_exp,sinY_Model):
-        diffSq.append( np.power(i-j,2) )
-
-    return np.sum(diffSq)
-
-
-# residual function for genetic algorithm
-def residuals(par, t, delta_exp):
-
-    # where sinModel is the sinusoidal function
-    sinY_Model = sinModel(t, par)
-
-    return leastsquare(delta_exp, sinY_Model)
-
-
-def fitSine(t, delta_t):
-
-    # update variable names for easier processing
-    t         = t.get(0)
-    Delta_exp = delta_t.get(0)
-
-
-    # high pass filter: remove values less than 0.01 (final smoothing of function)
-    tolerance  = 0.01
-    smoothT = []; smoothList = []
-    for i in range(0,len(Delta_exp)-1):
-
-        if abs(Delta_exp[i] - Delta_exp[i+1]) < tolerance and Delta_exp[i] < 180.60 and Delta_exp[i] > 179.81:
-            smoothList.append(Delta_exp[i])
-            smoothT.append(t[i])
-
-    # define boundaries of k; 2pi/lambda
-    lmbda1_lower = 5000
-    lmbda1_upper = 15000
-    lmbda1_guess = 6.429e+03
-    lmbda2_lower = 60000
-    lmbda2_upper = 80000
-    lmbda2_guess = 7.98488484e+04
-
-    # define input parameters; [A, lmbda1, phi1, B, lmbda2, phi2, c]
-    #par = [0.4, lmbda1_guess, 0, 180]
-    par = [0.4, lmbda1_guess, 0, 0.1, lmbda2_guess, 0, 180]
-
-    # associated parameter bounds; could fix pars by defining in model function
-    #bounds = [(0.2,0.5), (lmbda1_lower,lmbda1_upper), (-np.pi,np.pi), (179.5,180.5)]
-    bounds = [(0.2,0.5), (lmbda1_lower,lmbda1_upper), (-np.pi,np.pi), (0.0,0.5), (lmbda2_lower,lmbda2_upper), (-np.pi,np.pi), (178,182)]
-
-    # genetic algorithm
-    geneticOutput = opt.differential_evolution(residuals, bounds, args=(smoothT, smoothList), maxiter=1000) # might need args=*par or make par global
-
-    # parameter solution
-    solution = geneticOutput.x
-    print("\nParameter solution (A, lmbda1, phi1, B, lmbda2, phi2, c):\n %s" %solution)
-
-    # associated cost
-    lstsq = residuals(solution, t, Delta_exp)
-    print("\nCost of chosen solution: %f" %lstsq)
-
-    # number of iterations
-    print("\nNumber of iterations: %s" %geneticOutput.nit)
-
-    # bool of success
-    print("\nOptimisation status: %s" %geneticOutput.success)
-
-    # termination message
-    print("\nTermination message: %s" %geneticOutput.message)
-
-
-    # generate second sine set
-    sinY_Model = sinModel(smoothT,solution)
-
-    # generate subtracted data
-    DeltaSmoothSubtracted = []
-    for i in range(len(smoothT)):
-        DeltaSmoothSubtracted.append( smoothList[i] - sinY_Model[i] + solution[6])
-
-    plt.plot(t, Delta_exp, '.', label='Raw Data', c='#1643A2')
-    plt.plot(smoothT, smoothList, '-', label='Smoothed Data', c='#3CA8AB')
-    plt.plot(smoothT, sinY_Model, label='Fit', linewidth=3, c='#E9BC5D')
-    #plt.plot(smoothT, DeltaSmoothSubtracted, label='Subtracted', linewidth=1.5, c='red') # , c='#E9BC5D'
-    plt.legend()
-    plt.xlabel('Time (s)')
-    plt.ylabel('Delta (deg)')
-    plt.show()
-
-
-    return
-
-
-
-
 def main(instructionsFile, title, inputDIR, outputPath):
-
-    ## this is to calibrate the periodicity subtraction of the data
-    ## Create simpleFit option that analyses the periodicity of sample data - could extend to comparison between multiple fits
-    ## this should then generate parameters
-    ## generate sinusoidal data (general function) with these parameters
-    ## plot original data, fit, and subtracted data
-    ## ask user if they would like to update default parameters with the new ones (in practice it's most like the program's default will be set and rarely updated as the same should be used continuously)
-    ## ask user if they want to subtract the sin curve from this data
-
-    ### Points to think about
-    ## maybe each time the experimental data is read it should be analysed for periodicity [have to select region]
-    ## would have to have a noise filter
-    ## could callibrate against Andreas' data if he still has it
-
 
     # filter warnings
     warnings.filterwarnings("ignore")
 
 
     # give analysis choice to user
-    analysisOptions = ['plotAOIpsi','plotAOIdelta','plotTimePsi','plotTimeDelta', 'parOpt','fitSin']
+    analysisOptions = ['plotAOIpsi','plotAOIdelta','plotTimePsi','plotTimeDelta']
 
     analysisRunning = True
     while analysisRunning:
@@ -259,7 +137,7 @@ def main(instructionsFile, title, inputDIR, outputPath):
 
 
         # process data
-        if analysisType == 'plotAOIpsi' or analysisType == 'plotAOIdelta' or analysisType == 'parOpt':
+        if analysisType == 'plotAOIpsi' or analysisType == 'plotAOIdelta':
 
             if nAOI < 1:
                 print("Error: No AOI files in input.")
@@ -274,13 +152,8 @@ def main(instructionsFile, title, inputDIR, outputPath):
                     delta_AOI[i][j] = delta_AOI.get(i)[j] * 180 / np.pi
 
 
-            #if analysisType == 'parOpt':
-            #    parameterOptimisation(AOI, psi_AOI, delta_AOI)
 
-
-
-
-        if analysisType == 'plotTimePsi' or analysisType == 'plotTimeDelta' or analysisType == 'fitSin':
+        if analysisType == 'plotTimePsi' or analysisType == 'plotTimeDelta':
 
             if nTime < 1:
                 print("Error: No Time files in input.")
@@ -294,11 +167,8 @@ def main(instructionsFile, title, inputDIR, outputPath):
                 for j in range(len(delta_t.get(i))):
                     delta_t[i][j] = delta_t.get(i)[j] * 180 / np.pi
 
-            if analysisType == 'fitSin':
-                fitSine(t, delta_t)
 
-
-                # plot data
+        # plot data
         equip = 'null'
         key   = (1,1)
         if analysisType == 'plotAOIpsi':

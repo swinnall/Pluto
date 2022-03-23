@@ -1,4 +1,4 @@
-" Module that defines global variables for Pluto"
+" Module that defines variables for Pluto"
 
 ##############
 # File Paths #
@@ -9,7 +9,7 @@ outputDir = "../../UoM-Data-Repository/output/"
 
 # dict of input instructions names and output file names
 pathNames = {
-    "isoAnalysis":      ('Instructions - Surface Pressure', 'Isotherm'),
+    "isoAnalysis":      ('Instructions - Surface Pressure', 'Surface Pressure'),
     "ellipsAnalysis":   ('Instructions - Ellipsometry',     'Ellipsometry'),
     "chemFormulations": ('Instructions - ChemFormulation',  'Chem Formulations'),
     "sldAnalysis":      ('Instructions - SLD',              'SLD'),
@@ -21,6 +21,7 @@ pathNames = {
 # Print Options #
 #################
 
+# determine levels of print output to terminal for debugging (mostly SLD module)
 verbose      = False
 very_verbose = False
 
@@ -74,6 +75,7 @@ SLD_drug_D2O       = 4.46 # polyA in D2O
 # use vol frac (molar ratio = default); True is more accurate
 useVolFrac = True
 
+
 ###################
 # Surface Excess #
 ##################
@@ -81,8 +83,17 @@ useVolFrac = True
 # reduce number of points by len()/gammaNth
 gammaNth = 1
 
-# smooth function
+# smooth function by fitting polynomial of order:
 gamma_nPoly = 10
+
+
+###################
+# Surface Excess #
+##################
+
+# subtracting buffer reference (true) means isolating the lipid monolayer
+# select false if bare interface
+ellipSubtractBufferRef = True
 
 
 #############
@@ -93,7 +104,36 @@ gamma_nPoly = 10
 saveAsPNG = True
 saveAsPDF = True
 
-# List of plot types that use the time axis
+## Set default plot parameters
+defaultLw = 4
+
+plotWithScatter = False
+scatterSize     = 0
+
+plotLineWithMarker = False
+markEdgeWidth      = 0
+
+fs                  = 18
+legend_fs_reduction = 0
+
+
+## Set default plot region values
+overrideNoP = False
+config_n0   = 0
+config_nf   = 1E6
+
+overrideAxisLim = False
+config_xmin     = 0
+config_xmax     = 30000
+config_ymin     = 0
+config_ymax     = 45
+
+overrideTickLocation = False
+n_xticks             = 1
+xTickInterval        = 10
+yTickInterval        = 5
+
+## List of plot types that use the time axis
 tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time", " - gammaL", " - gammaP"]
 
 ## Colours

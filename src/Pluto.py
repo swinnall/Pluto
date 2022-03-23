@@ -1,4 +1,4 @@
-" Pluto "
+" Pluto - Data Analysis Pipeline for the Air-Water Interface "
 " Author: @S.Winnall "
 
 import glob, os, sys
@@ -26,26 +26,20 @@ def programSelection(analysisOptions):
     # ask user to pick one of the analysisOptions
     analysisType, analysisRunning = modSelection(analysisOptions)
 
-
     # calls from config database
     instructionsName = config.pathNames.get(analysisType)[0]
-
 
     # input/output folder names to be accessed within root in/output directory
     inputOutputStem  = config.pathNames.get(analysisType)[1]
 
-
     # instructions file path
     instructionsPath = "" + inputDir + instructionsName + ".txt"
-
 
     # input data files path
     inputDataPath    = '' + inputDir + '/' + inputOutputStem + ''
 
-
     # output data files path
     outputDataPath   = '' + outputDir + '/' + inputOutputStem + ''
-
 
     return analysisType, instructionsName, instructionsPath, inputDataPath, outputDataPath
 

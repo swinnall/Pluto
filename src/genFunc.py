@@ -1,5 +1,5 @@
 " Module for general functions within Pluto "
-" Next: add in geneneral smooth data functions "
+# Next: add in geneneral smooth data functions
 
 import csv
 import sys

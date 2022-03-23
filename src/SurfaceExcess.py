@@ -1,4 +1,4 @@
-" Module for calculating surface excess "
+" Module for plotting surface excess "
 
 import csv
 import os
