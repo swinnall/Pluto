@@ -1,4 +1,5 @@
 " Module that defines variables for Pluto"
+import sys
 
 ##############
 # File Paths #
@@ -50,29 +51,37 @@ nth        = 60  # data reduction; take every 'nth' point
 # SLD Analysis #
 ################
 
-# multiplies average chain vol by factor to model lipid chain compaction
+## Multiply average chain vol by factor to model lipid chain compaction
 compactChains      = False
 chainCompactFactor = 0.85
 
-# add an injected lipid into the existing monolayer
+## Add injected lipid into the existing monolayer
 addLipidToMonolayer      = True
-injectedComponents       = ["Monolayer", "DLin-MC3-DMA"]
+injectedComponents       = ["Monolayer", "DMG-PEG-2000"] # "DLin-MC3-DMA" "DMG-PEG-2000"
 injectedRatios           = [90, 10]
 updateMonolayerThickness = False
 new_d1 = 1
 new_d2 = 1
 
-#### need to average SLD with two components (e.g. polyA and PEG)
+## Adding drug to monolayer
+# as third layer
+addDrugToThirdLayer = True
 
-# add drug sample from third to second (headgroup) layer
+# in both third and second (headgroup) layer
 addDrugToMonolayer = True
-drugName           = "PolyA"
-drugSize           = 20
-threeSolv          = 91.374
-SLD_drug_H2O       = 3.67 # polyA in H2O
-SLD_drug_D2O       = 4.46 # polyA in D2O
 
-# use vol frac (molar ratio = default); True is more accurate
+# drug injection parameters
+drugSize           = 20 # drug size of polyA: 20, PEG: 20 (to fit)
+threeSolv          = 85
+SLD_drug_H2O       = 0.62 # polyA in H2O: 3.67, PEG in D2O: 0.62
+SLD_drug_D2O       = 0.62 # polyA in D2O: 4.46, PEG in D2O: 0.62
+
+# drug injection error check
+if addDrugToThirdLayer == True and addDrugToMonolayer == True:
+    print("\nFatal Config Error: Both drug config commands are true.")
+    sys.exit()
+
+## Use more accurate vol frac (True) rather than default molar ratio (False) 
 useVolFrac = True
 
 
