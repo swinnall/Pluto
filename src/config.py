@@ -28,7 +28,7 @@ pathNames = {
 #################
 
 # determine levels of print output to terminal for debugging (mostly SLD module)
-verbose      = True
+verbose      = False
 very_verbose = False
 
 
@@ -61,7 +61,7 @@ compactChains      = False
 chainCompactFactor = 0.85
 
 ## Add injected lipid into the existing monolayer
-addLipidToMonolayer      = True
+addLipidToMonolayer      = False
 injectedComponents       = ["Monolayer", "DMG-PEG-2000"] # "DLin-MC3-DMA" "DMG-PEG-2000"
 injectedRatios           = [90, 10]
 updateMonolayerThickness = False
@@ -79,9 +79,9 @@ addDrugToMonolayer = False
 
 # drug injection parameters
 drugSize           = 20 # drug size of polyA: 20, PEG: 20 (to fit)
-threeSolv          = 85
-SLD_drug_H2O       = 0.62 # polyA in H2O: 3.67, PEG in D2O: 0.62
-SLD_drug_D2O       = 0.62 # polyA in D2O: 4.46, PEG in D2O: 0.62
+threeSolv          = 86.75
+SLD_drug_H2O       = 3.67 # polyA in H2O: 3.67, PEG in H2O: 0.62
+SLD_drug_D2O       = 4.46 # polyA in D2O: 4.46, PEG in D2O: 0.62
 
 # drug injection error check
 if addDrugToThirdLayer == True and addDrugToMonolayer == True:

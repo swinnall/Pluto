@@ -1,0 +1,70 @@
+
+
+S02 = dMC3 on ACMW
+S07 = hMC3 on ACMW 
+
+S03 = dMC3:dchol on ACMW 
+S08 = hMC3:hchol on ACMW 
+
+
+S02 - S07 = dMC3 - hMC3  [on ACMW]
+S03 - S08 = d....
+
+Trend: kinetics needs dLipid - hLipid on ACMW 
+
+Endosomal Systems available 
+
+
+hEEM p30 D2O
+
+dEEM p30 D2O
+dEEM p30 D2O 2 (repeat)
+
+dEEM p30 ACMW 
+
+hEEM p15 D2O
+
+dLEM p30 D2O 
+
+
+SLD_buffer * 0.8 + SLD_Peg * 0.1 + SLD_polyA * 0.1
+
+ACMW: -0.56*0.8 + 0.62*0.1 + 3.67*0.1 = -0.019
+D2O: 6.38*0.8 + 0.62*0.1 + 4.46*0.1 = 5.612
+
+
+
+
+
+313 LEM add 10 DMG L1-2 and PEG L3 brush
+x = 25.12
+
+313 LEM add 10 DMG L1-2 and PEG L3 brush and polyA L3
+x = 16.47
+
+
+313 LEM add 10 DMG L1-2 and PEG L3 med mushroom
+x = 23.30
+
+313 LEM add 10 DMG L1-2 and PEG L3 med mushroom and polyA L3
+x = 
+
+
+313 LEM add 10 DMG L1-2 and PEG L3 mushroom
+x = 23.40
+
+
+311 LEM add 10 MC3 and polyA L2-3
+x = 21.24
+
+311 LEM add 20 MC3 and polyA L2-3
+x = 20.22
+
+
+
+
+
+
+
+
+
