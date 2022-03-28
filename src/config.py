@@ -1,4 +1,9 @@
 " Module that defines variables for Pluto"
+
+###########
+# Imports #
+##########
+
 import sys
 
 ##############
@@ -23,7 +28,7 @@ pathNames = {
 #################
 
 # determine levels of print output to terminal for debugging (mostly SLD module)
-verbose      = False
+verbose      = True
 very_verbose = False
 
 
@@ -64,11 +69,13 @@ new_d1 = 1
 new_d2 = 1
 
 ## Adding drug to monolayer
-# as third layer
-addDrugToThirdLayer = True
+drugName = "PolyA and PEG"
+
+# as third layer (not yet implemented)
+addDrugToThirdLayer = False
 
 # in both third and second (headgroup) layer
-addDrugToMonolayer = True
+addDrugToMonolayer = False
 
 # drug injection parameters
 drugSize           = 20 # drug size of polyA: 20, PEG: 20 (to fit)
@@ -78,11 +85,11 @@ SLD_drug_D2O       = 0.62 # polyA in D2O: 4.46, PEG in D2O: 0.62
 
 # drug injection error check
 if addDrugToThirdLayer == True and addDrugToMonolayer == True:
-    print("\nFatal Config Error: Both drug config commands are true.")
+    print("\nFatal Config Error: Both addDrug config commands are true.")
     sys.exit()
 
-## Use more accurate vol frac (True) rather than default molar ratio (False) 
-useVolFrac = True
+## Use contentious vol frac (True) or default molar ratio (False)
+useVolFrac = False
 
 
 ###################

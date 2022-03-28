@@ -8,19 +8,26 @@ import config
 
 class Membrane:
 
-    def __init__(self, lipidNames, molRatios, thickness, outputFilePath):
+    def __init__(self, lipidNames, molRatios, thickness, monolayerPar, outputFilePath):
+
+        # read system parameters
         self.lipidNames  = lipidNames
         self.molRatios   = molRatios
         self.thickness   = thickness
         self.nLipids     = len(self.lipidNames)
 
+        # unpack monolayer parameters (0s if 1st run; each tuple ele is dict[struct])
+        self.monolayerMolVol = monolayerPar[0]
+        self.monolayerSL     = monolayerPar[1]
+        self.monolayerSLD    = monolayerPar[2]
+
+        # import filepath
+        self.outputFilePath = outputFilePath
+
         # import databases
         self.lipidStruct = config.lipidStruct
         self.atomSL      = config.atomSL
         self.lipidMolVol = config.lipidMolVol
-
-        # import filepath
-        self.outputFilePath = outputFilePath
 
         # initialise new variables
         self.headVolFrac   = 0
@@ -32,7 +39,6 @@ class Membrane:
         self.normMolRatios = []
         self.volFrac       = {}
         self.lipidSL       = {}
-        self.lipidSLD      = {}
         self.totalLipidVol = {'head': 0, 'tails': 0}
         self.avLipidVol    = {'head': 0, 'tails': 0}
         self.avSL          = {'head': 0, 'tails': 0}
@@ -49,11 +55,15 @@ class Membrane:
         for i, value in enumerate(self.molRatios):
             self.normMolRatios.append( float(value) / totMol  )
 
+        if config.verbose == True and "Monolayer" not in self.lipidNames:
+            print("\nLipid names:\n%s\n\nInput molar ratios:\n%s" %(self.lipidNames, self.molRatios))
 
-    # calculates the total volume by summing lipid component volumes
-    def calcVolFrac(self):
+        if config.very_verbose == True:
+            print("\nNormalised molar ratios:\n%s" %self.normMolRatios)
 
-        global monolayerMolVol
+
+    # calculates the total lipid volume
+    def calcTotalLipidVol(self):
 
         for i, lipid in enumerate(self.lipidNames):
 
@@ -68,9 +78,29 @@ class Membrane:
             for j, struct in enumerate(['head','tails']):
 
                 if lipid == "Monolayer":
-                    self.totalLipidVol[struct] += self.normMolRatios[i] * monolayerMolVol[struct]
+                    self.totalLipidVol[struct] += self.normMolRatios[i] * self.monolayerMolVol[struct]
                 else:
                     self.totalLipidVol[struct] += self.normMolRatios[i] * self.lipidMolVol.get(lipid)[j]
+
+
+        # save Monolayer monolayer struct volumes on the first iteration
+        if "Monolayer" not in self.lipidNames:
+            self.monolayerMolVol['head']  = self.totalLipidVol.get('head')
+            self.monolayerMolVol['tails'] = self.totalLipidVol.get('tails')
+
+        if config.very_verbose == True:
+            print('\nTotal Volume:\n%s' %self.totalLipidVol)
+
+
+
+    # calculates volume fraction
+    def calcVolFrac(self):
+
+        warningChoice = input("\nWarning: You have set volFrac = True. Do you want to continue? (y/n)\n ")
+
+        if warningChoice.upper() == 'N':
+            print("Session closed, you must change config parameter.")
+            sys.exit()
 
 
         # component volume calculation
@@ -79,19 +109,9 @@ class Membrane:
 
             for j, struct in enumerate(['head','tails']):
                 if lipid == "Monolayer":
-                    self.volFrac[lipid][struct] = self.normMolRatios[i] * monolayerMolVol.get(struct) / self.totalLipidVol[struct]
+                    self.volFrac[lipid][struct] = self.normMolRatios[i] * self.monolayerMolVol.get(struct) / self.totalLipidVol[struct]
                 else:
                     self.volFrac[lipid][struct] = self.normMolRatios[i] * self.lipidMolVol.get(lipid)[j] / self.totalLipidVol[struct]
-
-
-
-        # save Monolayer monolayer struct volumes on the first iteration
-        if "Monolayer" not in self.lipidNames:
-            monolayerMolVol['head']  = self.totalLipidVol.get('head')
-            monolayerMolVol['tails'] = self.totalLipidVol.get('tails')
-
-        if config.verbose == True:
-            print('\nTotal Volume:\n%s' %self.totalLipidVol)
 
         if config.verbose == True:
             print('\nComponent Volume Fraction:\n%s' %self.volFrac)
@@ -101,16 +121,13 @@ class Membrane:
     # calculates the scattering length of each lipid component
     def calcSL(self):
 
-        global monolayerSL
-
         for i, lipid in enumerate(self.lipidNames):
             self.lipidSL[lipid] = {'head': 0, 'tails': 0}
 
             for j, struct in enumerate(['head','tails']):
 
                 if lipid == "Monolayer":
-                    #print(self.volFrac[lipid][struct])
-                    self.lipidSL[lipid][struct] = monolayerSL.get(struct)
+                    self.lipidSL[lipid][struct] = self.monolayerSL.get(struct)
 
                 else:
                     # splits head/tail into list of constituent atoms
@@ -135,7 +152,6 @@ class Membrane:
 
                 # multiply total lipid scattering length of a given lipid's head/tail by corresponding vol frac
                 if config.useVolFrac == True:
-                    #print(self.volFrac[lipid][struct])
                     self.avSL[struct] += self.volFrac[lipid][struct] * self.lipidSL[lipid][struct]
                 else:
                     self.avSL[struct] += self.normMolRatios[i] * self.lipidSL[lipid][struct]
@@ -143,8 +159,8 @@ class Membrane:
 
         # save Monolayer monolayer struct volumes on the first iteration
         if "Monolayer" not in self.lipidNames:
-            monolayerSL['head']  = self.avSL.get('head')
-            monolayerSL['tails'] = self.avSL.get('tails')
+            self.monolayerSL['head']  = self.avSL.get('head')
+            self.monolayerSL['tails'] = self.avSL.get('tails')
 
         if config.very_verbose == True:
             print("\nLipid scattering lengths:\n%s" %self.lipidSL)
@@ -156,8 +172,6 @@ class Membrane:
 
     def calcAvLipidVol(self):
 
-        global monolayerMolVol
-
         for i, lipid in enumerate(self.lipidNames):
 
             # calculate total lipid volumes
@@ -165,13 +179,13 @@ class Membrane:
 
                 if config.useVolFrac == True:
                     if lipid == "Monolayer":
-                        self.avLipidVol[struct] += self.volFrac[lipid][struct] * monolayerMolVol[struct]
+                        self.avLipidVol[struct] += self.volFrac[lipid][struct] * self.monolayerMolVol[struct]
                     else:
                         self.avLipidVol[struct] += self.volFrac[lipid][struct] * self.lipidMolVol.get(lipid)[j]
 
                 else:
                     if lipid == "Monolayer":
-                        self.avLipidVol[struct] += self.normMolRatios[i] * monolayerMolVol[struct]
+                        self.avLipidVol[struct] += self.normMolRatios[i] * self.monolayerMolVol[struct]
                     else:
                         self.avLipidVol[struct] += self.normMolRatios[i] * self.lipidMolVol.get(lipid)[j]
 
@@ -190,20 +204,14 @@ class Membrane:
     # calculates the scattering length density of each lipid component
     def calcSLD(self):
 
-        global monolayerSLD
-
         # take avSL and divide by avStructVol (tails, heads)
         for i, struct in enumerate(['head','tails']):
             self.avSLD[struct] = 10 * self.avSL[struct] / self.avLipidVol[struct]
 
-
         # save Monolayer monolayer struct volumes on the first iteration
         if "Monolayer" not in self.lipidNames:
-            monolayerSLD['head']  = self.avSLD.get('head')
-            monolayerSLD['tails'] = self.avSLD.get('tails')
-
-        if config.very_verbose == True:
-            print("\nLipid scattering length densities:\n%s" %self.lipidSLD)
+            self.monolayerSLD['head']  = self.avSLD.get('head')
+            self.monolayerSLD['tails'] = self.avSLD.get('tails')
 
         print("\nAverage SLD:\n%s" %self.avSLD)
 
@@ -271,14 +279,20 @@ class Membrane:
         self.twoSLD_H2O = (self.headVolFrac*self.avSLD.get("head") + vf_drug*SLD_drug_H2O ) / (self.headVolFrac + vf_drug)
         self.twoSLD_D2O = (self.headVolFrac*self.avSLD.get("head") + vf_drug*SLD_drug_D2O ) / (self.headVolFrac + vf_drug)
 
+        # calculate 3-SLD, average against buffer
+        
+
         # print values to terminal
         print("\n\nYou have chosen to add the drug (%s) to the second layer:" %config.drugName)
         print("\n3-thick = %f" %self.d3)
-        print("\n2-solv = %f" %self.twoSolv)
-        print("3-solv = %f" %self.threeSolv)
+        print("\n2-solv = %f\n3-solv = %f" %(self.twoSolv, self.threeSolv))
         print("\n2-SLD_H2O = %f\n2-SLD_D2O = %f" %(self.twoSLD_H2O, self.twoSLD_D2O))
         print("\n3-SLD_H2O = %f\n3-SLD_D2O = %f" %(SLD_drug_H2O, SLD_drug_D2O))
 
+
+    # method that returns monolayer information for adding extra lipid components
+    def getMonolayerPar(self):
+        return (self.monolayerMolVol, self.monolayerSL, self.monolayerSLD)
 
 
     # write output to file
@@ -327,9 +341,8 @@ def importSampleData(instructionsFile, sampleNum):
     return membrane, lipidRatio, t_thick, h_thick, label
 
 
-
+# function to check whether a string contains a number
 def hasNumbers(inputString):
-    # function to check whether a string contains a number
     return bool(re.search(r'\d', inputString))
 
 
@@ -341,15 +354,6 @@ def main(instructionsFile, outputFilePath):
 
     # calculate component volumes
     for sampleNum in range(nMemb):
-
-        # initialise global variables for averageAgain func
-        global monolayerMolVol
-        global monolayerSL
-        global monolayerSLD
-        monolayerMolVol = {'head': 0, 'tails': 0}
-        monolayerMolVol = {'head': 0, 'tails': 0}
-        monolayerSL     = {'head': 0, 'tails': 0}
-        monolayerSLD    = {'head': 0, 'tails': 0}
 
         # import sample data
         membrane, lipidRatio, t_thick, h_thick, label = importSampleData(instructionsFile, sampleNum)
@@ -367,11 +371,20 @@ def main(instructionsFile, outputFilePath):
             'tails': float(t_thick)
         }
 
+        # initialise monolayer information
+        monolayerMolVol = {'head': 0, 'tails': 0}
+        monolayerSL     = {'head': 0, 'tails': 0}
+        monolayerSLD    = {'head': 0, 'tails': 0}
+        monolayerPar    = (monolayerMolVol, monolayerSL, monolayerSLD)
+
         # create class instance with input variables
-        m = Membrane(lipids, ratios, thickness, outputFilePath)
+        m = Membrane(lipids, ratios, thickness, monolayerPar, outputFilePath)
 
         # converts 3:5 to 3/8:5/8
         m.normaliseMolarRatios()
+
+        # calculates the total lipid volume of the monolayer (needed for addLipidToMonolayer)
+        m.calcTotalLipidVol()
 
         # convert molar fraction to component volume fraction
         if config.useVolFrac == True: m.calcVolFrac()
@@ -391,9 +404,13 @@ def main(instructionsFile, outputFilePath):
         # append file with initial monolayer calculation information
         m.appendFile_Membrane()
 
-
         # repeat for incorporating an injected lipid component into the membrane
         if config.addLipidToMonolayer == True:
+
+            # get monlayer parameter information for next iteration
+            monolayerPar = m.getMonolayerPar()
+
+            if config.very_verbose == True: print("\nMonolayerPar:\n%s" %(monolayerPar,))
 
             # get added lipids and associated ratios from config file
             lipids = config.injectedComponents
@@ -411,10 +428,11 @@ def main(instructionsFile, outputFilePath):
                 sys.exit()
 
             # creates a new class instance to pass new config params to
-            # monolayer properties from initial monolayer are stored in global variables
-            m = Membrane(lipids, ratios, thickness, outputFilePath)
+            m = Membrane(lipids, ratios, thickness, monolayerPar, outputFilePath)
 
             m.normaliseMolarRatios()
+
+            m.calcTotalLipidVol()
 
             if config.useVolFrac == True: m.calcVolFrac()
 
@@ -439,6 +457,7 @@ def main(instructionsFile, outputFilePath):
 
     sys.exit()
     return
+
 
 
 if __name__ == '__main__':
