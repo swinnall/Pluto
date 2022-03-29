@@ -1,11 +1,5 @@
 " Module that defines variables for Pluto"
 
-###########
-# Imports #
-##########
-
-import sys
-
 ##############
 # File Paths #
 ##############
@@ -61,32 +55,22 @@ compactChains      = False
 chainCompactFactor = 0.85
 
 ## Add injected lipid into the existing monolayer
-addLipidToMonolayer      = False
-injectedComponents       = ["Monolayer", "DMG-PEG-2000"] # "DLin-MC3-DMA" "DMG-PEG-2000"
-injectedRatios           = [90, 10]
+addLipidToMonolayer      = True
+injectedLipidNames       = ["Monolayer", "DMG-PEG-2000"] # "DLin-MC3-DMA" "DMG-PEG-2000"
+injectedLipidRatios      = [99, 1]
 updateMonolayerThickness = False
 new_d1 = 1
 new_d2 = 1
 
-## Adding drug to monolayer
-drugName = "PolyA and PEG"
-
-# as third layer (not yet implemented)
-addDrugToThirdLayer = False
-
-# in both third and second (headgroup) layer
-addDrugToMonolayer = False
-
-# drug injection parameters
-drugSize           = 20 # drug size of polyA: 20, PEG: 20 (to fit)
-threeSolv          = 86.75
-SLD_drug_H2O       = 3.67 # polyA in H2O: 3.67, PEG in H2O: 0.62
-SLD_drug_D2O       = 4.46 # polyA in D2O: 4.46, PEG in D2O: 0.62
-
-# drug injection error check
-if addDrugToThirdLayer == True and addDrugToMonolayer == True:
-    print("\nFatal Config Error: Both addDrug config commands are true.")
-    sys.exit()
+## Adding injected drug to system
+addDrugToThirdLayer = True # in third layer
+addDrugToMonolayer  = False # in both third and second (headgroup) layer
+injectedDrugNames   = ["PolyA", "PEG"] # "PolyA", "PEG"
+injectedDrugRatios  = [99, 1]
+injectedDrugSizes   = [20, 0]
+injectedDrugSLD_H2O = {"PolyA": 3.67, "PEG": 0.62}
+injectedDrugSLD_D2O = {"PolyA": 4.46, "PEG": 0.62}
+threeSolv           = 86.75
 
 ## Use contentious vol frac (True) or default molar ratio (False)
 useVolFrac = False
