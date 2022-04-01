@@ -61,6 +61,11 @@ x = 21.24
 x = 20.22
 
 
+Richard Campbell Mol.Vol. vs Vol.Frac. Test 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+title=999 Richard Campbell Test System
+membranes,lipidRatios,d1,d2,label
+POPC:DOPE,75:25,15,5,Test System
 
 
 

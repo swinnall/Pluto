@@ -22,7 +22,7 @@ pathNames = {
 #################
 
 # determine levels of print output to terminal for debugging (mostly SLD module)
-verbose      = False
+verbose      = True
 very_verbose = False
 
 
@@ -55,25 +55,25 @@ compactChains      = False
 chainCompactFactor = 0.85
 
 ## Add injected lipid into the existing monolayer
-addLipidToMonolayer      = True
+addLipidToMonolayer      = False
 injectedLipidNames       = ["Monolayer", "DMG-PEG-2000"] # "DLin-MC3-DMA" "DMG-PEG-2000"
-injectedLipidRatios      = [99, 1]
+injectedLipidRatios      = [98, 2]
 updateMonolayerThickness = False
 new_d1 = 1
 new_d2 = 1
 
 ## Adding injected drug to system
-addDrugToThirdLayer = True # in third layer
+addDrugToThirdLayer = False # in third layer
 addDrugToMonolayer  = False # in both third and second (headgroup) layer
 injectedDrugNames   = ["PolyA", "PEG"] # "PolyA", "PEG"
-injectedDrugRatios  = [99, 1]
+injectedDrugRatios  = [98, 2]
 injectedDrugSizes   = [20, 0]
 injectedDrugSLD_H2O = {"PolyA": 3.67, "PEG": 0.62}
 injectedDrugSLD_D2O = {"PolyA": 4.46, "PEG": 0.62}
 threeSolv           = 86.75
 
 ## Use contentious vol frac (True) or default molar ratio (False)
-useVolFrac = False
+useVolFrac = True
 
 
 ###################
