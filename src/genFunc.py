@@ -40,7 +40,7 @@ def modSelection(analysisOptions):
 
 # general function for Pluto, isotherm and surface excess modules
 def getFile(path,nSkip,delim):
-    return pd.read_csv(path, skiprows=nSkip, sep=delim, comment='#', na_values =' ', on_bad_lines='skip', skip_blank_lines=True, encoding = "utf-8")
+    return pd.read_csv(path, skiprows=nSkip, sep=delim, comment='#', na_values =' ', skip_blank_lines=True, encoding = "utf-8") # on_bad_lines='skip',
 
 
 # just for getting BeagleHole ellipsometry files, each row needs to be split so don't integrate with getFile

@@ -23,7 +23,7 @@ pathNames = {
 
 # determine levels of print output to terminal for debugging (mostly SLD module)
 verbose      = True
-very_verbose = False
+very_verbose = True
 
 
 ################
