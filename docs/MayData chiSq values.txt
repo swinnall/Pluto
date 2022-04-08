@@ -68,8 +68,103 @@ membranes,lipidRatios,d1,d2,label
 POPC:DOPE,75:25,15,5,Test System
 
 
+MOLAR FRACTION:
+
+Lipid names:
+['POPC', 'DOPE']
+
+Input molar ratios:
+['75', '25']
+
+Average SL:
+{'head': 59.86399999999998, 'tails': -24.338499999999982}
+
+Average Lipid Head/Tail Volume:
+{'head': 317.0, 'tails': 945.0}
+
+Average SLD:
+{'head': 1.8884542586750785, 'tails': -0.25755026455026436}
+
+
+VOLUME FRACTION METHOD:
+
+Lipid names:
+['POPC', 'DOPE']
+
+Input molar ratios:
+['75', '25']
+
+Component Volume Fraction:
+{'POPC': {'head': 0.8138801261829653, 'tails': 0.7436507936507937}, 'DOPE': {'head': 0.1861198738170347, 'tails': 0.2563492063492063}}
+
+Average SL:
+{'head': 59.704555205047306, 'tails': -24.301585714285697}
+
+Average Lipid Head/Tail Volume:
+{'head': 323.8990536277603, 'tails': 945.2031746031746}
+
+Average SLD:
+{'head': 1.8433074915267436, 'tails': -0.2571043598588023}
+
+
+CALCULATIONS:
+
+1) normMolRatios = [75:25 ==> 0.75:0.25]
+2) totalLipidVolume = Sum(normMolRatios * lipidMolecularVolume)
+
+2.5) volFrac = normMolRatio * lipidMolecularVolume / totalLipidVolume
+
+3) avSL = Sum(normMolRatio * lipidSL)   OR   Sum(volFrac * lipidSL)
+4) avLipidVol = Sum(normMolRatio * lipidMolecularVolume)   OR  Sum(volFrac * lipidMolecularVolume)
+
+5) avSLD = avSL / avLipidVol
+
+
+
+----
+
+study MC3:chol (75:25) and MC3:chol (50:50) in the three contrasts (h-lipid on D2O, d-lipid on ACMW & D2O) at low pH
+
+ T = (3 measurement + 0.75 sample change) hr * 3 + 4 hr callibrations +  = 15.25 hr 
+ 
+ 
+ 3 samples for ref measurements: (pH 7: MC3:Chol, pH 3: MC3 and MC3:Chol)
+ 3 contrasts per sample  
+ 1 hr measurement, 15 min sample change (based on ILL data)
+ 
+ 9 * 1.25 hr = 11.25 hr 
+ 
+ (2.5 + 0.75) * 3 + 4 + (9*1.25)
+
+
+
+AGENDA 05-04-22
+1) September system ISIS rapid access
+	- Draft attached 
+	- Is it worth waiting for ILL to get kinetics?
+	
+2) September system analysis 
+	- Mol/Vol frac discussion
+	- Inner layer 
+	
+3) May system ISIS rapid access 
+	- Missing h-LEM in D2O w/ LNPs 
+	- Could we use d-Chol to get more contrasts?
+
+4) Manchester trip dates 
+	- 1st two weeks of May? 
+
+5) Marianna request for d-MC3 
+
+
+DATA dLEM D2O = RGB RGB (33, 66, 171)  Ultramarine blue 
+FIT  dLEM D2O = RGB RGB (171, 138, 33) Uni of California Gold 
+
+DATA dLEM ACMW = RGB (35, 171, 158) Light sea green 
+FIT  dLEM ACMW = RGB (171, 35, 48)  Royal red 
 
 
 
 
+Currently 25 hr. Alt.: 4 + (2.5 + 0.75)*3 + (9*1.1) = 23.65 hr
 

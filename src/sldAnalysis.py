@@ -41,6 +41,8 @@ class Membrane:
         self.normMolRatios      = []
         self.volFrac            = {}
         self.lipidSL            = {}
+        self.sumAvSL            = {}
+        self.sumAvSLD           = {}
         self.totalLipidVol      = {'head': 0, 'tails': 0}
         self.avLipidVol         = {'head': 0, 'tails': 0}
         self.avSL               = {'head': 0, 'tails': 0}
@@ -124,7 +126,7 @@ class Membrane:
     def calcSL(self):
 
         for i, lipid in enumerate(self.lipidNames):
-            self.lipidSL[lipid] = {'head': 0, 'tails': 0}
+            self.lipidSL[lipid]       = {'head': 0, 'tails': 0}
 
             for j, struct in enumerate(['head','tails']):
 
@@ -159,6 +161,9 @@ class Membrane:
                     self.avSL[struct] += self.normMolRatios[i] * self.lipidSL[lipid][struct]
 
 
+        # calculate the average SL of the whole averaged lipid
+        self.sumAvSL = self.avSL.get("head") + self.avSL.get("tails")
+
         # save Monolayer monolayer struct volumes on the first iteration
         if "Monolayer" not in self.lipidNames:
             self.monolayerSL['head']  = self.avSL.get('head')
@@ -170,6 +175,8 @@ class Membrane:
         if config.verbose == True:
             print("\nAverage SL:\n%s" %self.avSL)
 
+        if config.very_verbose == True:
+            print("\nSummed average SL:\n%s" %self.sumAvSL)
 
 
     def calcAvLipidVol(self):
@@ -210,6 +217,9 @@ class Membrane:
         for i, struct in enumerate(['head','tails']):
             self.avSLD[struct] = 10 * self.avSL[struct] / self.avLipidVol[struct]
 
+        # calculate the average SLD of the whole averaged lipid
+        self.sumAvSLD = self.avSLD.get("head") + self.avSLD.get("tails")
+
         # save Monolayer monolayer struct volumes on the first iteration
         if "Monolayer" not in self.lipidNames:
             self.monolayerSLD['head']  = self.avSLD.get('head')
@@ -217,6 +227,8 @@ class Membrane:
 
         print("\nAverage SLD:\n%s" %self.avSLD)
 
+        if config.very_verbose == True:
+            print("\nSummed average SLD:\n%s" %self.sumAvSLD)
 
 
     # calculates volume fraction of the head group based on SLD
