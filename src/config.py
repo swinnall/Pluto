@@ -105,7 +105,7 @@ saveAsPNG = True
 saveAsPDF = True
 
 ## Set default plot parameters
-defaultLw = 4
+defaultLw = 5
 
 plotWithScatter = False
 scatterSize     = 0
@@ -113,7 +113,7 @@ scatterSize     = 0
 plotLineWithMarker = False
 markEdgeWidth      = 0
 
-fs                  = 18
+fs                  = 24
 legend_fs_reduction = 0
 
 
@@ -122,7 +122,7 @@ overrideNoP = False
 config_n0   = 0
 config_nf   = 1E6
 
-overrideAxisLim = False
+overrideAxisLim = True
 config_xmin     = 0
 config_xmax     = 30000
 config_ymin     = 0
@@ -163,9 +163,13 @@ colourDict = {
     # light blue, dark blue, light orange, dark orange, light green, dark green
     "7": ['#abdbe3', '#1e81b0', '#eab676', '#e28743', '#A3e19d', '#32BE25'],
 
+    # EEM Figures: aqua, azure, blue
+    "8": ['#00FFFF', '#0080FF', '#0000FF'],
 
+    # LEM Figures: orange, red
+    "9": ['#FF7F00', '#FF0000'],
     }
-c = colourDict.get("3")
+c = colourDict.get("9")
 
 ## Markers
 markerDict = {

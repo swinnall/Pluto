@@ -168,3 +168,52 @@ FIT  dLEM ACMW = RGB (171, 35, 48)  Royal red
 
 Currently 25 hr. Alt.: 4 + (2.5 + 0.75)*3 + (9*1.1) = 23.65 hr
 
+
+
+
+
+
+
+
+\s(fit_hEEM_p30_D2O_R) Fit: hEEM D2O
+\s(fit_dEEM_p30_D2O_2_R) Fit: dEEM D2O
+\s(fit_dEEM_p30_ACMW__2_R) Fit: dEEM ACMW
+\s(dLEM_p30_D2O_R) dLEM D2O
+\s(dLEM_p30_ACMW_R) dLEM ACMW
+\s(fit_dLEM_p30_D2O_R) Fit: dLEM D2O
+\s(fit_dLEM_p30_ACMW_R) Fit: dLEM ACMW
+
+
+\s(dEEM_p30_ACMW__2_R) dEEM_p30_ACMW__2_R
+\s(dEEM_p30_D2O_2_R) dEEM_p30_D2O_2_R
+\s(hEEM_p30_D2O_R) hEEM_p30_D2O_R
+\s(fit_dEEM_p30_ACMW__2_R) fit_dEEM_p30_ACMW__2_R
+\s(fit_hEEM_p30_D2O_R) fit_hEEM_p30_D2O_R
+\s(fit_dEEM_p30_D2O_2_R) fit_dEEM_p30_D2O_2_R
+\s(fit_hEEM_p30_D2O_LNPs_struct_R) Fit: hEEM D2O
+\s(fit_dEEM_p30_D2O_struct2_R) Fit: dEEM D2O
+\s(fit_dEEM_p30_ACMW_LNPs_struc_R) Fit: dEEM ACMW
+
+
+\s(dEEM_p30_ACMW__2_R) dEEM_p30_ACMW__2_R
+\s(dEEM_p30_D2O_2_R) dEEM_p30_D2O_2_R
+\s(hEEM_p30_D2O_R) hEEM_p30_D2O_R
+\s(fit_dEEM_p30_ACMW__2_R) fit_dEEM_p30_ACMW__2_R
+\s(fit_hEEM_p30_D2O_R) fit_hEEM_p30_D2O_R
+\s(fit_dEEM_p30_D2O_2_R) fit_dEEM_p30_D2O_2_R
+
+\s(fit_dLEM_p30_ACMW_R) fit_dLEM_p30_ACMW_R
+\s(fit_dLEM_p30_D2O_R) fit_dLEM_p30_D2O_R
+\s(dLEM_p30_ACMW_R) dLEM_p30_ACMW_R
+\s(dLEM_p30_D2O_R) dLEM_p30_D2O_R
+\s(fit_dLEM_p30_D2O_LNPs_struct_R) Fit: dLEM D2O LNPs
+\s(fit_dLEM_p30_ACMW_LNPs_struc_R) Fit: dLEM ACMW LNPs
+
+
+
+
+
+
+
+
+
