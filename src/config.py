@@ -5,7 +5,7 @@
 ##############
 
 inputDir  = "../../UoM-Data-Repository/input/"
-outputDir = "../../UoM-Data-Repository/output/"
+outputDir = "../../UoM-Data-Repository/output"
 
 # dict of input instructions names and output file names
 pathNames = {
@@ -37,7 +37,7 @@ smoothIso = False  # reduces number of points for final plot
 overplot  = False  # not yet functional
 
 ## Override Normal Keys
-plotMultiPanel = False  # split input data between subplots
+plotMultiPanel = False   # split input data between subplots
 key = [(1,1)]  # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
 
 ## Parameters
@@ -105,33 +105,43 @@ saveAsPNG = True
 saveAsPDF = True
 
 ## Set default plot parameters
-defaultLw = 5
+defaultLw = 4
 
 plotWithScatter = False
-scatterSize     = 0
+scatterSize     = 50
 
 plotLineWithMarker = False
-markEdgeWidth      = 0
+markEdgeWidth      = 3
 
-fs                  = 24
-legend_fs_reduction = 0
-
+fs                   = 24
+legend_fs_reduction  = 6
+x0Axis_fs_reduction  = 4
+x1Axis_fs_reduction  = 10
+y0Axis_fs_reduction  = 0
 
 ## Set default plot region values
 overrideNoP = False
 config_n0   = 0
 config_nf   = 1E6
 
-overrideAxisLim = True
+overrideAxisLim = False
 config_xmin     = 0
-config_xmax     = 30000
+config_xmax     = 120
 config_ymin     = 0
-config_ymax     = 45
+config_ymax     = 1.5
 
 overrideTickLocation = False
-n_xticks             = 1
+n_xticks             = 6
 xTickInterval        = 10
-yTickInterval        = 5
+yTickInterval        = 0.5
+
+overrideXAxisLabel = False
+xLabel = "Time (min)"
+
+overrideYAxisLabel = False
+yLabel = "NA"
+
+legendOn = False
 
 ## List of plot types that use the time axis
 tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time", " - gammaL", " - gammaP"]
@@ -168,8 +178,11 @@ colourDict = {
 
     # LEM Figures: orange, red
     "9": ['#FF7F00', '#FF0000'],
+
+    # MC3 Surface Excess Figures: light blue, purple-blue, light orange
+    "10": ["#3399FF", "#3333FF", "#FF9933", "#FF3333"]
     }
-c = colourDict.get("9")
+c = colourDict.get("10")
 
 ## Markers
 markerDict = {
@@ -193,7 +206,7 @@ markerDict = {
     "5": ['o','s','d','o','s','d']
 
     }
-markerType = markerDict.get("0")
+markerType = markerDict.get("1")
 
 
 ##############

@@ -161,7 +161,7 @@ def smoothData(genList):
 
 ## Calculation Functions
 def calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdded):
-    
+
     # import molecular weight database
     lipidMW = config.lipidMw
 
@@ -480,7 +480,7 @@ def main(instructionsFile, title, inputDIR, plotDIR):
             Am[i] = Am_list
 
             # pass list, get a dict of cycles, store each dict in a masterDict
-            if analysisType == 'plotIsotherm' or  analysisType == 'plotCompressions' or analysisType == 'plotExpansions' or analysisType == 'plotCycles':
+            if analysisType == 'plotIsotherm' or  analysisType == 'plotCompressions' or analysisType == 'plotExpansions' or analysisType == 'plotCycles' or analysisType == 'plotElasticity':
                 cycleAm, cycleP, cycleL = findCycles(Am_list, P_list, l.get(i))
                 master_Am[i] = cycleAm
                 master_P[i]  = cycleP
@@ -496,8 +496,8 @@ def main(instructionsFile, title, inputDIR, plotDIR):
                         stitched_Am[i].append( cycleAm.get(cycleNum)[value] )
                         stitched_P[i].append( cycleP.get(cycleNum)[value] )
 
-                    for i in range(len(stitched_Am)):
-                        stitched_t[i].append(t[i])
+                    for k in range(len(stitched_Am)):
+                        stitched_t[i].append(t[k])
 
 
         ## Specific calculation functions
@@ -514,17 +514,19 @@ def main(instructionsFile, title, inputDIR, plotDIR):
             # calculate elasticity
             if analysisType == 'plotElasticity':
 
-                # pass dict of cycles to splitCycles, returns dicts containing all cycles in file
+                # pass dict of cycles to splitCycles, returns dicts containing all half cycles in file
                 suffix = " - compressions"
                 halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, cycleAm, cycleP, l.get(i))
                 elasticityCompression_Am[i] = halfCycleAm.get(0)
                 elasticityCompression_P[i]  = halfCycleP.get(0)
                 elasticityCompression_L[i]  = halfCycleL.get(0)
 
+
                 # pass the compression of cycle 0 as list; later adapt to selected cycle in config
                 E_list, Espl_list = calcElasticity(halfCycleAm.get(0), halfCycleP.get(0))
                 E[i]    = E_list
                 Espl[i] = Espl_list
+
 
 
             # calculate normalise pressure
@@ -558,7 +560,7 @@ def main(instructionsFile, title, inputDIR, plotDIR):
 
 
         if analysisType == 'plotElasticity':
-            axLabels = {"x": "$\pi$ ($mNm^{-1}$)", "x1": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$C_s^{-1} (mNm^{-1})$"}
+            axLabels = {"x": "$\pi$ ($mNm^{-1}$)", "x1": "Mol. Area ($\AA$$^2$/Molecule)", "y": "$C_s^{-1} (mNm^{-1})$"}
             suffix   = " - elasticity"
             key = (1,2); vars = (nFiles, equip, l, axLabels, title, plotDIR, (elasticityCompression_P,elasticityCompression_Am), Espl)
             genPlot.main(key,vars,suffix)

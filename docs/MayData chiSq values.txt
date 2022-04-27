@@ -211,9 +211,20 @@ Currently 25 hr. Alt.: 4 + (2.5 + 0.75)*3 + (9*1.1) = 23.65 hr
 
 
 
+\s(fit_S01_R) fit: h-MC3 D2O 
+\s(fit_S04_R) fit: d-MC3 D2O 
+\s(fit_S07_R) fit: h-MC3 ACMW 
+\s(fit_S02_R) fit: d-MC3 ACMW 
 
+\s(fit_S06_R) fit: h-MC3 h-Chol D2O
+\s(fit_S03_R) fit: d-MC3 d-Chol ACMW
+\s(fit_S08_R) fit: h-MC3 h-Chol ACMW
+\s(fit_S05_R) fit: d-MC3 d-Chol D2O
 
-
+\s(fit_S18_R) fit: h-MC3 D2O 
+\s(fit_S17_R) fit: d-MC3 D2O 
+\s(fit_S10_R) fit: h-MC3 ACMW 
+\s(fit_S09_R) fit: d-MC3 ACMW  
 
 
 

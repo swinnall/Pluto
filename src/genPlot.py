@@ -314,6 +314,14 @@ def plot(key, vars, suffix):
 
             else: pass
 
+
+            # finalise axis labels
+            if config.overrideXAxisLabel == True:
+                axLabels["x"] = config.xLabel
+
+            if config.overrideYAxisLabel == True:
+                axLabels["y"] = config.yLabel
+
     ## Axis labels
 
             # axis labels; in for loop as iterates along number of subplots
@@ -341,10 +349,10 @@ def plot(key, vars, suffix):
 
             else:
                 if col == 0:
-                    ax.set_xlabel(axLabels.get("x"), fontsize=fs, fontweight='bold')
-                    ax.set_ylabel(axLabels.get("y"), fontsize=fs, fontweight='bold')
+                    ax.set_xlabel(axLabels.get("x"), fontsize=fs-config.x0Axis_fs_reduction, fontweight='bold')
+                    ax.set_ylabel(axLabels.get("y"), fontsize=fs-config.y0Axis_fs_reduction, fontweight='bold')
                 elif col == 1:
-                    ax.set_xlabel(axLabels.get("x1"), fontsize=fs-4, fontweight='bold')
+                    ax.set_xlabel(axLabels.get("x1"), fontsize=fs-config.x1Axis_fs_reduction, fontweight='bold')
                     plt.setp(ax.get_yticklabels(), visible=False)
 
 
@@ -356,7 +364,8 @@ def plot(key, vars, suffix):
             #    pass
             #else:
             #    ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
-            ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
+            if config.legendOn == True:
+                ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
 
 
     ## Tick label size; legend; layout; show fig; save fig
