@@ -227,4 +227,14 @@ Currently 25 hr. Alt.: 4 + (2.5 + 0.75)*3 + (9*1.1) = 23.65 hr
 \s(fit_S09_R) fit: d-MC3 ACMW  
 
 
+\s(fit_X02_hEEM_ACMW_dLNPs_dDSP_R) fit_X02_hEEM_ACMW_dLNPs_dDSP_R
+\s(fit_X03_hEEM_ACMW_dLNPs_dcho_R) fit_X03_hEEM_ACMW_dLNPs_dcho_R
+\s(fit_X05_hEEM_ACMW_dLNPs_dMC3_R) fit_X05_hEEM_ACMW_dLNPs_dMC3_R
+\s(fit_X07_ACMW_dLNPs_dMC3_R) fit_X07_ACMW_dLNPs_dMC3_R
+\s(fit_X08_ACMW_dLNPs_dDSPC_R) fit_X08_ACMW_dLNPs_dDSPC_R
+\s(fit_X09_ACMW_dLNPs_dchol_R) fit_X09_ACMW_dLNPs_dchol_R
+
+
+
+
 

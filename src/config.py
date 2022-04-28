@@ -33,17 +33,18 @@ very_verbose = False
 ## Functions
 checkT0   = False  # ensures T0 = 0
 shiftP    = False  # shift to P_min = 0
-smoothIso = False  # reduces number of points for final plot
+smoothIso = False  # reduces number of points for final isotherm plots
+smoothPre = True   # reduces number of points for P versus time
 overplot  = False  # not yet functional
 
 ## Override Normal Keys
-plotMultiPanel = False   # split input data between subplots
-key = [(1,1)]  # [row0=(nFiles0,nFiles1),row1=(nFiles0,nFiles1)]
+plotMultiPanel = True   # split input data between subplots
+key = [[4],[4],[4]]  # [row0=[nFiles0,nFiles1],row1=[nFiles0,nFiles1]]
 
 ## Parameters
 useCycles  = [0]  # list of cycles to be used in isotherm
 nPoly      = 40  # order of the elasticity fit
-nth        = 60  # data reduction; take every 'nth' point
+nth        = 450  # data reduction; take every 'nth' point
 
 
 #################
@@ -105,35 +106,37 @@ saveAsPNG = True
 saveAsPDF = True
 
 ## Set default plot parameters
-defaultLw = 4
+defaultLw = 2.5
 
 plotWithScatter = False
-scatterSize     = 50
+scatterSize     = 20
 
-plotLineWithMarker = False
-markEdgeWidth      = 3
+plotLineWithMarker = True
+markerSize         = 7
+markEdgeWidth      = 2.5
 
 fs                   = 24
-legend_fs_reduction  = 6
-x0Axis_fs_reduction  = 4
-x1Axis_fs_reduction  = 10
+legend_fs_reduction  = 16
+x0Axis_fs_reduction  = 0
+x1Axis_fs_reduction  = 0
 y0Axis_fs_reduction  = 0
+tick_fs_reduction    = 11
 
 ## Set default plot region values
 overrideNoP = False
 config_n0   = 0
 config_nf   = 1E6
 
-overrideAxisLim = False
+overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 120
-config_ymin     = 0
-config_ymax     = 1.5
+config_xmax     = 9000
+config_ymin     = 20
+config_ymax     = 36
 
-overrideTickLocation = False
-n_xticks             = 6
+overrideTickLocation = True
+n_xticks             = 60
 xTickInterval        = 10
-yTickInterval        = 0.5
+yTickInterval        = 5
 
 overrideXAxisLabel = False
 xLabel = "Time (min)"
@@ -141,7 +144,8 @@ xLabel = "Time (min)"
 overrideYAxisLabel = False
 yLabel = "NA"
 
-legendOn = False
+legendOn  = True
+legendLoc = 'upper left' # default = 'best'
 
 ## List of plot types that use the time axis
 tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time", " - gammaL", " - gammaP"]
@@ -180,9 +184,21 @@ colourDict = {
     "9": ['#FF7F00', '#FF0000'],
 
     # MC3 Surface Excess Figures: light blue, purple-blue, light orange
-    "10": ["#3399FF", "#3333FF", "#FF9933", "#FF3333"]
+    "10": ["#3399FF", "#3333FF", "#FF9933", "#FF3333"],
+
+	# MC3 PBS Structural Figures: blue; light -> dark
+	"11": ["#CCE6FF", "#99CCFF", "#66B3FF", "#3399FF"],
+
+	# MC3:chol PBS Structural Figures: purple; light -> dark
+	"12": ["#CCCCFF", "#9999FF", "#6666FF", "#3333FF"],
+
+	# MC3 Citrate Structural Figures: orange; light -> dark
+	"13": ["#FFE5CC", "#FFCC99", "#FFB266", "#FF9933"],
+
+    # three panel combination of 11-13; must be list of lists where each sublist is a subplot
+	"14": [["#CCE6FF", "#99CCFF", "#66B3FF", "#3399FF"], ["#CCCCFF", "#9999FF", "#6666FF", "#3333FF"], ["#FFE5CC", "#FFCC99", "#FFB266", "#FF9933"]],
     }
-c = colourDict.get("10")
+c = colourDict.get("14")
 
 ## Markers
 markerDict = {
@@ -203,10 +219,13 @@ markerDict = {
     "4": ['o','s','o','s'],
 
     # cicrle-square-diamond repeat
-    "5": ['o','s','d','o','s','d']
+    "5": ['o','s','d','o','s','d'],
+
+    # Neutron symbols
+    "6": [['s', 'o', '^', 'd'],['s', 'o', '^', 'd'],['s', 'o', '^', 'd']],
 
     }
-markerType = markerDict.get("1")
+markerType = markerDict.get("6")
 
 
 ##############

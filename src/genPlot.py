@@ -111,7 +111,7 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
     nFilesTotal = len(X[0])
 
     # separate number of files per subplot if multiplot
-    if config.plotMultiPanel == True and suffix == " - isotherm":
+    if config.plotMultiPanel == True and suffix == " - isotherm" or " - pressure":
         nFilesPerPlot = key[row][col]
     else:
         nFilesPerPlot = nFilesTotal
@@ -123,7 +123,7 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
 
     # count is how far through the list of total files you are
     # iterate through all files
-    if config.plotMultiPanel == True and suffix == " - isotherm":
+    if config.plotMultiPanel == True and suffix == " - isotherm" or " - pressure":
         for i in range(count, nFilesTotal):
 
             if i == count:
@@ -162,7 +162,7 @@ def plot(key, vars, suffix):
 
 
     # unpack key into rows and columns for subplot
-    if config.plotMultiPanel == True and suffix == " - isotherm":
+    if config.plotMultiPanel == True and suffix == " - isotherm" or " - pressure":
         key = config.key
         nRow = len(key)
         nCol = len(key[0]) # assumes same num columns on both rows
@@ -232,15 +232,15 @@ def plot(key, vars, suffix):
 
                 # plots scatter plot with empty circles
                 if plotWithScatter == True:
-                    ax.scatter(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), s=scatterSize, edgecolors=config.c[i], linewidth=lw, facecolors='none')
+                    ax.scatter(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), s=scatterSize, edgecolors=config.c[row][i], linewidth=lw, facecolors='none')
 
                 # line plot with marker
                 elif plotLineWithMarker == True:
-                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=lw, marker=config.markerType[i], markerfacecolor="None", markeredgewidth=markEdgeWidth)
+                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[row][i], linewidth=lw, marker=config.markerType[row][i], markerfacecolor="None", markeredgewidth=markEdgeWidth, markersize=config.markerSize)
 
                 # default line plot
                 else:
-                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[i], linewidth=lw)
+                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[row][i], linewidth=lw)
 
 
                 # store minimum and maximum values for axis scales
@@ -347,6 +347,30 @@ def plot(key, vars, suffix):
                 elif row == 0 and col == 1:
                     plt.setp(ax.get_yticklabels(), visible=False)
 
+
+            elif config.plotMultiPanel == True and suffix == " - pressure" and (nRow == 1 and nCol == 3):
+
+                if row == 0 and col == 0:
+                    ax.set_ylabel(axLabels.get("y"), fontsize=fs-config.y0Axis_fs_reduction, fontweight='bold')
+                    plt.setp(ax.get_yticklabels(), visible=True)
+                elif row == 0 and col == 1:
+                    ax.set_xlabel(axLabels.get("x"), fontsize=fs-config.x0Axis_fs_reduction, fontweight='bold')
+                    plt.setp(ax.get_yticklabels(), visible=False)
+                elif row == 0 and col == 2:
+                    plt.setp(ax.get_yticklabels(), visible=False)
+
+            elif config.plotMultiPanel == True and suffix == " - pressure" and (nRow == 3 and nCol == 1):
+
+                if row == 0 and col == 0:
+                    plt.setp(ax.get_xticklabels(), visible=False)
+                elif row == 1 and col == 0:
+                    ax.set_ylabel(axLabels.get("y"), fontsize=fs-config.y0Axis_fs_reduction, fontweight='bold')
+                    plt.setp(ax.get_xticklabels(), visible=False)
+                elif row == 2 and col == 0:
+                    ax.set_xlabel(axLabels.get("x"), fontsize=fs-config.x0Axis_fs_reduction, fontweight='bold')
+                    plt.setp(ax.get_xticklabels(), visible=True)
+
+
             else:
                 if col == 0:
                     ax.set_xlabel(axLabels.get("x"), fontsize=fs-config.x0Axis_fs_reduction, fontweight='bold')
@@ -365,14 +389,14 @@ def plot(key, vars, suffix):
             #else:
             #    ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
             if config.legendOn == True:
-                ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
+                ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False, loc=config.legendLoc)
 
 
     ## Tick label size; legend; layout; show fig; save fig
 
     # set axis parameters, size etc.
-            ax.tick_params(axis='x', labelsize=fs-1)
-            ax.tick_params(axis='y', labelsize=fs-1)
+            ax.tick_params(axis='x', labelsize=fs-config.tick_fs_reduction)
+            ax.tick_params(axis='y', labelsize=fs-config.tick_fs_reduction)
 
             ax.xaxis.set_tick_params(which='major', size=5, width=2, direction='in', top='on')
             ax.yaxis.set_tick_params(which='major', size=5, width=2, direction='in', right='on')

@@ -480,7 +480,7 @@ def main(instructionsFile, title, inputDIR, plotDIR):
             Am[i] = Am_list
 
             # pass list, get a dict of cycles, store each dict in a masterDict
-            if analysisType == 'plotIsotherm' or  analysisType == 'plotCompressions' or analysisType == 'plotExpansions' or analysisType == 'plotCycles' or analysisType == 'plotElasticity':
+            if analysisType in ['plotIsotherm','plotCompressions','plotExpansions','plotCycles','plotElasticity']:
                 cycleAm, cycleP, cycleL = findCycles(Am_list, P_list, l.get(i))
                 master_Am[i] = cycleAm
                 master_P[i]  = cycleP
@@ -541,7 +541,10 @@ def main(instructionsFile, title, inputDIR, plotDIR):
                 percA_list = calcPercArea(A_list)
                 percA[i] = percA_list
 
-
+            if config.smoothPre == True:
+                redt, redP = reduceNpoints(t.get(i),P.get(i))
+                t[i] = redt
+                P[i] = redP
 
 
 	 ## Plot instructions
