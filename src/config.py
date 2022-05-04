@@ -38,7 +38,7 @@ smoothPre = True   # reduces number of points for P versus time
 overplot  = False  # not yet functional
 
 ## Override Normal Keys
-plotMultiPanel = True   # split input data between subplots
+plotMultiPanel = False   # split input data between subplots
 key = [[4],[4],[4]]  # [row0=[nFiles0,nFiles1],row1=[nFiles0,nFiles1]]
 
 ## Parameters
@@ -106,21 +106,21 @@ saveAsPNG = True
 saveAsPDF = True
 
 ## Set default plot parameters
-defaultLw = 2.5
+defaultLw = 4
 
-plotWithScatter = False
-scatterSize     = 20
+plotWithScatter = True
+scatterSize     = 50
 
-plotLineWithMarker = True
+plotLineWithMarker = False
 markerSize         = 7
-markEdgeWidth      = 2.5
+markEdgeWidth      = 4
 
 fs                   = 24
-legend_fs_reduction  = 16
+legend_fs_reduction  = 6
 x0Axis_fs_reduction  = 0
 x1Axis_fs_reduction  = 0
 y0Axis_fs_reduction  = 0
-tick_fs_reduction    = 11
+tick_fs_reduction    = 0
 
 ## Set default plot region values
 overrideNoP = False
@@ -129,23 +129,23 @@ config_nf   = 1E6
 
 overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 9000
-config_ymin     = 20
-config_ymax     = 36
+config_xmax     = 60
+config_ymin     = 0
+config_ymax     = 1.5
 
 overrideTickLocation = True
-n_xticks             = 60
-xTickInterval        = 10
-yTickInterval        = 5
+n_xticks             = 6
+xTickInterval        = 1
+yTickInterval        = 0.5
 
-overrideXAxisLabel = False
+overrideXAxisLabel = True
 xLabel = "Time (min)"
 
 overrideYAxisLabel = False
 yLabel = "NA"
 
 legendOn  = True
-legendLoc = 'upper left' # default = 'best'
+legendLoc = 'lower right' # default = 'best'
 
 ## List of plot types that use the time axis
 tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time", " - gammaL", " - gammaP"]
@@ -184,7 +184,7 @@ colourDict = {
     "9": ['#FF7F00', '#FF0000'],
 
     # MC3 Surface Excess Figures: light blue, purple-blue, light orange
-    "10": ["#3399FF", "#3333FF", "#FF9933", "#FF3333"],
+    "10": [["#3399FF", "#3333FF", "#FF9933", "#FF3333"]],
 
 	# MC3 PBS Structural Figures: blue; light -> dark
 	"11": ["#CCE6FF", "#99CCFF", "#66B3FF", "#3399FF"],
@@ -198,7 +198,7 @@ colourDict = {
     # three panel combination of 11-13; must be list of lists where each sublist is a subplot
 	"14": [["#CCE6FF", "#99CCFF", "#66B3FF", "#3399FF"], ["#CCCCFF", "#9999FF", "#6666FF", "#3333FF"], ["#FFE5CC", "#FFCC99", "#FFB266", "#FF9933"]],
     }
-c = colourDict.get("14")
+c = colourDict.get("10")
 
 ## Markers
 markerDict = {
@@ -207,7 +207,7 @@ markerDict = {
     "0": ['.','.','.','.'],
 
     # circles
-    "1": ['o','o','o','o'],
+    "1": [['o','o','o','o']],
 
     # squares
     "2": ['s','s','s','s'],
@@ -225,7 +225,7 @@ markerDict = {
     "6": [['s', 'o', '^', 'd'],['s', 'o', '^', 'd'],['s', 'o', '^', 'd']],
 
     }
-markerType = markerDict.get("6")
+markerType = markerDict.get("1")
 
 
 ##############

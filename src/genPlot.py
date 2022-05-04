@@ -111,7 +111,7 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
     nFilesTotal = len(X[0])
 
     # separate number of files per subplot if multiplot
-    if config.plotMultiPanel == True and suffix == " - isotherm" or " - pressure":
+    if config.plotMultiPanel == True and (suffix == " - isotherm" or " - pressure"):
         nFilesPerPlot = key[row][col]
     else:
         nFilesPerPlot = nFilesTotal
@@ -162,7 +162,7 @@ def plot(key, vars, suffix):
 
 
     # unpack key into rows and columns for subplot
-    if config.plotMultiPanel == True and suffix == " - isotherm" or " - pressure":
+    if config.plotMultiPanel == True and (suffix == " - isotherm" or " - pressure"):
         key = config.key
         nRow = len(key)
         nCol = len(key[0]) # assumes same num columns on both rows
@@ -180,7 +180,7 @@ def plot(key, vars, suffix):
 
 
 
-    # iterate along subplots, currently just row 0 column 1-2
+    # iterate along subplots
     count = 0
     for row in range(nRow):
         for col in range(nCol):
@@ -188,11 +188,10 @@ def plot(key, vars, suffix):
 
             # unpack variables evertime to prevent overwriting within plot code
             N, equip, LABELS, axLabels, title, plotDIR, X, Y = vars
-
+            #print(N)
             # iterate through files and check number of subplots, isolate files accordingly
             count, nFilesPerPlot, x, y, labels = isolateFiles(count, key, suffix, row, col, X, Y, LABELS)
             N = nFilesPerPlot
-
 
             # initialise the subplot
             ax = plt.subplot(gs[row, col]) # row 0, col 0
@@ -214,6 +213,7 @@ def plot(key, vars, suffix):
             #print(x)
             # set upper limit to be shorter of two lists to ensure same length
             for i in range(N):
+                #print(i)
                 if len(x.get(i)) == len(y.get(i)):
                     nf.append(len(x.get(i)))
                 elif len(x.get(i)) > len(y.get(i)):
@@ -246,6 +246,7 @@ def plot(key, vars, suffix):
                 # store minimum and maximum values for axis scales
                 #min_x_vals.append( n0[i] ); max_x_vals.append( nf[i] )
                 #min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
+                #print(x.get(i))
                 min_x_vals.append( min(x.get(i)) ); max_x_vals.append( max(x.get(i)) )
                 min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
 

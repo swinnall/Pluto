@@ -172,7 +172,7 @@ def main(instructionsFile, title, inputDIR, plotDIR):
 	    ## Plot instructions
         if analysisType == 'plotGammaL':
             key      = (1,1)
-            axLabels = {"x": "Time (min)", "y": "$\Gamma_{Lipid}$"}
+            axLabels = {"x": "Time (min)", "y": "$\Gamma_{Lipid}$ (molecule $m^{-2}$)"}
             suffix   = " - gammaL"
             equip    = "N/A"
             vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), gammaL)
@@ -202,7 +202,7 @@ def main(instructionsFile, title, inputDIR, plotDIR):
 
         # program executed
         print('\nAnalysis Complete!\n')
-
+    sys.exit()
     return
 
 
