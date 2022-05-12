@@ -98,7 +98,7 @@ config_nf   = 1E6
 
 overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 1200 # 7200 (2 hr) # 28800 (8hr)
+config_xmax     = 7200 # 7200 (2 hr) # 28800 (8hr)
 config_ymin     = 1
 config_ymax     = 4.0
 

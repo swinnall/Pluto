@@ -9,8 +9,6 @@ from shutil import copyfile
 import config
 import isoAnalysis
 import ellipsAnalysis
-import chemFormulations
-import sldAnalysis
 import surfaceExcess
 from genFunc import modSelection, getFile
 
