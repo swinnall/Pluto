@@ -11,8 +11,6 @@ outputDir = "../../UoM-Data-Repository/output"
 pathNames = {
     "isoAnalysis":      ('Instructions - Surface Pressure', 'Surface Pressure'),
     "ellipsAnalysis":   ('Instructions - Ellipsometry',     'Ellipsometry'),
-    "chemFormulations": ('Instructions - ChemFormulation',  'Chem Formulations'),
-    "sldAnalysis":      ('Instructions - SLD',              'SLD'),
     "surfaceExcess":    ('Instructions - SurfaceExcess',    'Surface Excess'),
     }
 
@@ -48,33 +46,12 @@ nth        = 450  # data reduction; take every 'nth' point
 
 
 #################
-# SLD Analysis #
+# Ellipsometry #
 ################
 
-## Multiply average chain vol by factor to model lipid chain compaction
-compactChains      = False
-chainCompactFactor = 0.85
-
-## Add injected lipid into the existing monolayer
-addLipidToMonolayer      = False
-injectedLipidNames       = ["Monolayer", "DMG-PEG-2000"] # "DLin-MC3-DMA" "DMG-PEG-2000"
-injectedLipidRatios      = [99, 1]
-updateMonolayerThickness = False
-new_d1 = 0
-new_d2 = 0
-
-## Adding injected drug to system
-addDrugToThirdLayer = False  # in third layer
-addDrugToMonolayer  = False # in both third and second (headgroup) layer
-injectedDrugNames   = ["PolyA","PEG"] # "PolyA", "PEG"
-injectedDrugRatios  = [99,1]
-injectedDrugSizes   = [20, 0]
-injectedDrugSLD_H2O = {"PolyA": 3.67, "PEG": 0.62}
-injectedDrugSLD_D2O = {"PolyA": 4.46, "PEG": 0.62}
-threeSolv           = 86.75
-
-## Use contentious vol frac (True) or default molar ratio (False)
-useVolFrac = False
+# subtracting buffer reference (true) means isolating the lipid monolayer
+# select false if bare interface
+ellipSubtractBufferRef = True
 
 
 ###################
@@ -87,14 +64,6 @@ gammaNth = 1
 # smooth function by fitting polynomial of order:
 gamma_nPoly = 10
 
-
-#################
-# Ellipsometry #
-################
-
-# subtracting buffer reference (true) means isolating the lipid monolayer
-# select false if bare interface
-ellipSubtractBufferRef = True
 
 
 #############

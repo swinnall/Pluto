@@ -110,8 +110,7 @@ def organisePaths(analysisType, instructionsName, instructionsPath, outputDataPa
 
 def main():
 
-    analysisOptions = ['isoAnalysis','ellipsAnalysis', 'surfaceExcess',        \
-                        'chemFormulations', 'sldAnalysis']
+    analysisOptions = ['isoAnalysis','ellipsAnalysis', 'surfaceExcess']
 
     PlutoRunning = True
     while PlutoRunning:
@@ -131,12 +130,6 @@ def main():
 
         if analysisType == analysisOptions[2]:
             surfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
-
-        if analysisType == analysisOptions[3]:
-            chemFormulations.main(instructionsFile, outputInstructionFile)
-
-        if analysisType == analysisOptions[4]:
-            sldAnalysis.main(instructionsFile, outputInstructionFile)
 
     return
 
