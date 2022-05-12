@@ -88,9 +88,9 @@ gammaNth = 1
 gamma_nPoly = 10
 
 
-###################
-# Surface Excess #
-##################
+#################
+# Ellipsometry #
+################
 
 # subtracting buffer reference (true) means isolating the lipid monolayer
 # select false if bare interface
@@ -106,9 +106,9 @@ saveAsPNG = True
 saveAsPDF = True
 
 ## Set default plot parameters
-defaultLw = 4
+defaultLw = 2
 
-plotWithScatter = True
+plotWithScatter = False
 scatterSize     = 50
 
 plotLineWithMarker = False
@@ -116,7 +116,7 @@ markerSize         = 7
 markEdgeWidth      = 4
 
 fs                   = 24
-legend_fs_reduction  = 6
+legend_fs_reduction  = 10
 x0Axis_fs_reduction  = 0
 x1Axis_fs_reduction  = 0
 y0Axis_fs_reduction  = 0
@@ -129,23 +129,23 @@ config_nf   = 1E6
 
 overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 60
-config_ymin     = 0
-config_ymax     = 1.5
+config_xmax     = 1200 # 7200 (2 hr) # 28800 (8hr)
+config_ymin     = 1
+config_ymax     = 4.0
 
-overrideTickLocation = True
+overrideTickLocation = False
 n_xticks             = 6
-xTickInterval        = 1
+xTickInterval        = 10
 yTickInterval        = 0.5
 
-overrideXAxisLabel = True
+overrideXAxisLabel = False
 xLabel = "Time (min)"
 
 overrideYAxisLabel = False
 yLabel = "NA"
 
 legendOn  = True
-legendLoc = 'lower right' # default = 'best'
+legendLoc = 'lower left' # default = 'best'; lower right''
 
 ## List of plot types that use the time axis
 tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time", " - gammaL", " - gammaP"]

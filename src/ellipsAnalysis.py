@@ -14,7 +14,7 @@ import scipy.signal as sig
 import scipy.optimize as opt
 import config
 import genPlot
-from genFunc import modSelection, getEllipsometryFile
+from genFunc import modSelection, getEllipsometryFile, getFile
 
 
 def importSampleInfo(instructionsFile):
@@ -81,33 +81,44 @@ def importTimeData(inputDIR, time_ID, nTime):
     for i in range(nTime):
 
         ## Extract reference data
-        fileDIR = inputDIR + '/' + time_ID[i].get('refname') +".txt"
-        ref_df  = getEllipsometryFile(fileDIR)
+        fileDIR = inputDIR + '/' + time_ID[i].get('refname') +".ds.dat"#".txt"
+        #ref_df  = getEllipsometryFile(fileDIR)
+        ref_df  = getFile(fileDIR,0,"\t")
 
         # extract raw ref data from dataframe
-        for j in range(0,len(ref_df)):
-            psi_ref  .append(float(ref_df[j][0]))
-            delta_ref.append(float(ref_df[j][1]))
+        #for j in range(0,len(ref_df)):
+            #psi_ref  .append(float(ref_df[j][0]))
+            #delta_ref.append(float(ref_df[j][1]))
+
+        psi_ref   = ref_df[ref_df.columns.values[4]]
+        delta_ref = ref_df[ref_df.columns.values[3]]
 
         # average reference values; each list ele is an averaged ref
         avRefPsi = mean(psi_ref)
         avRefDel = mean(delta_ref)
 
-
         ## Extract time series data
-        fileDIR = inputDIR + '/' + time_ID[i].get('fname') +".txt"
-        time_df = getEllipsometryFile(fileDIR)
+        fileDIR = inputDIR + '/' + time_ID[i].get('fname') + ".ds.dat"#".txt"
+        #time_df = getEllipsometryFile(fileDIR)
+        time_df  = getFile(fileDIR,0,"\t")
 
         # subtract ref data from these to give lipid-only data
-        for j in range(0,len(time_df)):
-            t[i]      .append(float(time_df[j][6]))
+        #for j in range(0,len(time_df)):
+            #t[i]      .append(float(time_df[j][6]))
+        t[i] = time_df[time_df.columns.values[11]]
 
-            if config.ellipSubtractBufferRef == True:
-                psi_t[i]  .append(float(time_df[j][0]) - avRefPsi)
-                delta_t[i].append(float(time_df[j][1]) - avRefDel)
-            else:
-                psi_t[i]  .append(float(time_df[j][0]) )
-                delta_t[i].append(float(time_df[j][1]) )
+
+        if config.ellipSubtractBufferRef == True:
+                #psi_t[i]  .append(float(time_df[j][0]) - avRefPsi)
+                #delta_t[i].append(float(time_df[j][1]) - avRefDel)
+            psi_t[i]  = time_df[time_df.columns.values[4]] - avRefPsi
+            delta_t[i] = time_df[time_df.columns.values[3]] - avRefDel
+
+        else:
+                #psi_t[i]  .append(float(time_df[j][0]) )
+                #delta_t[i].append(float(time_df[j][1]) )
+            psi_t[i]   = time_df[time_df.columns.values[4]]
+            delta_t[i] = time_df[time_df.columns.values[3]]
 
         label_t[i] = time_ID[i].get('label')
 
@@ -163,9 +174,9 @@ def main(instructionsFile, title, inputDIR, outputPath):
             t, psi_t, delta_t, label_t = importTimeData(inputDIR, time_ID, nTime)
 
             # converting delta variables to degrees
-            for i in range(nTime):
-                for j in range(len(delta_t.get(i))):
-                    delta_t[i][j] = delta_t.get(i)[j] * 180 / np.pi
+            #for i in range(nTime):
+            #    for j in range(len(delta_t.get(i))):
+            #        delta_t[i][j] = delta_t.get(i)[j] * 180 / np.pi
 
 
         # plot data
@@ -198,7 +209,7 @@ def main(instructionsFile, title, inputDIR, outputPath):
 
         # program executed
         print('\nAnalysis Complete!\n')
-
+        sys.exit()
     return
 
 
