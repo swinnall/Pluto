@@ -98,7 +98,7 @@ config_nf   = 1E6
 
 overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 7200 # 7200 (2 hr) # 28800 (8hr)
+config_xmax     = 7200 # 1200 (20 min) # 7200 (2 hr) # 28800 (8hr)
 config_ymin     = 1
 config_ymax     = 4.0
 
@@ -152,8 +152,8 @@ colourDict = {
     # LEM Figures: orange, red
     "9": ['#FF7F00', '#FF0000'],
 
-    # MC3 Surface Excess Figures: light blue, purple-blue, light orange
-    "10": [["#3399FF", "#3333FF", "#FF9933", "#FF3333"]],
+    # MC3 Surface Excess Figures: light blue, purple-blue, light orange, dark green
+    "10": [["#3399FF", "#3333FF", "#FF9933", "#FF3333", "#32BE25"]],
 
 	# MC3 PBS Structural Figures: blue; light -> dark
 	"11": ["#CCE6FF", "#99CCFF", "#66B3FF", "#3399FF"],
