@@ -112,7 +112,7 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
     nFilesTotal = len(X[0])
 
     # separate number of files per subplot if multiplot
-    if config.plotMultiPanel == True and (suffix == " - isotherm" or " - pressure"):
+    if config.plotMultiPanel == True:
         nFilesPerPlot = key[row][col]
     else:
         nFilesPerPlot = nFilesTotal
@@ -124,7 +124,7 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
 
     # count is how far through the list of total files you are
     # iterate through all files
-    if config.plotMultiPanel == True and suffix == " - isotherm" or " - pressure":
+    if config.plotMultiPanel == True:
         for i in range(count, nFilesTotal):
 
             if i == count:
@@ -163,7 +163,7 @@ def plot(key, vars, suffix):
 
 
     # unpack key into rows and columns for subplot
-    if config.plotMultiPanel == True and (suffix == " - isotherm" or " - pressure"):
+    if config.plotMultiPanel == True:
         key = config.key
         nRow = len(key)
         nCol = len(key[0]) # assumes same num columns on both rows
@@ -327,7 +327,7 @@ def plot(key, vars, suffix):
     ## Axis labels
 
             # axis labels; in for loop as iterates along number of subplots
-            if config.plotMultiPanel == True and suffix == " - isotherm" and (nRow == 2 and nCol == 2):
+            if config.plotMultiPanel == True and (nRow == 2 and nCol == 2):
 
                 if row == 0 and col == 0:
                     plt.setp(ax.get_xticklabels(), visible=False)
@@ -342,7 +342,7 @@ def plot(key, vars, suffix):
                     plt.setp(ax.get_xticklabels(), visible=True)
                     plt.setp(ax.get_yticklabels(), visible=False)
 
-            elif config.plotMultiPanel == True and suffix == " - isotherm" and (nRow == 1 and nCol == 2):
+            elif config.plotMultiPanel == True and (nRow == 1 and nCol == 2):
 
                 if row == 0 and col == 0:
                     plt.setp(ax.get_yticklabels(), visible=True)
@@ -350,7 +350,7 @@ def plot(key, vars, suffix):
                     plt.setp(ax.get_yticklabels(), visible=False)
 
 
-            elif config.plotMultiPanel == True and suffix == " - pressure" and (nRow == 1 and nCol == 3):
+            elif config.plotMultiPanel == True and (nRow == 1 and nCol == 3):
 
                 if row == 0 and col == 0:
                     ax.set_ylabel(axLabels.get("y"), fontsize=fs-config.y0Axis_fs_reduction, fontweight='bold')
@@ -361,7 +361,7 @@ def plot(key, vars, suffix):
                 elif row == 0 and col == 2:
                     plt.setp(ax.get_yticklabels(), visible=False)
 
-            elif config.plotMultiPanel == True and suffix == " - pressure" and (nRow == 3 and nCol == 1):
+            elif config.plotMultiPanel == True and (nRow == 3 and nCol == 1):
 
                 if row == 0 and col == 0:
                     plt.setp(ax.get_xticklabels(), visible=False)
