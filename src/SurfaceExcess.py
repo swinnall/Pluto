@@ -8,7 +8,6 @@ import math as mt
 
 # import Pluto modules
 import config
-import genPlot
 from genFunc import modSelection, getFile
 
 
@@ -88,24 +87,12 @@ def main(instructionsFile, title, inputDIR, plotDIR):
         equip    = "N/A"
         vars     = [nFiles, equip, l, axLabels, title, plotDIR, [t,0], gamma]
 
-        # currently only allows 1x1, 2x1, 2x2 subplot types
-        if config.plotMultiPanel == True:
-            nRow = len(config.key)
-            nCol = len(config.key[0])
-            key = (nRow,nCol)
-
     if analysisType == 'plotGammaP':
         key      = (1,1)
         axLabels = {"x": "Time (min)", "y": "$\Gamma_{PolyA}$ (molecule $m^{-2}$)"}
         suffix   = " - gammaP"
         equip    = "N/A"
         vars     = [nFiles, equip, l, axLabels, title, plotDIR, [t,0], gamma]
-
-        # currently only allows 1x1, 2x1, 2x2 subplot types
-        if config.plotMultiPanel == True:
-            nRow = len(config.key)
-            nCol = len(config.key[0])
-            key = (nRow,nCol)
 
     return key, vars, suffix
 

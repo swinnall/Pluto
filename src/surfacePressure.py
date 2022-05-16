@@ -11,11 +11,12 @@ from scipy.signal import savgol_filter
 
 # import Pluto modeuls
 import config
+import database
 from genFunc import modSelection, getFile
 
 
 ## Import Functions
-def importSampleData(instructionsFile, nFiles):
+def importSampleInfo(instructionsFile, nFiles):
 
     # variable initialisations
     fileNames  = {init: 0 for init in range(nFiles)}
@@ -113,54 +114,11 @@ def shiftIsotherm(P):
 
 
 
-def smoothData(genList):
-
-    # initialise list for func output
-    smoothList = []
-
-
-    # if length is even, truncate as savgol must have odd window length
-    if len(genList) % 2 == 0:
-        genList.pop()
-
-
-    # remove noise introduced via derivative perturbations
-    try:
-        smoothList = savgol_filter(genList, len(genList), config.nPoly, mode='interp')  # variable, window size (length), polynomial order, mode
-
-    # remove infinity and nan values due to Nima having repeated area values
-    except linalg.LinAlgError:
-        print("LinAlgError")
-        for j in range(len(genList)):
-            if genList[j] == float("inf") or genList[j] == float("-inf") or mt.isnan(genList[j]) == True:
-                genList[j] = 0
-
-    except ValueError:
-        print("ValueError: Polyorder must be less than window length. Attempting adjustment at 0.5*nPoly = %d." %int(config.nPoly/2))
-        smoothList = savgol_filter(genList, len(genList), int(config.nPoly/2), mode='interp')  # variable, window size (length), polynomial order, mode
-
-
-    # high pass filter: remove values less than 0.01 (final smoothing of function)
-    deleteMe = []
-    for j in range(1,len(smoothList)-1):
-
-        if smoothList[j] < 0.01:
-
-            # store indices to be deleted
-            deleteMe.append(j)
-
-    # delete elements from the lists
-    smoothList = np.delete(smoothList, deleteMe)
-
-    return smoothList
-
-
-
 ## Calculation Functions
 def calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdded):
 
     # import molecular weight database
-    lipidMW = config.lipidMw
+    lipidMW = database.lipidMw
 
     # Aoagadro's Number
     NA = 6.0221409E23
@@ -197,7 +155,7 @@ def calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdde
 
     # calculate area per molecule
     for j in range(0,len(A_list)):
-        Am.append(   ( A_list[j] / (conc.get(i) * volAdded.get(i)) ) * (Mw/NA) )
+        Am.append(   ( A_list[j] / (conc.get(i) * volAdded.get(i)) ) * (Mw/NA) * (10**20))
 
     return Am
 
@@ -215,10 +173,7 @@ def calcElasticity(Am_list, P_list):
     for j in range(2,len(dPdAm)):
         E_list.append((-Am_list[j])*dPdAm[j])
 
-    # smooth data
-    Espl_list = smoothData(E_list)
-
-    return E_list, Espl_list
+    return E_list
 
 
 
@@ -242,27 +197,6 @@ def calcPercArea(A_list):
 
 
 
-def calcNormP(t_list, P_list):
-
-    # initialise temporary lists
-    tempNormT_list = []
-    tempNormP_list = []
-
-    # for every nth value, store in temp lists
-    nth = 1000
-    for j in range(0,len(P_list),nth):
-        tempNormT_list.append(t_list[j])
-        tempNormP_list.append(P_list[j])
-
-    P0 = P_list[0]
-    for j in range(len(tempNormP_list)):
-        tempNormP_list[j] = tempNormP_list[j]/P0
-
-    return tempNormT_list, tempNormP_list
-
-
-
-
 ## Cycle Extraction Functions
 def reduceNpoints(x, y):
 
@@ -270,7 +204,10 @@ def reduceNpoints(x, y):
     redX = []
     redY = []
 
-    for j in range(0,len(x),config.nth):
+    # data reduction for gradient calc.; take every 'Nth' point
+    gradNth   = 20
+
+    for j in range(0,len(x),gradNth):
         redX.append(x[j])
         redY.append(y[j])
 
@@ -396,23 +333,21 @@ def splitCycles(type, cycleX, cycleY, l):
     return halfCycleX, halfCycleY, halfCycleL
 
 
+
 # Main
 def main(instructionsFile, title, inputDIR, plotDIR):
 
     # filter warnings
     warnings.filterwarnings("ignore")
 
-
     # number of isotherms to plot
     nFiles  = len(instructionsFile)
 
-
     # user input & sample instructions information
-    fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l = importSampleData(instructionsFile, nFiles)
-
+    fileNames, equip, nLipids, lipidType, lipidRatio, conc, volAdded, l = importSampleInfo(instructionsFile, nFiles)
 
     # give analysis choice to user
-    analysisOptions = ['plotIsotherm','plotCompressions','plotExpansions','plotCycles','plotPressure','plotNormInjection','plotArea','plotElasticity']
+    analysisOptions = ['plotIsotherm','plotCompressions','plotExpansions','plotCycles','plotPressure','plotArea','plotElasticity']
 
     analysisType, analysisRunning = modSelection(analysisOptions)
 
@@ -422,10 +357,7 @@ def main(instructionsFile, title, inputDIR, plotDIR):
     P     = {new_list: [] for new_list in range(nFiles)}
     Am    = {new_list: [] for new_list in range(nFiles)}
     E     = {new_list: [] for new_list in range(nFiles)}
-    Espl  = {new_list: [] for new_list in range(nFiles)}
     percA = {new_list: [] for new_list in range(nFiles)}
-    normT = {new_list: [] for new_list in range(nFiles)}
-    normP = {new_list: [] for new_list in range(nFiles)}
 
     stitched_t  = {new_list: [] for new_list in range(nFiles)}
     stitched_P  = {new_list: [] for new_list in range(nFiles)}
@@ -443,9 +375,6 @@ def main(instructionsFile, title, inputDIR, plotDIR):
 
     ## perform analysis on each file and store in dict for genPlot.py
     for i in range(nFiles):
-
-        ## Preamble
-        # get filename
         fname = fileNames.get(i)
 
         # organise equipment
@@ -454,26 +383,23 @@ def main(instructionsFile, title, inputDIR, plotDIR):
         elif equip.get(i) in ["Nima", "nima"]:
             equipParams = (1,".txt","\t")
 
-        # import data from given file i
-        t_list, A_list, P_list = importData(equipParams, fname, inputDIR, plotDIR)
-        t[i] = t_list
-        A[i] = A_list
-        P[i] = P_list
+        # import data from given file i, immediate store t (need A & P lists as well)
+        t[i], A[i], P[i] = importData(equipParams, fname, inputDIR, plotDIR)
 
 
-    ## Essential calculations
+        # calculate percentage area
+        if analysisType == 'plotArea':
+            percA_list = calcPercArea(A.get(i))
+            percA[i] = percA_list
 
-        # calculates area per molecule for given file i
-        Am_list = calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdded)
-
-        # converts list units to Angstroms and stores in dict
-        for j in range(len(Am_list)):
-            Am_list[j] = Am_list[j] * (10**20)
-        Am[i] = Am_list
 
         # pass list, get a dict of cycles, store each dict in a masterDict
         if analysisType in ['plotIsotherm','plotCompressions','plotExpansions','plotCycles','plotElasticity']:
-            cycleAm, cycleP, cycleL = findCycles(Am_list, P_list, l.get(i))
+
+            # calculates area per molecule for given file i
+            Am[i] = calcAreaPerMolecule(i, A.get(i), lipidType, nLipids, lipidRatio, conc, volAdded)
+
+            cycleAm, cycleP, cycleL = findCycles(Am.get(i), P.get(i), l.get(i))
             master_Am[i] = cycleAm
             master_P[i]  = cycleP
             master_L[i]  = cycleL
@@ -492,17 +418,6 @@ def main(instructionsFile, title, inputDIR, plotDIR):
                     stitched_t[i].append(t[k])
 
 
-    ## Specific calculation functions
-
-        # smooth data; returns list; stored in stiched
-        if config.smoothIso == True:
-            tempSmoothList = smoothData(stitched_P.get(i))
-            stitched_P[i] = tempSmoothList
-
-            tempSmoothList = smoothData(stitched_Am.get(i))
-            stitched_Am[i] = tempSmoothList
-
-
         # calculate elasticity
         if analysisType == 'plotElasticity':
 
@@ -513,30 +428,8 @@ def main(instructionsFile, title, inputDIR, plotDIR):
             elasticityCompression_P[i]  = halfCycleP.get(0)
             elasticityCompression_L[i]  = halfCycleL.get(0)
 
-
             # pass the compression of cycle 0 as list; later adapt to selected cycle in config
-            E_list, Espl_list = calcElasticity(halfCycleAm.get(0), halfCycleP.get(0))
-            E[i]    = E_list
-            Espl[i] = Espl_list
-
-
-
-        # calculate normalise pressure
-        if analysisType == 'plotNormInjection':
-            tempNormT_list, tempNormP_list = calcNormP(t_list, P_list)
-            normT[i] = tempNormT_list
-            normP[i] = tempNormP_list
-
-
-        # calculate percentage area
-        if analysisType == 'plotArea':
-            percA_list = calcPercArea(A_list)
-            percA[i] = percA_list
-
-        if config.smoothPre == True:
-            redt, redP = reduceNpoints(t.get(i),P.get(i))
-            t[i] = redt
-            P[i] = redP
+            E[i] = calcElasticity(halfCycleAm.get(0), halfCycleP.get(0))
 
 
  ## Plot instructions
@@ -544,43 +437,27 @@ def main(instructionsFile, title, inputDIR, plotDIR):
         key      = (1,1)
         axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
         suffix   = " - isotherm"
-        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (stitched_Am,0), stitched_P)
-
-        # currently only allows 1x1, 2x1, 2x2 subplot types
-        if config.plotMultiPanel == True:
-            nRow = len(config.key)
-            nCol = len(config.key[0])
-            key = (nRow,nCol)
-
+        vars     = [nFiles, equip, l, axLabels, title, plotDIR, [stitched_Am,0], stitched_P]
 
     if analysisType == 'plotElasticity':
         axLabels = {"x": "$\pi$ ($mNm^{-1}$)", "x1": "Mol. Area ($\AA$$^2$/Molecule)", "y": "$C_s^{-1} (mNm^{-1})$"}
         suffix   = " - elasticity"
-        key = (1,2); vars = (nFiles, equip, l, axLabels, title, plotDIR, (elasticityCompression_P,elasticityCompression_Am), Espl)
-
+        key = (1,2); vars = [nFiles, equip, l, axLabels, title, plotDIR, [elasticityCompression_P,elasticityCompression_Am], E]
 
     if analysisType  == 'plotPressure':
         key      = (1,1)
         axLabels = {"x": "auto calculated in genPlot", "y": "$\pi$ ($mNm^{-1}$)"}
         suffix   = " - pressure"
-        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), P)
-
-
-    if analysisType == 'plotNormInjection':
-        key      = (1,1)
-        axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta\pi$"}
-        suffix   = " - normInjPressure"
-        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (normT,0), normP)
-
+        vars     = [nFiles, equip, l, axLabels, title, plotDIR, [t,0], P]
 
     if analysisType == 'plotArea':
         key      = (1,1)
         axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta$A (%)"}
         suffix   = " - area"
-        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), percA)
+        vars     = [nFiles, equip, l, axLabels, title, plotDIR, [t,0], percA]
 
 
-    # set default settings
+    # set default settings for subsequent similar fits
     key      = (1,1)
     axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
 
@@ -590,16 +467,16 @@ def main(instructionsFile, title, inputDIR, plotDIR):
         if analysisType == 'plotCompressions':
             suffix = " - compressions"
             halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
-            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
+            vars = [len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, [halfCycleAm,0], halfCycleP]
 
         if analysisType == 'plotExpansions':
             suffix = " - expansions"
             halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
-            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
+            vars = [len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, [halfCycleAm,0], halfCycleP]
 
         if analysisType == 'plotCycles':
             suffix = " - cycles"
-            vars = (len(master_Am.get(i)), equip, master_L.get(i), axLabels, newTitle, plotDIR, (stitched_Am,0), stitched_P)
+            vars = [len(master_Am.get(i)), equip, master_L.get(i), axLabels, newTitle, plotDIR, [stitched_Am,0], stitched_P]
 
     return key, vars, suffix
 
