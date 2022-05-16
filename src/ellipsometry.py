@@ -1,4 +1,4 @@
-" Data pipeline for ellipsometry measurements "
+" Process ellipsometry data "
 
 # import packages
 import sys
@@ -114,22 +114,22 @@ def main(instructionsFile, title, inputDIR, outputPath):
     if analysisType == 'plotAOIpsi':
         axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Psi$ (\N{DEGREE SIGN})"}
         suffix   = " - psi AOI"
-        vars     = (nFiles, equip, label, axLabels, title, outputPath, (x,0), yPsi)
+        vars     = [nFiles, equip, label, axLabels, title, outputPath, [x,0], yPsi]
 
     if analysisType == 'plotAOIdelta':
         axLabels = {"x": "AOI (\N{DEGREE SIGN})", "y": "$\Delta$ (\N{DEGREE SIGN})"}
         suffix   = " - delta AOI"
-        vars     = (nFiles, equip, label, axLabels, title, outputPath, (x,0), yDelta)
+        vars     = [nFiles, equip, label, axLabels, title, outputPath, [x,0], yDelta]
 
     if analysisType == 'plotTimePsi':
         axLabels = {"x": "Time (s)", "y": "$\Psi$ (\N{DEGREE SIGN})"}
         suffix   = " - psi Time"
-        vars     = (nFiles, equip, label, axLabels, title, outputPath, (x,0), yPsi)
+        vars     = [nFiles, equip, label, axLabels, title, outputPath, [x,0], yPsi]
 
     if analysisType == 'plotTimeDelta':
         axLabels = {"x": "Time (s)", "y": "$\Delta_{Lipids}$ - $\Delta_{Buffer}$ (\N{DEGREE SIGN})"}
         suffix   = " - delta Time"
-        vars     = (nFiles, equip, label, axLabels, title, outputPath, (x,0), yDelta)
+        vars     = [nFiles, equip, label, axLabels, title, outputPath, [x,0], yDelta]
 
     return key, vars, suffix
 

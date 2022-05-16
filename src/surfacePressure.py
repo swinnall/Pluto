@@ -1,5 +1,6 @@
-" Analysis module within IAP "
+" Process surface pressure data "
 
+# import packages
 import csv, os, sys, re, ast
 import warnings
 import math as mt

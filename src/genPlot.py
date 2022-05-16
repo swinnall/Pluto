@@ -1,10 +1,11 @@
 " Generalised plotting module for Pluto "
 
+import sys, ast
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import sys
-import ast
+
+# import Pluto modules
 import config
 
 def plotParameters(suffix):
@@ -99,9 +100,9 @@ def plotParameters(suffix):
 
 
     return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\
-            fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj,      \
-            xAxisMaxAdj, yAxisMaxAdj, overrideNoP, config_n0, config_nf, overrideAxisLim,    \
-            config_xmin, config_xmax, config_ymin, config_ymax, overrideTickLocation, n_xticks,            \
+            fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj,\
+            xAxisMaxAdj, yAxisMaxAdj, overrideNoP, config_n0, config_nf, overrideAxisLim,\
+            config_xmin, config_xmax, config_ymin, config_ymax, overrideTickLocation, n_xticks,\
             xTickInterval, yTickInterval
 
 
@@ -451,5 +452,4 @@ def main(key, vars, suffix):
 
 
 if __name__ == '__main__':
-    print("Generating Plot...\n")
     main()

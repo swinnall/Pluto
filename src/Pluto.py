@@ -13,7 +13,7 @@ import surfacePressure
 import ellipsometry
 import surfaceExcess
 import genPlot
-from genFunc import modSelection, getFile
+from genFunc import modSelection, getFile, reducePoints, polySmoothData
 
 
 def programSelection(analysisOptions):
@@ -125,14 +125,23 @@ def main():
         # calls analysis module
         if analysisType == analysisOptions[0]:
             key, vars, suffix = surfacePressure.main(instructionsFile, title, inputDataPath, outputDataPath)
-            genPlot.main(key, vars, suffix)
 
         if analysisType == analysisOptions[1]:
             key, vars, suffix = ellipsometry.main(instructionsFile, title, inputDataPath, outputDataPath)
-            genPlot.main(key, vars, suffix)
 
         if analysisType == analysisOptions[2]:
-            surfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
+            key, vars, suffix = surfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
+
+
+        # post analysis smoothing of data
+        if config.smoothByPoints == True:
+            vars[6][0], vars[7] = reducePoints(vars[6][0],vars[7])
+
+        if config.smoothByPolyFit == True:
+            vars[7] = polySmoothData(vars[7])
+
+        # plot data 
+        genPlot.main(key, vars, suffix)
 
     return
 

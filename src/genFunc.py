@@ -1,9 +1,14 @@
-" Module for general functions within Pluto "
-# Next: add in geneneral smooth data functions
+" General functions for Pluto "
 
-import csv
-import sys
+# import packages
+import csv, sys
 import pandas as pd
+import numpy as np
+from numpy import linalg
+from scipy.signal import savgol_filter
+
+# import Pluto modules
+import config
 
 
 def getFile(path,nSkip,delim):
@@ -39,3 +44,67 @@ def modSelection(analysisOptions):
         sys.exit()
 
     return analysisType, analysisRunning
+
+
+def reducePoints(x, y):
+
+    nLists = len(x)
+
+    redX = {init: [] for init in range(nLists)}
+    redY = {init: [] for init in range(nLists)}
+    for i in range(nLists):
+        nPoint = len(x.get(i))
+        for j in range(0,nPoint,config.nth):
+            redX[i].append(x.get(i)[j])
+            redY[i].append(y.get(i)[j])
+
+    return redX, redY
+
+
+def polySmoothData(y):
+
+    # gets number of lists within the y dictionary
+    nLists = len(y)
+
+    # initialise list for func output
+    smoothList = {init: [] for init in range(nLists)}
+
+    for item in y.items():
+
+        # unpacks tuple item
+        key     = item[0]
+        genList = item[1]
+
+        # if length is even, truncate as savgol must have odd window length
+        if len(genList) % 2 == 0:
+            del genList[len(genList)-1]
+
+        # remove noise introduced via derivative perturbations
+        try:
+            smoothList = savgol_filter(genList, len(genList), config.nPoly, mode='interp')  # variable, window size (length), polynomial order, mode
+
+        # remove infinity and nan values due to Nima having repeated area values
+        except linalg.LinAlgError:
+            print("LinAlgError")
+            for j in range(len(genList)):
+                if genList[j] == float("inf") or genList[j] == float("-inf") or mt.isnan(genList[j]) == True:
+                    genList[j] = 0
+
+        except ValueError:
+            print("ValueError: Polyorder must be less than window length. Attempting adjustment at 0.5*nPoly = %d." %int(config.nPoly/2))
+            smoothList = savgol_filter(genList, len(genList), int(config.nPoly/2), mode='interp')  # variable, window size (length), polynomial order, mode
+
+
+        # high pass filter: remove values less than 0.01 (final smoothing of function)
+        deleteMe = []
+        for i in range(0,len(smoothList)-1):
+            if smoothList[i] < config.lowerLimit:
+                deleteMe.append(i)
+
+        # delete elements from the lists
+        smoothList = np.delete(smoothList, deleteMe)
+
+        # updates the key-value pair with the smoothed data
+        y[key] = smoothList
+
+    return y

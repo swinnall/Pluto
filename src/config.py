@@ -24,6 +24,26 @@ verbose      = False
 very_verbose = False
 
 
+###############
+# Smooth Data #
+###############
+
+# for reducing the number of points in the dataset
+smoothByPoints = False
+
+# keep every nth point
+nth = 2
+
+# turns data cleaning on/off
+smoothByPolyFit = True
+
+# the order of the fitted polynomial (no params produced, just gives trend)
+nPoly = 5
+
+# filters out any anomalous produced datapoints during polynomial fitting
+lowerLimit = 0.01
+
+
 ################
 # IAP Analysis #
 ################
@@ -33,7 +53,6 @@ checkT0   = False  # ensures T0 = 0
 shiftP    = False  # shift to P_min = 0
 smoothIso = False  # reduces number of points for final isotherm plots
 smoothPre = True   # reduces number of points for P versus time
-overplot  = False  # not yet functional
 
 ## Override Normal Keys
 plotMultiPanel = False   # split input data between subplots
@@ -41,17 +60,9 @@ key = [[4],[4],[4]]  # [row0=[nFiles0,nFiles1],row1=[nFiles0,nFiles1]]
 
 ## Parameters
 useCycles  = [0]  # list of cycles to be used in isotherm
-nPoly      = 40  # order of the elasticity fit
-nth        = 450  # data reduction; take every 'nth' point
+nPolySP    = 40  # order of the elasticity fit
+nthSP      = 20  # data reduction; take every 'nth' point
 
-
-#################
-# Ellipsometry #
-################
-
-# subtracting buffer reference (true) means isolating the lipid monolayer
-# select false if bare interface
-ellipSubtractBufferRef = True
 
 
 ###################
@@ -98,7 +109,7 @@ config_nf   = 1E6
 
 overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 7200 # 1200 (20 min) # 7200 (2 hr) # 28800 (8hr)
+config_xmax     = 60 # 1200 (20 min) # 7200 (2 hr) # 28800 (8hr)
 config_ymin     = 1
 config_ymax     = 4.0
 
