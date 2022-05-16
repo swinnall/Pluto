@@ -1,19 +1,15 @@
 " Analysis module within IAP "
 
-import csv
-import os
-import sys
+import csv, os, sys, re, ast
+import warnings
+import math as mt
 import numpy as np
 from numpy import diff
 from numpy import linalg
 from scipy.signal import savgol_filter
-import warnings
-import re
-import ast
-import sys
-import math as mt
+
+# import Pluto modeuls
 import config
-import genPlot
 from genFunc import modSelection, getFile
 
 
@@ -417,210 +413,194 @@ def main(instructionsFile, title, inputDIR, plotDIR):
     # give analysis choice to user
     analysisOptions = ['plotIsotherm','plotCompressions','plotExpansions','plotCycles','plotPressure','plotNormInjection','plotArea','plotElasticity']
 
-    analysisRunning = True
-    while analysisRunning:
-        analysisType, analysisRunning = modSelection(analysisOptions)
+    analysisType, analysisRunning = modSelection(analysisOptions)
 
-        if analysisRunning == False:
-            break
+    # initialise dicts, store 1 file in each list
+    t     = {new_list: [] for new_list in range(nFiles)}
+    A     = {new_list: [] for new_list in range(nFiles)}
+    P     = {new_list: [] for new_list in range(nFiles)}
+    Am    = {new_list: [] for new_list in range(nFiles)}
+    E     = {new_list: [] for new_list in range(nFiles)}
+    Espl  = {new_list: [] for new_list in range(nFiles)}
+    percA = {new_list: [] for new_list in range(nFiles)}
+    normT = {new_list: [] for new_list in range(nFiles)}
+    normP = {new_list: [] for new_list in range(nFiles)}
 
-        # initialise dicts, store 1 file in each list
-        t     = {new_list: [] for new_list in range(nFiles)}
-        A     = {new_list: [] for new_list in range(nFiles)}
-        P     = {new_list: [] for new_list in range(nFiles)}
-        Am    = {new_list: [] for new_list in range(nFiles)}
-        E     = {new_list: [] for new_list in range(nFiles)}
-        Espl  = {new_list: [] for new_list in range(nFiles)}
-        percA = {new_list: [] for new_list in range(nFiles)}
-        normT = {new_list: [] for new_list in range(nFiles)}
-        normP = {new_list: [] for new_list in range(nFiles)}
+    stitched_t  = {new_list: [] for new_list in range(nFiles)}
+    stitched_P  = {new_list: [] for new_list in range(nFiles)}
+    stitched_Am = {new_list: [] for new_list in range(nFiles)}
 
-        stitched_t  = {new_list: [] for new_list in range(nFiles)}
-        stitched_P  = {new_list: [] for new_list in range(nFiles)}
-        stitched_Am = {new_list: [] for new_list in range(nFiles)}
+    elasticityCompression_Am = {new_list: [] for new_list in range(nFiles)}
+    elasticityCompression_P  = {new_list: [] for new_list in range(nFiles)}
+    elasticityCompression_L  = {new_list: [] for new_list in range(nFiles)}
 
-        elasticityCompression_Am = {new_list: [] for new_list in range(nFiles)}
-        elasticityCompression_P  = {new_list: [] for new_list in range(nFiles)}
-        elasticityCompression_L  = {new_list: [] for new_list in range(nFiles)}
-
-        # initialise master dicts, store dict of cycles in each element
-        master_P  = {new_dict: {0: []} for new_dict in range(nFiles)}
-        master_Am = {new_dict: {0: []} for new_dict in range(nFiles)}
-        master_L  = {new_dict: {0: []} for new_dict in range(nFiles)}
+    # initialise master dicts, store dict of cycles in each element
+    master_P  = {new_dict: {0: []} for new_dict in range(nFiles)}
+    master_Am = {new_dict: {0: []} for new_dict in range(nFiles)}
+    master_L  = {new_dict: {0: []} for new_dict in range(nFiles)}
 
 
-        ## perform analysis on each file and store in dict for genPlot.py
-        for i in range(nFiles):
+    ## perform analysis on each file and store in dict for genPlot.py
+    for i in range(nFiles):
 
-            ## Preamble
-            # get filename
-            fname = fileNames.get(i)
+        ## Preamble
+        # get filename
+        fname = fileNames.get(i)
 
-            # organise equipment
-            if equip.get(i) in ["Kibron", "kibron"]:
-                equipParams = (41,".NTB",";")
-            elif equip.get(i) in ["Nima", "nima"]:
-                equipParams = (1,".txt","\t")
+        # organise equipment
+        if equip.get(i) in ["Kibron", "kibron"]:
+            equipParams = (41,".NTB",";")
+        elif equip.get(i) in ["Nima", "nima"]:
+            equipParams = (1,".txt","\t")
 
-            # import data from given file i
-            t_list, A_list, P_list = importData(equipParams, fname, inputDIR, plotDIR)
-            t[i] = t_list
-            A[i] = A_list
-            P[i] = P_list
-
-
-        ## Essential calculations
-
-            # calculates area per molecule for given file i
-            Am_list = calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdded)
-
-            # converts list units to Angstroms and stores in dict
-            for j in range(len(Am_list)):
-                Am_list[j] = Am_list[j] * (10**20)
-            Am[i] = Am_list
-
-            # pass list, get a dict of cycles, store each dict in a masterDict
-            if analysisType in ['plotIsotherm','plotCompressions','plotExpansions','plotCycles','plotElasticity']:
-                cycleAm, cycleP, cycleL = findCycles(Am_list, P_list, l.get(i))
-                master_Am[i] = cycleAm
-                master_P[i]  = cycleP
-                master_L[i]  = cycleL
-
-                # selects cycles based on config input
-                # iterate along each chosen cycle and list of values within each cycle
-
-                for cycleNum in config.useCycles:
-
-                    # append every value to file i of stichedX
-                    for value in range(len(cycleAm.get(cycleNum))):
-                        stitched_Am[i].append( cycleAm.get(cycleNum)[value] )
-                        stitched_P[i].append( cycleP.get(cycleNum)[value] )
-
-                    for k in range(len(stitched_Am)):
-                        stitched_t[i].append(t[k])
+        # import data from given file i
+        t_list, A_list, P_list = importData(equipParams, fname, inputDIR, plotDIR)
+        t[i] = t_list
+        A[i] = A_list
+        P[i] = P_list
 
 
-        ## Specific calculation functions
+    ## Essential calculations
 
-            # smooth data; returns list; stored in stiched
-            if config.smoothIso == True:
-                tempSmoothList = smoothData(stitched_P.get(i))
-                stitched_P[i] = tempSmoothList
+        # calculates area per molecule for given file i
+        Am_list = calcAreaPerMolecule(i, A_list, lipidType, nLipids, lipidRatio, conc, volAdded)
 
-                tempSmoothList = smoothData(stitched_Am.get(i))
-                stitched_Am[i] = tempSmoothList
+        # converts list units to Angstroms and stores in dict
+        for j in range(len(Am_list)):
+            Am_list[j] = Am_list[j] * (10**20)
+        Am[i] = Am_list
 
+        # pass list, get a dict of cycles, store each dict in a masterDict
+        if analysisType in ['plotIsotherm','plotCompressions','plotExpansions','plotCycles','plotElasticity']:
+            cycleAm, cycleP, cycleL = findCycles(Am_list, P_list, l.get(i))
+            master_Am[i] = cycleAm
+            master_P[i]  = cycleP
+            master_L[i]  = cycleL
 
-            # calculate elasticity
-            if analysisType == 'plotElasticity':
+            # selects cycles based on config input
+            # iterate along each chosen cycle and list of values within each cycle
 
-                # pass dict of cycles to splitCycles, returns dicts containing all half cycles in file
-                suffix = " - compressions"
-                halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, cycleAm, cycleP, l.get(i))
-                elasticityCompression_Am[i] = halfCycleAm.get(0)
-                elasticityCompression_P[i]  = halfCycleP.get(0)
-                elasticityCompression_L[i]  = halfCycleL.get(0)
+            for cycleNum in config.useCycles:
 
+                # append every value to file i of stichedX
+                for value in range(len(cycleAm.get(cycleNum))):
+                    stitched_Am[i].append( cycleAm.get(cycleNum)[value] )
+                    stitched_P[i].append( cycleP.get(cycleNum)[value] )
 
-                # pass the compression of cycle 0 as list; later adapt to selected cycle in config
-                E_list, Espl_list = calcElasticity(halfCycleAm.get(0), halfCycleP.get(0))
-                E[i]    = E_list
-                Espl[i] = Espl_list
-
-
-
-            # calculate normalise pressure
-            if analysisType == 'plotNormInjection':
-                tempNormT_list, tempNormP_list = calcNormP(t_list, P_list)
-                normT[i] = tempNormT_list
-                normP[i] = tempNormP_list
+                for k in range(len(stitched_Am)):
+                    stitched_t[i].append(t[k])
 
 
-            # calculate percentage area
-            if analysisType == 'plotArea':
-                percA_list = calcPercArea(A_list)
-                percA[i] = percA_list
+    ## Specific calculation functions
 
-            if config.smoothPre == True:
-                redt, redP = reduceNpoints(t.get(i),P.get(i))
-                t[i] = redt
-                P[i] = redP
+        # smooth data; returns list; stored in stiched
+        if config.smoothIso == True:
+            tempSmoothList = smoothData(stitched_P.get(i))
+            stitched_P[i] = tempSmoothList
 
-
-	 ## Plot instructions
-        if analysisType == 'plotIsotherm':
-            key      = (1,1)
-            axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
-            suffix   = " - isotherm"
-            vars     = (nFiles, equip, l, axLabels, title, plotDIR, (stitched_Am,0), stitched_P)
-
-            # currently only allows 1x1, 2x1, 2x2 subplot types
-            if config.plotMultiPanel == True:
-                nRow = len(config.key)
-                nCol = len(config.key[0])
-                key = (nRow,nCol)
-            genPlot.main(key,vars,suffix)
+            tempSmoothList = smoothData(stitched_Am.get(i))
+            stitched_Am[i] = tempSmoothList
 
 
+        # calculate elasticity
         if analysisType == 'plotElasticity':
-            axLabels = {"x": "$\pi$ ($mNm^{-1}$)", "x1": "Mol. Area ($\AA$$^2$/Molecule)", "y": "$C_s^{-1} (mNm^{-1})$"}
-            suffix   = " - elasticity"
-            key = (1,2); vars = (nFiles, equip, l, axLabels, title, plotDIR, (elasticityCompression_P,elasticityCompression_Am), Espl)
-            genPlot.main(key,vars,suffix)
+
+            # pass dict of cycles to splitCycles, returns dicts containing all half cycles in file
+            suffix = " - compressions"
+            halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, cycleAm, cycleP, l.get(i))
+            elasticityCompression_Am[i] = halfCycleAm.get(0)
+            elasticityCompression_P[i]  = halfCycleP.get(0)
+            elasticityCompression_L[i]  = halfCycleL.get(0)
 
 
-        if analysisType  == 'plotPressure':
-            key      = (1,1)
-            axLabels = {"x": "auto calculated in genPlot", "y": "$\pi$ ($mNm^{-1}$)"}
-            suffix   = " - pressure"
-            vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), P)
-            genPlot.main(key,vars,suffix)
+            # pass the compression of cycle 0 as list; later adapt to selected cycle in config
+            E_list, Espl_list = calcElasticity(halfCycleAm.get(0), halfCycleP.get(0))
+            E[i]    = E_list
+            Espl[i] = Espl_list
 
 
+
+        # calculate normalise pressure
         if analysisType == 'plotNormInjection':
-            key      = (1,1)
-            axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta\pi$"}
-            suffix   = " - normInjPressure"
-            vars     = (nFiles, equip, l, axLabels, title, plotDIR, (normT,0), normP)
-            genPlot.main(key,vars,suffix)
+            tempNormT_list, tempNormP_list = calcNormP(t_list, P_list)
+            normT[i] = tempNormT_list
+            normP[i] = tempNormP_list
 
 
+        # calculate percentage area
         if analysisType == 'plotArea':
-            key      = (1,1)
-            axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta$A (%)"}
-            suffix   = " - area"
-            vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), percA)
-            genPlot.main(key,vars,suffix)
+            percA_list = calcPercArea(A_list)
+            percA[i] = percA_list
+
+        if config.smoothPre == True:
+            redt, redP = reduceNpoints(t.get(i),P.get(i))
+            t[i] = redt
+            P[i] = redP
 
 
-        # set default settings
+ ## Plot instructions
+    if analysisType == 'plotIsotherm':
         key      = (1,1)
         axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
+        suffix   = " - isotherm"
+        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (stitched_Am,0), stitched_P)
 
-        for i in range(nFiles):
-            newTitle = title + " - " + l.get(i)
+        # currently only allows 1x1, 2x1, 2x2 subplot types
+        if config.plotMultiPanel == True:
+            nRow = len(config.key)
+            nCol = len(config.key[0])
+            key = (nRow,nCol)
 
-            if analysisType == 'plotCompressions':
-                suffix = " - compressions"
-                halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
-                vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
-                genPlot.main(key,vars,suffix)
 
-            if analysisType == 'plotExpansions':
-                suffix = " - expansions"
-                halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
-                vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
-                genPlot.main(key,vars,suffix)
+    if analysisType == 'plotElasticity':
+        axLabels = {"x": "$\pi$ ($mNm^{-1}$)", "x1": "Mol. Area ($\AA$$^2$/Molecule)", "y": "$C_s^{-1} (mNm^{-1})$"}
+        suffix   = " - elasticity"
+        key = (1,2); vars = (nFiles, equip, l, axLabels, title, plotDIR, (elasticityCompression_P,elasticityCompression_Am), Espl)
 
-            if analysisType == 'plotCycles':
-                suffix = " - cycles"
-                vars = (len(master_Am.get(i)), equip, master_L.get(i), axLabels, newTitle, plotDIR, (stitched_Am,0), stitched_P)
-                genPlot.main(key,vars,suffix)
 
-        # program executed
-        print('\nAnalysis Complete!\n\n')
+    if analysisType  == 'plotPressure':
+        key      = (1,1)
+        axLabels = {"x": "auto calculated in genPlot", "y": "$\pi$ ($mNm^{-1}$)"}
+        suffix   = " - pressure"
+        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), P)
 
-    return
+
+    if analysisType == 'plotNormInjection':
+        key      = (1,1)
+        axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta\pi$"}
+        suffix   = " - normInjPressure"
+        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (normT,0), normP)
+
+
+    if analysisType == 'plotArea':
+        key      = (1,1)
+        axLabels = {"x": "auto calculated in genPlot", "y": "$\Delta$A (%)"}
+        suffix   = " - area"
+        vars     = (nFiles, equip, l, axLabels, title, plotDIR, (t,0), percA)
+
+
+    # set default settings
+    key      = (1,1)
+    axLabels = {"x": "Molecular Area ($\AA$$^2$ / Molecule)", "y": "$\pi$ ($mNm^{-1}$)"}
+
+    for i in range(nFiles):
+        newTitle = title + " - " + l.get(i)
+
+        if analysisType == 'plotCompressions':
+            suffix = " - compressions"
+            halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
+            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
+
+        if analysisType == 'plotExpansions':
+            suffix = " - expansions"
+            halfCycleAm, halfCycleP, halfCycleL = splitCycles(suffix, master_Am.get(i), master_P.get(i), l.get(i))
+            vars = (len(master_Am.get(i)), equip, halfCycleL, axLabels, newTitle, plotDIR, (halfCycleAm,0), halfCycleP)
+
+        if analysisType == 'plotCycles':
+            suffix = " - cycles"
+            vars = (len(master_Am.get(i)), equip, master_L.get(i), axLabels, newTitle, plotDIR, (stitched_Am,0), stitched_P)
+
+    return key, vars, suffix
 
 
 

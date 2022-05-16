@@ -10,7 +10,16 @@
 
 #    return data
 
+# just for getting BeagleHole ellipsometry files, each row needs to be split so don't integrate with getFile
+def getEllipsometryFile(fileDIR):
 
+    df = []
+    with open(fileDIR, newline = '') as f:
+        rdr = csv.DictReader(filter(lambda row: row[0]!='#', f))
+        for row in rdr:
+            df.append( row[None][0].split())
+
+    return df
 
 
 def ellipsModel(AOI, par):

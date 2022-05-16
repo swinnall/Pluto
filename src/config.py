@@ -9,8 +9,8 @@ outputDir = "../../UoM-Data-Repository/output"
 
 # dict of input instructions names and output file names
 pathNames = {
-    "isoAnalysis":      ('Instructions - Surface Pressure', 'Surface Pressure'),
-    "ellipsAnalysis":   ('Instructions - Ellipsometry',     'Ellipsometry'),
+    "surfacePressure":      ('Instructions - Surface Pressure', 'Surface Pressure'),
+    "Ellipsometry":   ('Instructions - Ellipsometry',     'Ellipsometry'),
     "surfaceExcess":    ('Instructions - SurfaceExcess',    'Surface Excess'),
     }
 

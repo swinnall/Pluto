@@ -6,10 +6,13 @@ import pandas as pd
 import csv
 import shutil
 from shutil import copyfile
+
+# import Pluto modules
 import config
-import isoAnalysis
-import ellipsAnalysis
+import surfacePressure
+import ellipsometry
 import surfaceExcess
+import genPlot
 from genFunc import modSelection, getFile
 
 
@@ -108,7 +111,7 @@ def organisePaths(analysisType, instructionsName, instructionsPath, outputDataPa
 
 def main():
 
-    analysisOptions = ['isoAnalysis','ellipsAnalysis', 'surfaceExcess']
+    analysisOptions = ['surfacePressure','Ellipsometry', 'surfaceExcess']
 
     PlutoRunning = True
     while PlutoRunning:
@@ -121,10 +124,12 @@ def main():
 
         # calls analysis module
         if analysisType == analysisOptions[0]:
-            isoAnalysis.main(instructionsFile, title, inputDataPath, outputDataPath)
+            key, vars, suffix = surfacePressure.main(instructionsFile, title, inputDataPath, outputDataPath)
+            genPlot.main(key, vars, suffix)
 
         if analysisType == analysisOptions[1]:
-            ellipsAnalysis.main(instructionsFile, title, inputDataPath, outputDataPath)
+            key, vars, suffix = ellipsometry.main(instructionsFile, title, inputDataPath, outputDataPath)
+            genPlot.main(key, vars, suffix)
 
         if analysisType == analysisOptions[2]:
             surfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)

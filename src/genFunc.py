@@ -6,6 +6,10 @@ import sys
 import pandas as pd
 
 
+def getFile(path,nSkip,delim):
+    return pd.read_csv(path, skiprows=nSkip, sep=delim, comment='#', na_values =' ', skip_blank_lines=True, encoding = "utf-8") # on_bad_lines='skip',
+
+
 def modSelection(analysisOptions):
 
     # ask user to pick one of the analysisOptions
@@ -25,7 +29,7 @@ def modSelection(analysisOptions):
         print("You picked %s.py\n" %analysisType)
         analysisRunning = True
 
-    elif analysisChoice not in [str(i) for i in range(len(analysisOptions)+1)] and analysisOptions[0]!="isoAnalysis":
+    elif analysisChoice not in [str(i) for i in range(len(analysisOptions)+1)] and analysisOptions[0]!="surfacePressure":
         print("Not a valid response. Returning to Pluto landing page.\n\n")
         analysisType    = 'n/a'
         analysisRunning = False
@@ -35,21 +39,3 @@ def modSelection(analysisOptions):
         sys.exit()
 
     return analysisType, analysisRunning
-
-
-
-# general function for Pluto, isotherm and surface excess modules
-def getFile(path,nSkip,delim):
-    return pd.read_csv(path, skiprows=nSkip, sep=delim, comment='#', na_values =' ', skip_blank_lines=True, encoding = "utf-8") # on_bad_lines='skip',
-
-
-# just for getting BeagleHole ellipsometry files, each row needs to be split so don't integrate with getFile
-def getEllipsometryFile(fileDIR):
-
-    df = []
-    with open(fileDIR, newline = '') as f:
-        rdr = csv.DictReader(filter(lambda row: row[0]!='#', f))
-        for row in rdr:
-            df.append( row[None][0].split())
-
-    return df
