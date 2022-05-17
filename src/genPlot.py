@@ -290,11 +290,6 @@ def plot(key, vars, suffix):
                 ax.set_xticks(np.arange(xmin, xmax+1, step=int( round(((xmin+xmax)/n_xticks),-1) )))
                 ax.set_yticks(np.arange(0, ymax+1, step=yTickInterval))
 
-
-            #elif overrideTickLocation == True:
-            #    ax.set_xticks(np.arange(xmin, xmax+1, step=xTickInterval))
-            #    ax.set_yticks(np.arange(ymin, ymax+yAxisMaxAdj, step=yTickInterval))
-
             else: pass
 
 
