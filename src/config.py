@@ -25,6 +25,8 @@ pathNames = {
 checkT0   = False  # ensures T0 = 0
 shiftP    = False  # shift to P_min = 0
 useCycles = [0]  # list of cycles to be used in isotherm; e.g. [0, 1, 3, 4]
+subtractRef = False # subtracts ref file from each dataset
+pressureRef = "../../UoM-Data-Repository/input/Surface Pressure/MC3-PBS 2hr.NTB"
 
 
 ########################
@@ -35,6 +37,7 @@ useCycles = [0]  # list of cycles to be used in isotherm; e.g. [0, 1, 3, 4]
 # if no reference then set both to false and input "Null" in instructions file
 ellipsBufferRef = False
 ellipsLipidRef  = True
+
 
 ################
 # Smooth Data #
@@ -62,7 +65,7 @@ showFig = True
 saveAsPNG = True
 saveAsPDF = True
 
-## Set default plot parameters
+## Choose data symbol / plot type
 defaultLw = 2
 
 plotWithScatter = False
@@ -75,14 +78,13 @@ markEdgeWidth      = 4
 ## Axis range (False=Automatic)
 overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 7200 # 1200 (20 min) # 7200 (2 hr) # 28800 (8hr)
-config_ymin     = -1
-config_ymax     = 1
+config_xmax     = 10800 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
+config_ymin     = 0
+config_ymax     = 30
 
 ## Axis/tick intervals & number
-#overrideTickLocation = False
 xTickInterval = 10
-yTickInterval = 0.25
+yTickInterval = 5
 n_xticks      = 6
 
 ## Multi panel options
@@ -110,12 +112,13 @@ showMinorTicks = False
 minorTickSize  = 0
 minorTickWidth = 0
 
+## Force axis labels
 overrideXAxisLabel = False
-xLabel = "Time (min)"
-
 overrideYAxisLabel = False
+xLabel = "Time (min)"
 yLabel = "NA"
 
+## Force legend
 legendOn  = True
 legendLoc = 'best' # default = 'best'; lower right''
 

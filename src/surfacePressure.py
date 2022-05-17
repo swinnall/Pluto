@@ -392,6 +392,22 @@ def main(instructionsFile, title, inputDIR, plotDIR):
             percA_list = calcPercArea(A.get(i))
             percA[i] = percA_list
 
+        if analysisType == 'plotPressure' and config.subtractRef == True:
+            ## basically need to get reference file from config input (for now)
+            ## via getFile and then subtract from each measurement
+            ## from the relevant start point
+            refData = getFile(path=config.pressureRef,nSkip=equipParams[0],delim=equipParams[2])
+
+            if equipParams[1] == ".NTB": # Kibron
+                t_ref = data[data.columns.values[8]]
+                P_ref = data[data.columns.values[5]]
+
+            if equipParams[1] == ".txt": # Nima
+                t_ref = data[data.columns.values[0]]
+                P_ref = data[data.columns.values[5]]
+
+            
+
 
         # pass list, get a dict of cycles, store each dict in a masterDict
         if analysisType in ['plotIsotherm','plotCompressions','plotExpansions','plotCycles','plotElasticity']:
