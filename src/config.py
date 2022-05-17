@@ -3,7 +3,7 @@
 # Keep program running after first analysis
 moreAnalysis = False
 
-##############
+###############
 # File Paths #
 ##############
 
@@ -26,15 +26,25 @@ checkT0   = False  # ensures T0 = 0
 shiftP    = False  # shift to P_min = 0
 useCycles = [0]  # list of cycles to be used in isotherm; e.g. [0, 1, 3, 4]
 
-###############
+
+########################
+# Ellipsometry Module #
+#######################
+
+# select which reference measurement to be subtracted
+# if no reference then set both to false and input "Null" in instructions file
+ellipsBufferRef = False
+ellipsLipidRef  = True
+
+################
 # Smooth Data #
 ###############
 
 smoothByPoints = False # for reducing the number of points in the dataset
 nth = 10 # keep every nth point
 
-smoothByPolyFit = True # turns data cleaning on/off
-nPoly = 15 # the order of the fitted polynomial (no params produced, just gives trend)
+smoothByPolyFit = False # turns data cleaning on/off
+nPoly = 20 # the order of the fitted polynomial (no params produced, just gives trend)
 lowerLimit = 0.01 # filters out any anomalous produced datapoints during polynomial fitting
 
 
@@ -52,16 +62,6 @@ showFig = True
 saveAsPNG = True
 saveAsPDF = True
 
-## Multi panel options
-plotMultiPanel = False   # split input data between subplots
-key = [[4],[4],[4]]  # [row0=[nFiles0,nFiles1],row1=[nFiles0,nFiles1]]
-
-## Vertical line option
-plotVerticalLine = False
-x0Line = 100
-y0Line = 0
-y1Line = 10
-
 ## Set default plot parameters
 defaultLw = 2
 
@@ -72,6 +72,29 @@ plotLineWithMarker = False
 markerSize         = 7
 markEdgeWidth      = 4
 
+## Axis range (False=Automatic)
+overrideAxisLim = True
+config_xmin     = 0
+config_xmax     = 7200 # 1200 (20 min) # 7200 (2 hr) # 28800 (8hr)
+config_ymin     = -1
+config_ymax     = 1
+
+## Axis/tick intervals & number
+#overrideTickLocation = False
+xTickInterval = 10
+yTickInterval = 0.25
+n_xticks      = 6
+
+## Multi panel options
+plotMultiPanel = False   # split input data between subplots
+key = [[4],[4],[4]]  # [row0=[nFiles0,nFiles1],row1=[nFiles0,nFiles1]]
+
+## Vertical line option
+plotVerticalLine = False
+x0Line = 100
+y0Line = 0
+y1Line = 10
+
 ## Font size and reduction values
 fs                   = 24
 legend_fs_reduction  = 10
@@ -79,19 +102,6 @@ x0Axis_fs_reduction  = 0
 x1Axis_fs_reduction  = 0
 y0Axis_fs_reduction  = 0
 tick_fs_reduction    = 0
-
-## Axis range (False=Automatic)
-overrideAxisLim = True
-config_xmin     = 0
-config_xmax     = 7200 # 1200 (20 min) # 7200 (2 hr) # 28800 (8hr)
-config_ymin     = 1
-config_ymax     = 4.0
-
-## Force tick locations
-overrideTickLocation = False
-n_xticks             = 6
-xTickInterval        = 10
-yTickInterval        = 0.5
 
 ## Tick sizes and major/minor
 majorTickSize  = 5
@@ -145,8 +155,8 @@ colourDict = {
     # LEM Figures: orange, red
     "9": ['#FF7F00', '#FF0000'],
 
-    # MC3 Surface Excess Figures: light blue, purple-blue, light orange, dark green
-    "10": [["#3399FF", "#3333FF", "#FF9933", "#FF3333", "#32BE25"]],
+    # MC3 Surface Excess Figures: light blue, purple-blue, light orange, dark green, persian pink
+    "10": [["#3399FF", "#3333FF", "#FF9933", "#FF3333", "#32BE25", '#F77FBE']],
 
 	# MC3 PBS Structural Figures: blue; light -> dark
 	"11": ["#CCE6FF", "#99CCFF", "#66B3FF", "#3399FF"],

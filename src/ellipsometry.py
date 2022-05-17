@@ -60,6 +60,7 @@ def importData(inputDIR, nFiles, fileInfoList):
             for j in range(len(yDelta.get(i))):
                     yDelta[i][j] = yDelta.get(i)[j] * 180 / np.pi
 
+        #print(yDelta.get(i))
         # for instructions where reference data was provided: subtract from measurement
         if fileInfoList[i].get('refname').upper() != "NULL":
 
@@ -71,19 +72,32 @@ def importData(inputDIR, nFiles, fileInfoList):
             refPsi   = ref_df[ref_df.columns.values[4]]
             refDelta = ref_df[ref_df.columns.values[3]]
 
-            # average reference values
-            avRefPsi = mean(refPsi)
-            avRefDel = mean(refDelta)
 
-            # convert to degrees if necessary
-            if yDelta.get(i)[0] < 10:
-                avRefPsi = avRefPsi * 180 / np.pi
-                avRefDel = avRefDel * 180 / np.pi
+            if config.ellipsBufferRef == True:
 
-            # subtract reference from measurement
-            yPsi[i]   = file_df[file_df.columns.values[4]] - avRefPsi
-            yDelta[i] = file_df[file_df.columns.values[3]] - avRefDel
+                # average reference values
+                avRefPsi = mean(refPsi)
+                avRefDel = mean(refDelta)
 
+                # convert to degrees if necessary
+                if yDelta.get(i)[0] < 10:
+                    avRefPsi = avRefPsi * 180 / np.pi
+                    avRefDel = avRefDel * 180 / np.pi
+
+                # subtract reference from measurement
+                yPsi[i]   = file_df[file_df.columns.values[4]] - avRefPsi
+                yDelta[i] = file_df[file_df.columns.values[3]] - avRefDel
+
+            elif config.ellipsLipidRef == True:
+
+                # subtract reference from measurement
+                yPsi[i]   = file_df[file_df.columns.values[4]] - refPsi
+                yDelta[i] = file_df[file_df.columns.values[3]] - refDelta
+
+            else:
+                print("Fatal Error: Expected Null reference but found file.\n [Buffer & lipid ref == False]")
+                sys.exit()
+                
     return x, yPsi, yDelta, label
 
 

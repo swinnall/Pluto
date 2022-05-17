@@ -59,7 +59,7 @@ def plotParameters():
 
 
     if config.askUserPlotPar == True:
-        
+
         # ask user to pick one of the analysisOptions
         analysisChoice = input("Would you like to override default plot region (y/n): ")
 
@@ -73,7 +73,6 @@ def plotParameters():
             config_ymax     = ast.literal_eval(input("ymax = "))
 
             # Override Parameters; n_xticks, xTickInterval, yTickInterval
-            overrideTickLocation = True
             n_xticks             = ast.literal_eval(input("Number of x-axis ticks = "))  # number of x axis ticks in time plots (s); [n-1]
             xTickInterval        = ast.literal_eval(input("xTick interval = "))  # x, y axis tick interval for P vs t plots; x is mins plot only
             yTickInterval        = ast.literal_eval(input("yTick interval = "))
@@ -81,14 +80,12 @@ def plotParameters():
 
     # default parameters, initialise with arbitrary numbers
     else:
-
         overrideAxisLim = config.overrideAxisLim
         config_xmin     = config.config_xmin
         config_xmax     = config.config_xmax
         config_ymin     = config.config_ymin
         config_ymax     = config.config_ymax
 
-        overrideTickLocation = config.overrideTickLocation
         n_xticks             = config.n_xticks
         xTickInterval        = config.xTickInterval
         yTickInterval        = config.yTickInterval
@@ -97,7 +94,7 @@ def plotParameters():
     return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\
             fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj,\
             xAxisMaxAdj, yAxisMaxAdj, overrideAxisLim,\
-            config_xmin, config_xmax, config_ymin, config_ymax, overrideTickLocation, n_xticks,\
+            config_xmin, config_xmax, config_ymin, config_ymax, n_xticks,\
             xTickInterval, yTickInterval
 
 
@@ -155,7 +152,7 @@ def plot(key, vars, suffix):
     plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,       \
      fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj, xAxisMaxAdj,\
      yAxisMaxAdj, overrideAxisLim, config_xmin, config_xmax, config_ymin,      \
-     config_ymax, overrideTickLocation, n_xticks, xTickInterval, yTickInterval = plotParameters()
+     config_ymax, n_xticks, xTickInterval, yTickInterval = plotParameters()
 
 
     # update and unpack key into rows and columns for subplot
@@ -294,9 +291,9 @@ def plot(key, vars, suffix):
                 ax.set_yticks(np.arange(0, ymax+1, step=yTickInterval))
 
 
-            elif overrideTickLocation == True:
-                ax.set_xticks(np.arange(xmin, xmax+1, step=xTickInterval))
-                ax.set_yticks(np.arange(ymin, ymax+yAxisMaxAdj, step=yTickInterval))
+            #elif overrideTickLocation == True:
+            #    ax.set_xticks(np.arange(xmin, xmax+1, step=xTickInterval))
+            #    ax.set_yticks(np.arange(ymin, ymax+yAxisMaxAdj, step=yTickInterval))
 
             else: pass
 
