@@ -1,5 +1,8 @@
 " Module that defines variables for Pluto"
 
+# Keep program running after first analysis
+moreAnalysis = False
+
 ##############
 # File Paths #
 ##############
@@ -28,7 +31,7 @@ useCycles = [0]  # list of cycles to be used in isotherm; e.g. [0, 1, 3, 4]
 ###############
 
 smoothByPoints = False # for reducing the number of points in the dataset
-nth = 8 # keep every nth point
+nth = 10 # keep every nth point
 
 smoothByPolyFit = True # turns data cleaning on/off
 nPoly = 15 # the order of the fitted polynomial (no params produced, just gives trend)
@@ -39,6 +42,12 @@ lowerLimit = 0.01 # filters out any anomalous produced datapoints during polynom
 # Plotting #
 ############
 
+## Ask for user input plot parameters while program is running
+askUserPlotPar = False
+
+## Show options
+showFig = True
+
 ## Save Options
 saveAsPNG = True
 saveAsPDF = True
@@ -46,6 +55,12 @@ saveAsPDF = True
 ## Multi panel options
 plotMultiPanel = False   # split input data between subplots
 key = [[4],[4],[4]]  # [row0=[nFiles0,nFiles1],row1=[nFiles0,nFiles1]]
+
+## Vertical line option
+plotVerticalLine = False
+x0Line = 100
+y0Line = 0
+y1Line = 10
 
 ## Set default plot parameters
 defaultLw = 2
@@ -57,6 +72,7 @@ plotLineWithMarker = False
 markerSize         = 7
 markEdgeWidth      = 4
 
+## Font size and reduction values
 fs                   = 24
 legend_fs_reduction  = 10
 x0Axis_fs_reduction  = 0
@@ -64,21 +80,25 @@ x1Axis_fs_reduction  = 0
 y0Axis_fs_reduction  = 0
 tick_fs_reduction    = 0
 
-## Set default plot region values
-overrideNoP = False
-config_n0   = 0
-config_nf   = 1E6
-
-overrideAxisLim = False
+## Axis range (False=Automatic)
+overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 60 # 1200 (20 min) # 7200 (2 hr) # 28800 (8hr)
+config_xmax     = 7200 # 1200 (20 min) # 7200 (2 hr) # 28800 (8hr)
 config_ymin     = 1
 config_ymax     = 4.0
 
+## Force tick locations
 overrideTickLocation = False
 n_xticks             = 6
 xTickInterval        = 10
 yTickInterval        = 0.5
+
+## Tick sizes and major/minor
+majorTickSize  = 5
+majorTickWidth = 2
+showMinorTicks = False
+minorTickSize  = 0
+minorTickWidth = 0
 
 overrideXAxisLabel = False
 xLabel = "Time (min)"
@@ -90,7 +110,7 @@ legendOn  = True
 legendLoc = 'best' # default = 'best'; lower right''
 
 ## List of plot types that use the time axis
-tAxisList = [" - pressure", " - area", " - normInjPressure", " - psi Time", " - delta Time", " - gammaL", " - gammaP"]
+tAxisList = [" - pressure", " - area", " - psi Time", " - delta Time", " - gammaL", " - gammaP"]
 
 ## Colours
 colourDict = {

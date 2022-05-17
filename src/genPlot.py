@@ -8,32 +8,34 @@ import matplotlib.gridspec as gridspec
 # import Pluto modules
 import config
 
-def plotParameters(suffix):
+def plotParameters():
 
-    # ask user to pick one of the analysisOptions
-    analysisChoice = input("Would you like to override default plot parameters (y/n): ")
+    if config.askUserPlotPar == True:
 
-    if analysisChoice.upper() == 'Y':
+        # ask user to pick one of the analysisOptions
+        analysisChoice = input("Would you like to override default plot parameters (y/n): ")
 
-        ## Plot Types, default line plot if false
-        scatterPlot = (input("Plot as scatter plot (y/n)?: "))
-        if scatterPlot.upper() == 'Y':
-            plotWithScatter = True
-            scatterSize     = int(input("Scatter size = "))
-        else: plotWithScatter = False; scatterSize = 0
+        if analysisChoice.upper() == 'Y':
 
-        lineMarkerPlot = (input("Plot as line with maker (y/n)?: "))
-        if lineMarkerPlot.upper() == 'Y':
-            plotLineWithMarker = True
-            markEdgeWidth     = int(input("Marker edge width = "))
-        else: plotLineWithMarker = False; markEdgeWidth = 0
+            ## Plot Types, default line plot if false
+            scatterPlot = (input("Plot as scatter plot (y/n)?: "))
+            if scatterPlot.upper() == 'Y':
+                plotWithScatter = True
+                scatterSize     = int(input("Scatter size = "))
+            else: plotWithScatter = False; scatterSize = 0
 
-        ## Marker Parameters
-        lw = int(input("Line width = "))
+            lineMarkerPlot = (input("Plot as line with maker (y/n)?: "))
+            if lineMarkerPlot.upper() == 'Y':
+                plotLineWithMarker = True
+                markEdgeWidth     = int(input("Marker edge width = "))
+            else: plotLineWithMarker = False; markEdgeWidth = 0
 
-        ## Font Size
-        fs                  = int(input("Fontsize = "))
-        legend_fs_reduction = int(input("Reduce fontsize by factor for legend = "))
+            ## Marker Parameters
+            lw = int(input("Line width = "))
+
+            ## Font Size
+            fs                  = int(input("Fontsize = "))
+            legend_fs_reduction = int(input("Reduce fontsize by factor for legend = "))
 
     # default parameters
     else:
@@ -56,36 +58,29 @@ def plotParameters(suffix):
     yAxisMaxAdj = 1
 
 
+    if config.askUserPlotPar == True:
+        
+        # ask user to pick one of the analysisOptions
+        analysisChoice = input("Would you like to override default plot region (y/n): ")
 
-    # ask user to pick one of the analysisOptions
-    analysisChoice = input("Would you like to override default plot region (y/n): ")
+        if analysisChoice.upper() == 'Y':
 
-    if analysisChoice.upper() == 'Y':
+            # Override Parameters; config_xmin, config_xmax, config_ymin, config_ymax
+            overrideAxisLim = True
+            config_xmin     = ast.literal_eval(input("xmin = "))
+            config_xmax     = ast.literal_eval(input("xmax = "))
+            config_ymin     = ast.literal_eval(input("ymin = "))
+            config_ymax     = ast.literal_eval(input("ymax = "))
 
-        # Override Parameters; config_n0, config_nf
-        overrideNoP = True
-        config_n0   = ast.literal_eval(input("Starting data point [n0, n0, ...]:\n  "))
-        config_nf   = ast.literal_eval(input("Final data point [nf, nf, ...]:\n  "))
-
-        # Override Parameters; config_xmin, config_xmax, config_ymin, config_ymax
-        overrideAxisLim = True
-        config_xmin     = ast.literal_eval(input("xmin = "))
-        config_xmax     = ast.literal_eval(input("xmax = "))
-        config_ymin     = ast.literal_eval(input("ymin = "))
-        config_ymax     = ast.literal_eval(input("ymax = "))
-
-        # Override Parameters; n_xticks, xTickInterval, yTickInterval
-        overrideTickLocation = True
-        n_xticks             = ast.literal_eval(input("Number of x-axis ticks = "))  # number of x axis ticks in time plots (s); [n-1]
-        xTickInterval        = ast.literal_eval(input("xTick interval = "))  # x, y axis tick interval for P vs t plots; x is mins plot only
-        yTickInterval        = ast.literal_eval(input("yTick interval = "))
+            # Override Parameters; n_xticks, xTickInterval, yTickInterval
+            overrideTickLocation = True
+            n_xticks             = ast.literal_eval(input("Number of x-axis ticks = "))  # number of x axis ticks in time plots (s); [n-1]
+            xTickInterval        = ast.literal_eval(input("xTick interval = "))  # x, y axis tick interval for P vs t plots; x is mins plot only
+            yTickInterval        = ast.literal_eval(input("yTick interval = "))
 
 
     # default parameters, initialise with arbitrary numbers
     else:
-        overrideNoP = config.overrideNoP
-        config_n0   = config.config_n0
-        config_nf   = config.config_nf
 
         overrideAxisLim = config.overrideAxisLim
         config_xmin     = config.config_xmin
@@ -101,9 +96,10 @@ def plotParameters(suffix):
 
     return plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,\
             fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj,\
-            xAxisMaxAdj, yAxisMaxAdj, overrideNoP, config_n0, config_nf, overrideAxisLim,\
+            xAxisMaxAdj, yAxisMaxAdj, overrideAxisLim,\
             config_xmin, config_xmax, config_ymin, config_ymax, overrideTickLocation, n_xticks,\
             xTickInterval, yTickInterval
+
 
 
 def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
@@ -137,7 +133,7 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
 
         count += nFilesPerPlot
 
-
+    # specific case for ellipsometry files where ax1=P and ax2=Am
     elif suffix == " - elasticity" and col==0:
         x = X[0]
         y = Y; labels = LABELS
@@ -145,7 +141,7 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
         x = X[1]
         y = Y; labels = LABELS
 
-
+    # base condition information parsed as usual
     else:
         x = X[0]; y = Y; labels = LABELS
 
@@ -155,14 +151,14 @@ def isolateFiles(count, key, suffix, row, col, X, Y, LABELS):
 
 def plot(key, vars, suffix):
 
+    # get plot parameters from user or config
     plotWithScatter, plotLineWithMarker, lw, scatterSize, markEdgeWidth,       \
      fs, legend_fs_reduction, setX_AxInt, setY_AxInt, xAxisMinAdj, xAxisMaxAdj,\
-     yAxisMaxAdj, overrideNoP, config_n0, config_nf, overrideAxisLim, config_xmin, config_xmax, config_ymin,      \
-     config_ymax, overrideTickLocation, n_xticks, xTickInterval, yTickInterval = plotParameters(suffix)
+     yAxisMaxAdj, overrideAxisLim, config_xmin, config_xmax, config_ymin,      \
+     config_ymax, overrideTickLocation, n_xticks, xTickInterval, yTickInterval = plotParameters()
 
 
-
-    # unpack key into rows and columns for subplot
+    # update and unpack key into rows and columns for subplot
     if config.plotMultiPanel == True:
         key = config.key
         nRow = len(key)
@@ -171,28 +167,23 @@ def plot(key, vars, suffix):
         nRow, nCol = key
 
 
-    # Create key x 1 subplot grid
+    # Create correpsonding subplot grid
     gs = gridspec.GridSpec(nRow, nCol)
 
     # initialise figure
     fig = plt.figure()
     ax  = plt.axes()
 
-
-
-
     # iterate along subplots
     count = 0
     for row in range(nRow):
         for col in range(nCol):
 
-
             # unpack variables evertime to prevent overwriting within plot code
-            N, equip, LABELS, axLabels, title, plotDIR, X, Y = vars
-            #print(N)
+            nFilesPerPlot, equip, LABELS, axLabels, title, plotDIR, X, Y = vars
+
             # iterate through files and check number of subplots, isolate files accordingly
             count, nFilesPerPlot, x, y, labels = isolateFiles(count, key, suffix, row, col, X, Y, LABELS)
-            N = nFilesPerPlot
 
             # initialise the subplot
             ax = plt.subplot(gs[row, col]) # row 0, col 0
@@ -206,15 +197,14 @@ def plot(key, vars, suffix):
             min_y_vals = []; max_y_vals = []
 
 
-    ## Set region of interest
+    ## Set region of interest (number of points to be plotted)
 
-            # default region of interest (all values)
-            n0 = [0 for i in range(N)]
+            # region of interest (all values)
+            n0 = [0 for i in range(nFilesPerPlot)]
             nf = []
-            #print(x)
+
             # set upper limit to be shorter of two lists to ensure same length
-            for i in range(N):
-                #print(i)
+            for i in range(nFilesPerPlot):
                 if len(x.get(i)) == len(y.get(i)):
                     nf.append(len(x.get(i)))
                 elif len(x.get(i)) > len(y.get(i)):
@@ -222,14 +212,9 @@ def plot(key, vars, suffix):
                 elif len(x.get(i)) < len(y.get(i)):
                     nf.append(len(x.get(i)))
 
-            # alt. region of interest, NoP = number of points
-            if overrideNoP == True:
-                n0 = config_n0
-                nf = config_nf
-
 
     ## Plot
-            for i in range(N):
+            for i in range(nFilesPerPlot):
 
                 # plots scatter plot with empty circles
                 if plotWithScatter == True:
@@ -244,18 +229,16 @@ def plot(key, vars, suffix):
                     ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[row][i], linewidth=lw)
 
 
-                # store minimum and maximum values for axis scales
-                #min_x_vals.append( n0[i] ); max_x_vals.append( nf[i] )
-                #min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
-                #print(x.get(i))
+                # store minimum and maximum values of pre-processed data for axis scales
                 min_x_vals.append( min(x.get(i)) ); max_x_vals.append( max(x.get(i)) )
                 min_y_vals.append( min(y.get(i)) ); max_y_vals.append( max(y.get(i)) )
 
 
 
 
-    ## Set Axis ranges / limits
+    ## Set Axis ranges / limits (the actual values of the points)
 
+            # automatically set axis limits
             ymin = 0
             if int(round(min(min_x_vals),-1)) + xAxisMinAdj >= 0:
                 xmin = int(round(min(min_x_vals),-1)) + xAxisMinAdj
@@ -264,8 +247,7 @@ def plot(key, vars, suffix):
             xmax = int(round(max(max_x_vals),setX_AxInt)) + xAxisMaxAdj
             ymax = int(round(max(max_y_vals),setY_AxInt)) + yAxisMaxAdj
 
-
-            # alt. region of interest
+            # override axis limits/region of interest via config/user
             if overrideAxisLim == True:
                 xmin = config_xmin
                 xmax = config_xmax
@@ -279,7 +261,9 @@ def plot(key, vars, suffix):
 
     ## Set tick locations plots
 
-            # thresholds for different x axis scales
+            # ticks correspond to values rather than number of points
+            # thresholds for different x axis scales:
+
             if xmax >= 7200 and suffix in config.tAxisList:
                 axLabels["x"] = "Time (hr)"
 
@@ -317,14 +301,14 @@ def plot(key, vars, suffix):
             else: pass
 
 
-            # finalise axis labels
+
+    ## Axis labels
+
             if config.overrideXAxisLabel == True:
                 axLabels["x"] = config.xLabel
 
             if config.overrideYAxisLabel == True:
                 axLabels["y"] = config.yLabel
-
-    ## Axis labels
 
             # axis labels; in for loop as iterates along number of subplots
             if config.plotMultiPanel == True and (nRow == 2 and nCol == 2):
@@ -349,7 +333,6 @@ def plot(key, vars, suffix):
                 elif row == 0 and col == 1:
                     plt.setp(ax.get_yticklabels(), visible=False)
 
-
             elif config.plotMultiPanel == True and (nRow == 1 and nCol == 3):
 
                 if row == 0 and col == 0:
@@ -372,7 +355,6 @@ def plot(key, vars, suffix):
                     ax.set_xlabel(axLabels.get("x"), fontsize=fs-config.x0Axis_fs_reduction, fontweight='bold')
                     plt.setp(ax.get_xticklabels(), visible=True)
 
-
             else:
                 if col == 0:
                     ax.set_xlabel(axLabels.get("x"), fontsize=fs-config.x0Axis_fs_reduction, fontweight='bold')
@@ -382,29 +364,27 @@ def plot(key, vars, suffix):
                     plt.setp(ax.get_yticklabels(), visible=False)
 
 
-            # legend; plot along with every figure unless elasticity - no property plotIsotherm...
-            #if config.plotIsotherm == True and config.plotElasticity == True and col == 1:
-            #    pass
-                #ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
-            #elif config.plotIsotherm == True and config.plotElasticity == True and col == 0:
-            #    pass
-            #else:
-            #    ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False)
+    ## Legend; plot on every subplot
             if config.legendOn == True:
                 ax.legend(prop={'size': fs-legend_fs_reduction, 'weight':'bold'}, frameon = False, loc=config.legendLoc)
 
 
-    ## Tick label size; legend; layout; show fig; save fig
+    ## Tick label size
 
-    # set axis parameters, size etc.
+            # tick label size
             ax.tick_params(axis='x', labelsize=fs-config.tick_fs_reduction)
             ax.tick_params(axis='y', labelsize=fs-config.tick_fs_reduction)
 
-            ax.xaxis.set_tick_params(which='major', size=5, width=2, direction='in', top='on')
-            ax.yaxis.set_tick_params(which='major', size=5, width=2, direction='in', right='on')
-            #ax.xaxis.set_tick_params(which='minor', size=7, width=2, direction='in', top='on')
-            #ax.yaxis.set_tick_params(which='minor', size=7, width=2, direction='in', right='on')
+            # tick line size and width
+            ax.xaxis.set_tick_params(which='major', size=config.majorTickSize, width=config.majorTickWidth, direction='in', top='on')
+            ax.yaxis.set_tick_params(which='major', size=config.majorTickSize, width=config.majorTickWidth, direction='in', right='on')
 
+            if config.showMinorTicks == True:
+                ax.xaxis.set_tick_params(which='minor', size=config.minorTickSize, width=config.minorTickWidth, direction='in', top='on')
+                ax.yaxis.set_tick_params(which='minor', size=config.minorTickSize, width=config.minorTickWidth, direction='in', right='on')
+
+
+    ## Other
 
     # merge axis of multipanel isotherm plots
     if config.plotMultiPanel == True and suffix == " - isotherm":
@@ -413,7 +393,8 @@ def plot(key, vars, suffix):
 
 
     # plot vertical line
-    #plt.axvline(900, 0, 6, label='pyplot vertical line', c='r')
+    if config.plotVerticalLine == True:
+        plt.axvline(config.x0Line, config.y0Line, config.y1Line, label='pyplot vertical line', c='r')
 
 
     # tight layout function
@@ -421,8 +402,9 @@ def plot(key, vars, suffix):
     fig.subplots_adjust(wspace=0.05, hspace=0.05)
 
     # show plot
-    print("\nFigure: %s%s" %(title, suffix))
-    plt.show()
+    print("\nFigure generated: %s%s." %(title, suffix))
+    if config.showFig == True:
+        plt.show()
 
     # save the plot as a file
     if config.saveAsPNG == True:
@@ -442,12 +424,7 @@ def plot(key, vars, suffix):
 
 
 def main(key, vars, suffix):
-
-    # plot either single or dual style plot depending on input key
-    # accepts dict structures only
-    plot(key, vars, suffix)
-
-    return
+    return plot(key, vars, suffix)
 
 
 

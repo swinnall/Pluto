@@ -132,12 +132,6 @@ def main():
         if analysisType == analysisOptions[2]:
             key, vars, suffix = surfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
 
-        # update key based on multiplot option; currently only 1x1, 2x1, 2x2
-        if config.plotMultiPanel == True:
-            nRow = len(config.key)
-            nCol = len(config.key[0])
-            key = (nRow,nCol)
-
         # post analysis smoothing of data
         if config.smoothByPoints == True:
             vars[6][0], vars[7] = reducePoints(vars[6][0],vars[7])
@@ -147,6 +141,11 @@ def main():
 
         # plot data
         genPlot.main(key, vars, suffix)
+
+        # exit system if not running back to back analyses 
+        if config.moreAnalysis == False:
+            print("\nSession complete.")
+            sys.exit()
 
     return
 
