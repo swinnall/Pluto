@@ -25,9 +25,15 @@ pathNames = {
 checkT0   = False  # ensures T0 = 0
 shiftP    = False  # shift to P_min = 0
 useCycles = [0]  # list of cycles to be used in isotherm; e.g. [0, 1, 3, 4]
-subtractRef = False # subtracts ref file from each dataset
+subtractRef = True # subtracts ref file from each dataset
 pressureRef = "../../UoM-Data-Repository/input/Surface Pressure/MC3-PBS 2hr.NTB"
+upperROI = 4*7200 # x4 because measurement taken every ~0.25 sec
 
+# Citrate measurements:
+injROI = [ (4*3200,upperROI), (4*600,upperROI), (4*860,upperROI), (4*600,upperROI), (4*1200,upperROI) ]
+
+# PBS measurements:
+#injROI = [ (4*3800,upperROI), (4*3350,upperROI), (4*4700,upperROI), (4*670,upperROI), (4*1200,upperROI) ]
 
 ########################
 # Ellipsometry Module #
@@ -76,11 +82,11 @@ markerSize         = 7
 markEdgeWidth      = 4
 
 ## Axis range (False=Automatic)
-overrideAxisLim = True
+overrideAxisLim = False
 config_xmin     = 0
 config_xmax     = 10800 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
 config_ymin     = 0
-config_ymax     = 30
+config_ymax     = 27
 
 ## Axis/tick intervals & number
 xTickInterval = 10
