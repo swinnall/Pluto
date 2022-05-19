@@ -404,22 +404,9 @@ def main(instructionsFile, title, inputDIR, plotDIR):
                 t_ref = refData[refData.columns.values[0]]
                 P_ref = refData[refData.columns.values[5]]
 
-            ## need to determine injection start point and then clean up data from there
-            ## make specific functions just for pressure injections
-            ## that can isolate the point of injection
-
-            ## either isolate ref region and then fit via expontial to get all data points
-            ## or just subtract region directly (might not line up)
-            ## first just try plotting region of interest in all files (injection onwards)
-            ## then compare to ref region
-            ## then try subtracting
-
-
             ## isolate region of interest, a function that truncates P according to config parameters
             injROI = config.injROI[i]
-            #print(len(P.get(i)))
             P[i]   = P.get(i)[injROI[0]:injROI[1]]
-            #print(len(P.get(i)))
             t[i]   = np.linspace(0,injROI[1],len(P.get(i)),endpoint=True)
 
         # pass list, get a dict of cycles, store each dict in a masterDict

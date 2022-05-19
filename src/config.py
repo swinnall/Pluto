@@ -25,7 +25,7 @@ pathNames = {
 checkT0   = False  # ensures T0 = 0
 shiftP    = False  # shift to P_min = 0
 useCycles = [0]  # list of cycles to be used in isotherm; e.g. [0, 1, 3, 4]
-subtractRef = True # subtracts ref file from each dataset
+subtractRef = False # subtracts ref file from each dataset
 pressureRef = "../../UoM-Data-Repository/input/Surface Pressure/MC3-PBS 2hr.NTB"
 upperROI = 4*7200 # x4 because measurement taken every ~0.25 sec
 
