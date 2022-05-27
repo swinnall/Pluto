@@ -44,7 +44,7 @@ def importSampleInfo(instructionsFile, nFiles):
 
 
 
-def importData(equipParams, fname, inputDIR, plotDIR):
+def importData(instrumentName, equipParams, fname, inputDIR, plotDIR):
 
     # read file into memory data
     fileDIR = inputDIR + '/' + fname + equipParams[1]
@@ -52,17 +52,20 @@ def importData(equipParams, fname, inputDIR, plotDIR):
     # get data file as pandas dataframe
     data = getFile(path=fileDIR,nSkip=equipParams[0],delim=equipParams[2])
 
-    # Kibron; extracting relevant column data from df
-    if equipParams[1] == ".NTB":
+    if instrumentName == "KIBRON":
         t = data[data.columns.values[8]]
         A = data[data.columns.values[1]] * (10**-6)
         P = data[data.columns.values[5]]
 
-    # Nima
-    if equipParams[1] == ".txt":
+    if instrumentName == "NIMA":
         t = data[data.columns.values[0]]
         A = data[data.columns.values[1]] * (10**-4)
         P = data[data.columns.values[5]]
+
+    if instrumentName == "CUSTOM":
+        t = data[data.columns.values[0]]
+        A = None
+        P = data[data.columns.values[1]]
 
 
     # set tStart to 0
@@ -378,13 +381,15 @@ def main(instructionsFile, title, inputDIR, plotDIR):
         fname = fileNames.get(i)
 
         # organise equipment
-        if equip.get(i) in ["Kibron", "kibron"]:
+        if equip.get(i).upper() == "KIBRON":
             equipParams = (41,".NTB",";")
-        elif equip.get(i) in ["Nima", "nima"]:
+        elif equip.get(i).upper() == "NIMA":
+            equipParams = (1,".txt","\t")
+        elif equip.get(i).upper() == "CUSTOM":
             equipParams = (1,".txt","\t")
 
         # import data from given file i, immediate store t (need A & P lists as well)
-        t[i], A[i], P[i] = importData(equipParams, fname, inputDIR, plotDIR)
+        t[i], A[i], P[i] = importData(equip.get(i).upper(), equipParams, fname, inputDIR, plotDIR)
 
 
         # calculate percentage area
@@ -396,13 +401,17 @@ def main(instructionsFile, title, inputDIR, plotDIR):
 
             refData = getFile(path=config.pressureRef,nSkip=equipParams[0],delim=equipParams[2])
 
-            if equipParams[1] == ".NTB": # Kibron
+            if equip.get(i).upper() == "KIBRON":
                 t_ref = refData[refData.columns.values[8]]
                 P_ref = refData[refData.columns.values[5]]
 
-            if equipParams[1] == ".txt": # Nima
+            if equip.get(i).upper() == "NIMA":
                 t_ref = refData[refData.columns.values[0]]
                 P_ref = refData[refData.columns.values[5]]
+
+            if equip.get(i).upper() == "CUSTOM":
+                t_ref = refData[refData.columns.values[0]]
+                P_ref = refData[refData.columns.values[1]]
 
             ## isolate region of interest, a function that truncates P according to config parameters
             injROI = config.injROI[i]

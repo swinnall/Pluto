@@ -42,7 +42,7 @@ injROI = [ (4*3200,upperROI), (4*600,upperROI), (4*860,upperROI), (4*600,upperRO
 # select which reference measurement to be subtracted
 # if no reference then set both to false and input "Null" in instructions file
 ellipsBufferRef = False
-ellipsLipidRef  = True
+ellipsLipidRef  = False
 
 
 ################
@@ -82,9 +82,9 @@ markerSize         = 7
 markEdgeWidth      = 4
 
 ## Axis range (False=Automatic)
-overrideAxisLim = False
+overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 10800 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
+config_xmax     = 50 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
 config_ymin     = 0
 config_ymax     = 27
 
@@ -119,7 +119,7 @@ minorTickSize  = 0
 minorTickWidth = 0
 
 ## Force axis labels
-overrideXAxisLabel = False
+overrideXAxisLabel = True
 overrideYAxisLabel = False
 xLabel = "Time (min)"
 yLabel = "NA"
