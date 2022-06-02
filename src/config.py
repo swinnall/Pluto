@@ -15,6 +15,7 @@ pathNames = {
     "surfacePressure": ('Instructions - Surface Pressure', 'Surface Pressure'),
     "Ellipsometry":    ('Instructions - Ellipsometry',     'Ellipsometry'),
     "surfaceExcess":   ('Instructions - SurfaceExcess',    'Surface Excess'),
+    "dls":             ('Instructions - DLS', 'DLS')
     }
 
 
@@ -84,14 +85,14 @@ markEdgeWidth      = 4
 ## Axis range (False=Automatic)
 overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 50 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
+config_xmax     = 1800 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
 config_ymin     = 0
-config_ymax     = 27
+config_ymax     = 1500
 
 ## Axis/tick intervals & number
 xTickInterval = 10
-yTickInterval = 5
-n_xticks      = 6
+yTickInterval = 250
+n_xticks      = 10
 
 ## Multi panel options
 plotMultiPanel = False   # split input data between subplots
@@ -105,7 +106,7 @@ y1Line = 10
 
 ## Font size and reduction values
 fs                   = 24
-legend_fs_reduction  = 10
+legend_fs_reduction  = 14
 x0Axis_fs_reduction  = 0
 x1Axis_fs_reduction  = 0
 y0Axis_fs_reduction  = 0
@@ -119,17 +120,17 @@ minorTickSize  = 0
 minorTickWidth = 0
 
 ## Force axis labels
-overrideXAxisLabel = True
+overrideXAxisLabel = False
 overrideYAxisLabel = False
 xLabel = "Time (min)"
-yLabel = "NA"
+yLabel = ""
 
 ## Force legend
 legendOn  = True
 legendLoc = 'best' # default = 'best'; lower right''
 
 ## List of plot types that use the time axis
-tAxisList = [" - pressure", " - area", " - psi Time", " - delta Time", " - gammaL", " - gammaP"]
+tAxisList = [" - pressure", " - area", " - psi Time", " - delta Time", " - gammaL", " - gammaP", " - TR DLS"]
 
 ## Colours
 colourDict = {

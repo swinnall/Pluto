@@ -9,6 +9,7 @@ from shutil import copyfile
 
 # import Pluto modules
 import config
+import dls
 import surfacePressure
 import ellipsometry
 import surfaceExcess
@@ -111,7 +112,7 @@ def organisePaths(analysisType, instructionsName, instructionsPath, outputDataPa
 
 def main():
 
-    analysisOptions = ['surfacePressure','Ellipsometry', 'surfaceExcess']
+    analysisOptions = ['surfacePressure','Ellipsometry', 'surfaceExcess', 'dls']
 
     PlutoRunning = True
     while PlutoRunning:
@@ -132,6 +133,9 @@ def main():
         if analysisType == analysisOptions[2]:
             key, vars, suffix = surfaceExcess.main(instructionsFile, title, inputDataPath, outputDataPath)
 
+        if analysisType == analysisOptions[3]:
+            key, vars, suffix = dls.main(instructionsFile, title, inputDataPath, outputDataPath)
+
         # post analysis smoothing of data
         if config.smoothByPoints == True:
             vars[6][0], vars[7] = reducePoints(vars[6][0],vars[7])
@@ -142,7 +146,7 @@ def main():
         # plot data
         genPlot.main(key, vars, suffix)
 
-        # exit system if not running back to back analyses 
+        # exit system if not running back to back analyses
         if config.moreAnalysis == False:
             print("\nSession complete.")
             sys.exit()
