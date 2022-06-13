@@ -75,8 +75,8 @@ saveAsPDF = True
 ## Choose data symbol / plot type
 defaultLw = 2
 
-plotWithScatter = False
-scatterSize     = 50
+plotWithScatter = True
+scatterSize     = 5
 
 plotLineWithMarker = False
 markerSize         = 7
@@ -84,15 +84,19 @@ markEdgeWidth      = 4
 
 ## Axis range (False=Automatic)
 overrideAxisLim = True
-config_xmin     = 0
-config_xmax     = 1800 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
-config_ymin     = 0
-config_ymax     = 1500
+config_xmin     = 0.01
+config_xmax     = 100 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
+config_ymin     = 0.01
+config_ymax     = 0.2
 
 ## Axis/tick intervals & number
 xTickInterval = 10
 yTickInterval = 250
-n_xticks      = 10
+n_xticks      = 3
+
+## axis type; linear = default (False)
+plotxLog10 = True
+plotyLog10 = True
 
 ## Multi panel options
 plotMultiPanel = False   # split input data between subplots

@@ -389,6 +389,11 @@ def plot(key, vars, suffix):
         plt.axvline(config.x0Line, config.y0Line, config.y1Line, label='pyplot vertical line', c='r')
 
 
+    if config.plotxLog10 == True:
+        ax.set_xscale('log')
+    if config.plotyLog10 == True:
+        ax.set_yscale('log')
+
     # tight layout function
     plt.tight_layout()
     fig.subplots_adjust(wspace=0.05, hspace=0.05)
