@@ -85,8 +85,8 @@ markEdgeWidth      = 4
 ## Axis range (False=Automatic)
 overrideAxisLim = True
 config_xmin     = 0.01
-config_xmax     = 100 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
-config_ymin     = 0.01
+config_xmax     = 10 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
+config_ymin     = 0
 config_ymax     = 0.2
 
 ## Axis/tick intervals & number
@@ -96,7 +96,7 @@ n_xticks      = 3
 
 ## axis type; linear = default (False)
 plotxLog10 = True
-plotyLog10 = True
+plotyLog10 = False
 
 ## Multi panel options
 plotMultiPanel = False   # split input data between subplots

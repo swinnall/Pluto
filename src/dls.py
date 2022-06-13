@@ -4,6 +4,8 @@
 import sys, os, csv
 import warnings
 import numpy as np
+from scipy.optimize import curve_fit
+from matplotlib import pyplot
 
 # import Pluto modules
 import config
@@ -96,12 +98,12 @@ def analyseCorrelation(nSamples, fileInfoList):
         g1List  = []
 
         for filename in os.listdir(inputPaths[sampleNum]):
-            # initialise lists to store values per file
-            tau = []
-            g1  = []
-
             if filename.endswith(".ASC"):
                 filepath = inputPaths[sampleNum] + '/' + filename
+
+                # initialise lists to store values per file
+                tau = []
+                g1  = []
                 with open(filepath) as f:
 
                     # isolate region for correlation data only
@@ -116,7 +118,7 @@ def analyseCorrelation(nSamples, fileInfoList):
                             tauVal, g1Val = float(rowData[0]), float(rowData[1])
 
                             # store values in lists
-                            tau.append(np.log(tauVal))
+                            tau.append(tauVal) # np.log(tauVal)
 
                             if g1Val < 0:
                                 g1.append(-np.sqrt(abs(g1Val)))
@@ -132,12 +134,37 @@ def analyseCorrelation(nSamples, fileInfoList):
             tauList.append(tau)
             g1List.append(g1)
 
-            ##
-            ## This is where one would fit the function with B, Gamma, and mu terms
+            # where x is the tau variable
+            def objective(x,B,beta,Gamma,mu2):
+                return B + beta*np.exp(-2*Gamma*x)*(1+(mu2/2)*(x**2))**2
+
+
+            initialparameters = (0,0.4,1,0.1)
+            tauLim = 100
+            popt, pcov = curve_fit(objective, tau[0:tauLim], g1[0:tauLim], p0 = initialparameters)
+            print(popt)
+            print(pcov)
+            B,beta,Gamma,mu2 = popt
+            print('y = %.5f + %.5f*np.exp(-2*%.5f*x)*(1+(%.5f/2)*(x**2))**2' %(B,beta,Gamma,mu2))
+            # plot input vs output
+            pyplot.scatter(tau, g1)
+            # define a sequence of inputs between the smallest and largest known inputs
+            x_line = np.arange(min(tau[0:tauLim]), max(tau[0:tauLim]), 0.0001)
+
+            # calculate the output for the range
+            y_line = objective(x_line,B,beta,Gamma,mu2)
+            pyplot.plot(x_line, y_line, '--', color='red')
+            pyplot.xscale('log')
+            pyplot.show()
+            sys.exit()
+
             ## relate Gamma (decay time) to diffusion coefficient
             ## relate diffusion coefficient to hydrodynamic radius
-            ##
-
+            ## store these values as a function of time (using date_time) and pass to x, y for plotting
+            
+            ## viscosity of the buffer (use water to start with at 20 deg = 1.002 cp) at 30 deg it's 0.7977 cp
+            ## source: Lide, David R. CRC Handbook of Chemistry and Physics. Boca Raton, FL: CRC Press, 2005. http://www.hbcpnetbase.com.
+            ## Add 30 seconds of dead time to the beginning
 
         # store list of taus in x variables
         x[sampleNum] = tauList[0]
