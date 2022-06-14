@@ -88,15 +88,50 @@ def analyseCountRate(nSamples, fileInfoList):
 
 
 
-def analyseCorrelation(nSamples, fileInfoList):
+def closest_value(input_list, input_value): # find the closest value in the model array
+    arr = np.asarray(input_list)
+    idx = (np.abs(arr - input_value)).argmin()
+    return arr[idx], idx
+
+
+
+def objective(x,B,beta,Gamma,mu2): # where x is the tau variable
+    return B + beta*np.exp(-2*Gamma*x)*(1+(mu2/2)*(x**2))**2
+
+
+
+def plotFit(popt, tau, g1, g1LimVal, g1LimIdx):
+
+    print('\ng1LimVal = %f; g1LimIdx = %d' %(g1LimVal,g1LimIdx))
+
+    # unpack parameters
+    B,beta,Gamma,mu2 = popt
+
+    # plot input vs output
+    pyplot.scatter(tau, g1)
+
+    # define a sequence of inputs between the smallest and largest known inputs
+    x_line = np.arange(min(tau[0:g1LimIdx]), max(tau[0:g1LimIdx]), 0.0001)
+
+    # calculate the output for the range
+    y_line = objective(x_line,B,beta,Gamma,mu2)
+    pyplot.plot(x_line, y_line, '--', color='red')
+    pyplot.xscale('log')
+    pyplot.show()
+
+    return
+
+
+def analyseRadius(nSamples, fileInfoList):
 
     inputPaths, x, y, label = initDataStruct(nSamples, fileInfoList)
 
     # for every sample specific file directory, list out ASC files and extract data
     for sampleNum in range(nSamples):
-        tauList = []
-        g1List  = []
-
+        time      = []
+        Dlist     = []
+        Rlist     = []
+        fileCount = 0
         for filename in os.listdir(inputPaths[sampleNum]):
             if filename.endswith(".ASC"):
                 filepath = inputPaths[sampleNum] + '/' + filename
@@ -105,10 +140,17 @@ def analyseCorrelation(nSamples, fileInfoList):
                 tau = []
                 g1  = []
                 with open(filepath) as f:
+                    fileData = f.readlines()[0:205]
 
-                    # isolate region for correlation data only
-                    # need to identify general method for determining region
-                    correlationData = f.readlines()[30:205]
+                    timeRow = fileData[2].strip("\n").split("\t")
+                    date_time = timeRow[1].strip().strip('""')
+                    sec_time = sum(x * int(t) for x, t in zip([3600, 60, 1], date_time.split(":")))
+                    if fileCount == 0:
+                        startTime = sec_time
+                    time.append(sec_time - startTime)
+
+                    # isolate region for correlation data only; could make more general 
+                    correlationData = fileData[30:197]
 
                     # split all the data corresponding to
                     for row in correlationData:
@@ -118,7 +160,7 @@ def analyseCorrelation(nSamples, fileInfoList):
                             tauVal, g1Val = float(rowData[0]), float(rowData[1])
 
                             # store values in lists
-                            tau.append(tauVal) # np.log(tauVal)
+                            tau.append(tauVal)
 
                             if g1Val < 0:
                                 g1.append(-np.sqrt(abs(g1Val)))
@@ -129,46 +171,36 @@ def analyseCorrelation(nSamples, fileInfoList):
                             print("\nValueError: Could not convert string to float.\nString = %s\n" %rowData)
 
                 f.close()
-
-            # store tau in list of taus
-            tauList.append(tau)
-            g1List.append(g1)
-
-            # where x is the tau variable
-            def objective(x,B,beta,Gamma,mu2):
-                return B + beta*np.exp(-2*Gamma*x)*(1+(mu2/2)*(x**2))**2
-
+            fileCount += 1
 
             initialparameters = (0,0.4,1,0.1)
-            tauLim = 100
-            popt, pcov = curve_fit(objective, tau[0:tauLim], g1[0:tauLim], p0 = initialparameters)
-            print(popt)
-            print(pcov)
-            B,beta,Gamma,mu2 = popt
-            print('y = %.5f + %.5f*np.exp(-2*%.5f*x)*(1+(%.5f/2)*(x**2))**2' %(B,beta,Gamma,mu2))
-            # plot input vs output
-            pyplot.scatter(tau, g1)
-            # define a sequence of inputs between the smallest and largest known inputs
-            x_line = np.arange(min(tau[0:tauLim]), max(tau[0:tauLim]), 0.0001)
+            g1LimVal, g1LimIdx = closest_value(g1, 0.2*g1[0])
 
-            # calculate the output for the range
-            y_line = objective(x_line,B,beta,Gamma,mu2)
-            pyplot.plot(x_line, y_line, '--', color='red')
-            pyplot.xscale('log')
-            pyplot.show()
-            sys.exit()
+            popt, pcov = curve_fit(objective, tau[0:g1LimIdx], g1[0:g1LimIdx], p0 = initialparameters)
 
-            ## relate Gamma (decay time) to diffusion coefficient
-            ## relate diffusion coefficient to hydrodynamic radius
-            ## store these values as a function of time (using date_time) and pass to x, y for plotting
-            
-            ## viscosity of the buffer (use water to start with at 20 deg = 1.002 cp) at 30 deg it's 0.7977 cp
-            ## source: Lide, David R. CRC Handbook of Chemistry and Physics. Boca Raton, FL: CRC Press, 2005. http://www.hbcpnetbase.com.
-            ## Add 30 seconds of dead time to the beginning
+            checkFit = False
+            if checkFit == True:
+                plotFit(popt, tau, g1, g1LimVal, g1LimIdx)
+
+            # unpack parameters
+            B, beta, Gamma, mu2 = popt
+
+            # relate Gamma (decay time) to diffusion coefficient; account for refractive index?
+            lmbda = 632.8 # [nm]
+            q = 4*np.pi*np.sin(90/2)/lmbda # [1/nm]
+            D = 1E-15 * Gamma / q**2  # (1/ms) / (1/nm)**2 = nm**2 / ms = 1E-18 / 1E-3 [m2/s] = 1E-15 m^2/s
+            Dlist.append(D)
+
+            # calculate hydrodynamic radius from diffusion coefficient
+            k    = 1.380649e-23 #Boltzmann constant, [J/K]
+            T    = 293.15 # [K]
+            visc = 1.002 * 1E-3 # [cp] = 10−3 Pa⋅s ; @20 deg; source: Lide, David R. CRC Handbook of Chemistry and Physics. Boca Raton, FL: CRC Press, 2005. http://www.hbcpnetbase.com.
+            R = k*T/(6*np.pi*visc*D) * (1/1E-9) # take out nm as a factor to get nice units
+            Rlist.append(R)
 
         # store list of taus in x variables
-        x[sampleNum] = tauList[0]
-        y[sampleNum] = g1List[0]
+        x[sampleNum] = time
+        y[sampleNum] = Rlist
         label[sampleNum] = fileInfoList[sampleNum].get("label")
 
     return x, y, label
@@ -194,7 +226,7 @@ def main(instructionsFile, title, inputDIR, outputPath):
     warnings.filterwarnings("ignore")
 
     # give analysis choice to user
-    analysisOptions = ['plotCount', 'plotCorrelation', 'plotRaleigh']
+    analysisOptions = ['plotCount', 'plotRadius', 'plotRaleighRatio']
 
     analysisType, analysisRunning = modSelection(analysisOptions)
 
@@ -212,13 +244,13 @@ def main(instructionsFile, title, inputDIR, outputPath):
     # analysis functions with associated plotting params
     if analysisType == 'plotCount':
         axLabels = {"x": "T", "y": "Mean Count Rate"}
-        suffix   = " - TR DLS"
+        suffix   = " - TR DLS countRate"
         x, y, label = analyseCountRate(nSamples, fileInfoList)
 
-    if analysisType == 'plotCorrelation':
-        axLabels = {"x": "Tau", "y": "g1"}
-        suffix   = " - TR DLS Correlation"
-        x, y, label = analyseCorrelation(nSamples, fileInfoList)
+    if analysisType == 'plotRadius':
+        axLabels = {"x": "Time", "y": "R (nm)"}
+        suffix   = " - TR DLS radius"
+        x, y, label = analyseRadius(nSamples, fileInfoList)
 
     if analysisType == 'plotRaleigh':
         x, y, label = analyseRaleighRatio(nSamples, fileInfoList)

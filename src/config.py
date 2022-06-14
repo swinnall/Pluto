@@ -84,10 +84,10 @@ markEdgeWidth      = 4
 
 ## Axis range (False=Automatic)
 overrideAxisLim = True
-config_xmin     = 0.01
-config_xmax     = 10 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
+config_xmin     = 0
+config_xmax     = 1800 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
 config_ymin     = 0
-config_ymax     = 0.2
+config_ymax     = 1500
 
 ## Axis/tick intervals & number
 xTickInterval = 10
@@ -95,7 +95,7 @@ yTickInterval = 250
 n_xticks      = 3
 
 ## axis type; linear = default (False)
-plotxLog10 = True
+plotxLog10 = False
 plotyLog10 = False
 
 ## Multi panel options
@@ -134,7 +134,7 @@ legendOn  = True
 legendLoc = 'best' # default = 'best'; lower right''
 
 ## List of plot types that use the time axis
-tAxisList = [" - pressure", " - area", " - psi Time", " - delta Time", " - gammaL", " - gammaP", " - TR DLS"]
+tAxisList = [" - pressure", " - area", " - psi Time", " - delta Time", " - gammaL", " - gammaP", " - TR DLS countRate", " - TR DLS radius"]
 
 ## Colours
 colourDict = {
