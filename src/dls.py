@@ -149,7 +149,7 @@ def analyseRadius(nSamples, fileInfoList):
                         startTime = sec_time
                     time.append(sec_time - startTime)
 
-                    # isolate region for correlation data only; could make more general 
+                    # isolate region for correlation data only; could make more general
                     correlationData = fileData[30:197]
 
                     # split all the data corresponding to
@@ -178,8 +178,8 @@ def analyseRadius(nSamples, fileInfoList):
 
             popt, pcov = curve_fit(objective, tau[0:g1LimIdx], g1[0:g1LimIdx], p0 = initialparameters)
 
-            checkFit = False
-            if checkFit == True:
+            checkFit = False # set to true and choose which fit to analyse
+            if checkFit == True and fileCount == 90:
                 plotFit(popt, tau, g1, g1LimVal, g1LimIdx)
 
             # unpack parameters
@@ -213,8 +213,9 @@ def analyseRaleighRatio(nSamples, fileInfoList):
     print("\n\nError: Function not written yet.\n\n")
     sys.exit()
 
-    ## for each ASC file, plot col2 (count?) against col1 (time)
-    ## with some calculation to get the absolute intensity
+    # for each ASC file, plot col2 (count?) against col1 (time)
+    # with some calculation to get the absolute scattering intensity
+    # RayleighRatio = (I_solution - I_solvent)*(I_std_abs/I_std); eq 1.11 of LS book
 
     return x, y, label
 
