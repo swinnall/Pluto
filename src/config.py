@@ -87,7 +87,7 @@ overrideAxisLim = True
 config_xmin     = 0
 config_xmax     = 1800 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
 config_ymin     = 0
-config_ymax     = 1500
+config_ymax     = 0.001
 
 ## Axis/tick intervals & number
 xTickInterval = 10

@@ -20,7 +20,11 @@ def importSampleInfo(instructionsFile):
     # separate input data into relevant ID lists of dicts
     fileInfoList  = []
     for i in range(nSamples):
-       fileInfoList.append({'fname': instructionsFile["filename"][i], 'standard': instructionsFile["standard"][i], 'solvent': instructionsFile["solvent"][i], 'label': instructionsFile["label"][i]})
+       fileInfoList.append({'fname': instructionsFile["filename"][i], \
+       'I_abs_std': instructionsFile["I_abs_std"][i], \
+       'I_std': instructionsFile["I_std"][i], \
+       'I_solv': instructionsFile["I_solv"][i], \
+       'label': instructionsFile["label"][i]})
 
     return nSamples, fileInfoList
 
@@ -43,6 +47,10 @@ def initDataStruct(nSamples, fileInfoList):
     return inputPaths, x, y, label
 
 
+def getTime(timeRow):
+    date_time = timeRow[1].strip().strip('""')
+    return sum(x * int(t) for x, t in zip([3600, 60, 1], date_time.split(":")))
+
 
 def analyseCountRate(nSamples, fileInfoList):
 
@@ -57,27 +65,23 @@ def analyseCountRate(nSamples, fileInfoList):
         for filename in os.listdir(inputPaths[sampleNum]):
 
             if filename.endswith(".ASC"):
-
                 filepath = inputPaths[sampleNum] + '/' + filename
+
                 with open(filepath) as f:
+                    fileData = f.readlines()[0:30]
 
-                    for line in f:
-                        l = line.strip("\n").split("\t")
+                    timeRow = fileData[2].strip("\n").split("\t")
+                    sec_time = getTime(timeRow)
 
-                        if l[0] == "Time :":
-                            date_time = l[1].strip().strip('""')
-                            sec_time = sum(x * int(t) for x, t in zip([3600, 60, 1], date_time.split(":")))
-                            if fileCount == 0:
-                                startTime = sec_time
-                            time.append(sec_time - startTime)
+                    if fileCount == 0:
+                        startTime = sec_time
+                    time.append(sec_time - startTime)
 
-                        if l[0] == "MeanCR0 [kHz]   :":
-                            meanCR0 = float(l[1].strip())
-                        if l[0] == "MeanCR1 [kHz]   :":
-                            meanCR1 = float(l[1].strip())
+                    meanCR0 = float(fileData[24].strip("\n").split("\t")[1])
+                    meanCR1 = float(fileData[25].strip("\n").split("\t")[1])
+                    meanCR.append(meanCR0+meanCR1)
 
                 f.close()
-                meanCR.append(meanCR0+meanCR1)
                 fileCount += 1
 
         x[sampleNum] = time
@@ -87,17 +91,18 @@ def analyseCountRate(nSamples, fileInfoList):
     return x, y, label
 
 
-
 def closest_value(input_list, input_value): # find the closest value in the model array
     arr = np.asarray(input_list)
     idx = (np.abs(arr - input_value)).argmin()
     return arr[idx], idx
 
 
-
-def objective(x,B,beta,Gamma,mu2): # where x is the tau variable
+def objectiveMono(x,B,beta,Gamma,mu2): # where x is the tau variable; mu stuff is for polydispersity
     return B + beta*np.exp(-2*Gamma*x)*(1+(mu2/2)*(x**2))**2
 
+
+def objectiveBi(x,B,beta,Gamma,beta2,Gamma2): # where x is the tau variable
+    return B + beta*np.exp(-2*Gamma*x) + beta2*np.exp(-2*Gamma2*x)
 
 
 def plotFit(popt, tau, g1, g1LimVal, g1LimIdx):
@@ -114,7 +119,7 @@ def plotFit(popt, tau, g1, g1LimVal, g1LimIdx):
     x_line = np.arange(min(tau[0:g1LimIdx]), max(tau[0:g1LimIdx]), 0.0001)
 
     # calculate the output for the range
-    y_line = objective(x_line,B,beta,Gamma,mu2)
+    y_line = objectiveMono(x_line,B,beta,Gamma,mu2)
     pyplot.plot(x_line, y_line, '--', color='red')
     pyplot.xscale('log')
     pyplot.show()
@@ -132,6 +137,7 @@ def analyseRadius(nSamples, fileInfoList):
         Dlist     = []
         Rlist     = []
         fileCount = 0
+        chiCount = 0
         for filename in os.listdir(inputPaths[sampleNum]):
             if filename.endswith(".ASC"):
                 filepath = inputPaths[sampleNum] + '/' + filename
@@ -143,8 +149,8 @@ def analyseRadius(nSamples, fileInfoList):
                     fileData = f.readlines()[0:205]
 
                     timeRow = fileData[2].strip("\n").split("\t")
-                    date_time = timeRow[1].strip().strip('""')
-                    sec_time = sum(x * int(t) for x, t in zip([3600, 60, 1], date_time.split(":")))
+                    sec_time = getTime(timeRow)
+
                     if fileCount == 0:
                         startTime = sec_time
                     time.append(sec_time - startTime)
@@ -176,14 +182,27 @@ def analyseRadius(nSamples, fileInfoList):
             initialparameters = (0,0.4,1,0.1)
             g1LimVal, g1LimIdx = closest_value(g1, 0.2*g1[0])
 
-            popt, pcov = curve_fit(objective, tau[0:g1LimIdx], g1[0:g1LimIdx], p0 = initialparameters)
-
-            checkFit = False # set to true and choose which fit to analyse
-            if checkFit == True and fileCount == 90:
-                plotFit(popt, tau, g1, g1LimVal, g1LimIdx)
+            popt, pcov = curve_fit(objectiveMono, tau[0:g1LimIdx], g1[0:g1LimIdx], p0 = initialparameters)
 
             # unpack parameters
             B, beta, Gamma, mu2 = popt
+            nParMono = len(popt)
+
+            # generate model data for checking if fit is good
+            tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
+            g1Model  = objectiveMono(tauModel,B,beta,Gamma,mu2)
+
+            chisq_red = 0
+            for i in range(g1LimIdx):
+                chisq_red += (g1Model[i] - g1[i])**2
+            chisq_red = chisq_red / (g1LimIdx-nParMono)
+
+            checkFit = False # set to true and choose which fit to analyse
+            if checkFit == True and fileCount == 20: # and chisq_red < 0.05:
+                print("\nFile Number: %d" %fileCount)
+                print("\nChiSq: %.6f" %chisq_red)
+                plotFit(popt, tau, g1, g1LimVal, g1LimIdx)
+
 
             # relate Gamma (decay time) to diffusion coefficient; account for refractive index?
             lmbda = 632.8 # [nm]
@@ -210,14 +229,35 @@ def analyseRadius(nSamples, fileInfoList):
 
 def analyseRaleighRatio(nSamples, fileInfoList):
 
-    print("\n\nError: Function not written yet.\n\n")
-    sys.exit()
+    # initialise data structures (main part here is for initialising y)
+    inputPaths, x, y, label = initDataStruct(nSamples, fileInfoList)
 
-    # for each ASC file, plot col2 (count?) against col1 (time)
-    # with some calculation to get the absolute scattering intensity
-    # RayleighRatio = (I_solution - I_solvent)*(I_std_abs/I_std); eq 1.11 of LS book
+    # get all count rate data in dict structure; x = time = t, y = meanCR0+meanCR1 = I_solution at each timestep
+    t, I_sol, label = analyseCountRate(nSamples, fileInfoList)
 
-    return x, y, label
+
+    for sampleNum in range(nSamples):
+
+        # intensity from solvent
+        I_solv = fileInfoList[sampleNum].get('I_solv')
+
+        # absolute intensity from standard (RR value)
+        I_std_abs = fileInfoList[sampleNum].get('I_abs_std')
+
+        # intensity from standard
+        I_std = fileInfoList[sampleNum].get('I_std')
+
+        RR = []
+        nPoints = len(t[sampleNum])
+        for val in range(nPoints):
+
+            RR.append((I_sol.get(sampleNum)[val] - I_solv)*(I_std_abs/I_std))
+
+        # store list of taus in x variables
+        y[sampleNum] = RR
+        label[sampleNum] = fileInfoList[sampleNum].get("label")
+
+    return t, y, label
 
 
 
@@ -227,7 +267,7 @@ def main(instructionsFile, title, inputDIR, outputPath):
     warnings.filterwarnings("ignore")
 
     # give analysis choice to user
-    analysisOptions = ['plotCount', 'plotRadius', 'plotRaleighRatio']
+    analysisOptions = ['plotCount', 'plotRadius', 'plotRaleigh']
 
     analysisType, analysisRunning = modSelection(analysisOptions)
 
@@ -254,6 +294,8 @@ def main(instructionsFile, title, inputDIR, outputPath):
         x, y, label = analyseRadius(nSamples, fileInfoList)
 
     if analysisType == 'plotRaleigh':
+        axLabels = {"x": "Time", "y": "RR"}
+        suffix   = " - TR DLS RR"
         x, y, label = analyseRaleighRatio(nSamples, fileInfoList)
 
 
