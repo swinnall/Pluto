@@ -18,18 +18,18 @@ def importSampleInfo(instructionsFile):
     nSamples  = len(instructionsFile)
 
     # separate input data into relevant ID lists of dicts
-    fileInfoList  = []
+    sampleInfoList  = []
     for i in range(nSamples):
-       fileInfoList.append({'fname': instructionsFile["filename"][i], \
+       sampleInfoList.append({'fname': instructionsFile["filename"][i], \
        'I_abs_std': instructionsFile["I_abs_std"][i], \
        'I_std': instructionsFile["I_std"][i], \
        'I_solv': instructionsFile["I_solv"][i], \
        'label': instructionsFile["label"][i]})
 
-    return nSamples, fileInfoList
+    return nSamples, sampleInfoList
 
 
-def initDataStruct(nSamples, fileInfoList):
+def initDataStruct(nSamples, sampleInfoList):
 
     ## hardcoding paths; this is the general file directory
     inputRoot = '../../UoM-Data-Repository/input/TR-DLS/'
@@ -37,7 +37,7 @@ def initDataStruct(nSamples, fileInfoList):
     ## store the nSamples amount of file paths; sample specific file directory
     inputPaths = []
     for sampleNum in range(nSamples):
-        inputPaths.append(inputRoot + fileInfoList[sampleNum].get("fname"))
+        inputPaths.append(inputRoot + sampleInfoList[sampleNum].get("fname"))
 
     # initialise variables for time plots
     x        = {new_list: [] for new_list in range(nSamples)}
@@ -52,9 +52,9 @@ def getTime(timeRow):
     return sum(x * int(t) for x, t in zip([3600, 60, 1], date_time.split(":")))
 
 
-def analyseCountRate(nSamples, fileInfoList):
+def analyseCountRate(nSamples, sampleInfoList):
 
-    inputPaths, x, y, label = initDataStruct(nSamples, fileInfoList)
+    inputPaths, x, y, label = initDataStruct(nSamples, sampleInfoList)
 
     # for every sample specific file directory, list out ASC files and extract data
     for sampleNum in range(nSamples):
@@ -86,7 +86,7 @@ def analyseCountRate(nSamples, fileInfoList):
 
         x[sampleNum] = time
         y[sampleNum] = meanCR
-        label[sampleNum] = fileInfoList[sampleNum].get("label")
+        label[sampleNum] = sampleInfoList[sampleNum].get("label")
 
     return x, y, label
 
@@ -97,29 +97,31 @@ def closest_value(input_list, input_value): # find the closest value in the mode
     return arr[idx], idx
 
 
-def objectiveMono(x,B,beta,Gamma,mu2): # where x is the tau variable; mu stuff is for polydispersity
+def objectiveMono(x,*popt):
+    B, beta, Gamma, mu2 = popt # where x is the tau variable; mu stuff is for polydispersity
     return B + beta*np.exp(-2*Gamma*x)*(1+(mu2/2)*(x**2))**2
 
-
-def objectiveBi(x,B,beta,Gamma,beta2,Gamma2): # where x is the tau variable
+def objectiveBi(x,*popt):
+    B, beta, Gamma, beta2, Gamma2 = popt
     return B + beta*np.exp(-2*Gamma*x) + beta2*np.exp(-2*Gamma2*x)
 
+def objectiveTri(x,*popt):
+    B, beta, Gamma, beta2, Gamma2, beta3, Gamma3 = popt
+    return B + beta*np.exp(-2*Gamma*x) + beta2*np.exp(-2*Gamma2*x) + beta3*np.exp(-2*Gamma3*x)
 
-def plotFit(popt, tau, g1, g1LimVal, g1LimIdx):
+
+def plotFit(tau, g1, g1LimVal, g1LimIdx, *popt):
 
     print('\ng1LimVal = %f; g1LimIdx = %d' %(g1LimVal,g1LimIdx))
-
-    # unpack parameters
-    B,beta,Gamma,mu2 = popt
 
     # plot input vs output
     pyplot.scatter(tau, g1)
 
     # define a sequence of inputs between the smallest and largest known inputs
-    x_line = np.arange(min(tau[0:g1LimIdx]), max(tau[0:g1LimIdx]), 0.0001)
+    x_line = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx*10)
 
     # calculate the output for the range
-    y_line = objectiveMono(x_line,B,beta,Gamma,mu2)
+    y_line = objectiveBi(x_line,*popt)
     pyplot.plot(x_line, y_line, '--', color='red')
     pyplot.xscale('log')
     pyplot.show()
@@ -127,9 +129,9 @@ def plotFit(popt, tau, g1, g1LimVal, g1LimIdx):
     return
 
 
-def analyseRadius(nSamples, fileInfoList):
+def analyseRadius(nSamples, sampleInfoList):
 
-    inputPaths, x, y, label = initDataStruct(nSamples, fileInfoList)
+    inputPaths, x, y, label = initDataStruct(nSamples, sampleInfoList)
 
     # for every sample specific file directory, list out ASC files and extract data
     for sampleNum in range(nSamples):
@@ -179,29 +181,48 @@ def analyseRadius(nSamples, fileInfoList):
                 f.close()
             fileCount += 1
 
-            initialparameters = (0,0.4,1,0.1)
+
+            # function that calculates the reduced chiSq
+            def calcChiSq(yModel, yExp, nPoints, nPar):
+                chisq = 0
+                for i in range(nPoints):
+                    chisq += (yModel[i] - yExp[i])**2
+                return chisq / (nPoints-nPar)
+
+
+            # region extraction
             g1LimVal, g1LimIdx = closest_value(g1, 0.2*g1[0])
 
-            popt, pcov = curve_fit(objectiveMono, tau[0:g1LimIdx], g1[0:g1LimIdx], p0 = initialparameters)
+            fitType = 'bi'
+            if fileCount < 40: # fitType.upper() == 'MONO' and
+                initialparameters  = (0,0.4,1,0.1)
+                popt, pcov = curve_fit(objectiveMono, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
+                B, beta, Gamma, mu2 = popt
 
-            # unpack parameters
-            B, beta, Gamma, mu2 = popt
-            nParMono = len(popt)
+            if fileCount >= 40: # fitType.upper() == 'BI' and
+                initialparameters  = (0,0.4,1,0.1,1)
+                popt, pcov = curve_fit(objectiveBi, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
+                B,beta,Gamma,beta2,Gamma2 = popt
 
-            # generate model data for checking if fit is good
-            tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
-            g1Model  = objectiveMono(tauModel,B,beta,Gamma,mu2)
+            if fitType.upper() == 'TRI':
+                initialparameters  = (0,0.4,1,0.1,1,0.1,1)
+                popt, pcov = curve_fit(objectiveTri, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
+                B, beta, Gamma, beta2, Gamma2, beta3, Gamma3 = popt
 
-            chisq_red = 0
-            for i in range(g1LimIdx):
-                chisq_red += (g1Model[i] - g1[i])**2
-            chisq_red = chisq_red / (g1LimIdx-nParMono)
 
-            checkFit = False # set to true and choose which fit to analyse
-            if checkFit == True and fileCount == 20: # and chisq_red < 0.05:
+            checkFit = True # set to true and choose which fit to analyse
+            if checkFit == True and fileCount == 40:
                 print("\nFile Number: %d" %fileCount)
+
+                # generate model data for checking if fit is good
+                tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
+                g1Model  = objectiveBi(tauModel,*popt)
+
+
+                chisq_red = calcChiSq(g1Model, g1, g1LimIdx, len(popt))
                 print("\nChiSq: %.6f" %chisq_red)
-                plotFit(popt, tau, g1, g1LimVal, g1LimIdx)
+
+                plotFit(tau, g1, g1LimVal, g1LimIdx, *popt)
 
 
             # relate Gamma (decay time) to diffusion coefficient; account for refractive index?
@@ -220,32 +241,32 @@ def analyseRadius(nSamples, fileInfoList):
         # store list of taus in x variables
         x[sampleNum] = time
         y[sampleNum] = Rlist
-        label[sampleNum] = fileInfoList[sampleNum].get("label")
+        label[sampleNum] = sampleInfoList[sampleNum].get("label")
 
     return x, y, label
 
 
 
 
-def analyseRaleighRatio(nSamples, fileInfoList):
+def analyseRaleighRatio(nSamples, sampleInfoList):
 
     # initialise data structures (main part here is for initialising y)
-    inputPaths, x, y, label = initDataStruct(nSamples, fileInfoList)
+    inputPaths, x, y, label = initDataStruct(nSamples, sampleInfoList)
 
     # get all count rate data in dict structure; x = time = t, y = meanCR0+meanCR1 = I_solution at each timestep
-    t, I_sol, label = analyseCountRate(nSamples, fileInfoList)
+    t, I_sol, label = analyseCountRate(nSamples, sampleInfoList)
 
 
     for sampleNum in range(nSamples):
 
         # intensity from solvent
-        I_solv = fileInfoList[sampleNum].get('I_solv')
+        I_solv = sampleInfoList[sampleNum].get('I_solv')
 
         # absolute intensity from standard (RR value)
-        I_std_abs = fileInfoList[sampleNum].get('I_abs_std')
+        I_std_abs = sampleInfoList[sampleNum].get('I_abs_std')
 
         # intensity from standard
-        I_std = fileInfoList[sampleNum].get('I_std')
+        I_std = sampleInfoList[sampleNum].get('I_std')
 
         RR = []
         nPoints = len(t[sampleNum])
@@ -255,7 +276,7 @@ def analyseRaleighRatio(nSamples, fileInfoList):
 
         # store list of taus in x variables
         y[sampleNum] = RR
-        label[sampleNum] = fileInfoList[sampleNum].get("label")
+        label[sampleNum] = sampleInfoList[sampleNum].get("label")
 
     return t, y, label
 
@@ -272,7 +293,7 @@ def main(instructionsFile, title, inputDIR, outputPath):
     analysisType, analysisRunning = modSelection(analysisOptions)
 
     # user input & sample instructions information
-    nSamples, fileInfoList = importSampleInfo(instructionsFile)
+    nSamples, sampleInfoList = importSampleInfo(instructionsFile)
 
     if nSamples < 1:
         print("Fatal Error: No file input.")
@@ -286,17 +307,17 @@ def main(instructionsFile, title, inputDIR, outputPath):
     if analysisType == 'plotCount':
         axLabels = {"x": "T", "y": "Mean Count Rate"}
         suffix   = " - TR DLS countRate"
-        x, y, label = analyseCountRate(nSamples, fileInfoList)
+        x, y, label = analyseCountRate(nSamples, sampleInfoList)
 
     if analysisType == 'plotRadius':
         axLabels = {"x": "Time", "y": "R (nm)"}
         suffix   = " - TR DLS radius"
-        x, y, label = analyseRadius(nSamples, fileInfoList)
+        x, y, label = analyseRadius(nSamples, sampleInfoList)
 
     if analysisType == 'plotRaleigh':
         axLabels = {"x": "Time", "y": "RR"}
         suffix   = " - TR DLS RR"
-        x, y, label = analyseRaleighRatio(nSamples, fileInfoList)
+        x, y, label = analyseRaleighRatio(nSamples, sampleInfoList)
 
 
     # reduce plot parameters to list of variables for genPlot module
