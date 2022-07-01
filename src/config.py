@@ -85,14 +85,14 @@ markEdgeWidth      = 4
 ## Axis range (False=Automatic)
 overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 1800 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
-config_ymin     = 0
-config_ymax     = 500
+config_xmax     = 3000 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
+config_ymin     = 1E-6
+config_ymax     = 1E-3
 
 ## Axis/tick intervals & number
-xTickInterval = 10
-yTickInterval = 250
-n_xticks      = 3
+xTickInterval = 1
+yTickInterval = 10
+n_xticks      = 20
 
 ## axis type; linear = default (False)
 plotxLog10 = False
@@ -110,7 +110,7 @@ y1Line = 10
 
 ## Font size and reduction values
 fs                   = 24
-legend_fs_reduction  = 14
+legend_fs_reduction  = 18
 x0Axis_fs_reduction  = 0
 x1Axis_fs_reduction  = 0
 y0Axis_fs_reduction  = 0
@@ -124,9 +124,9 @@ minorTickSize  = 0
 minorTickWidth = 0
 
 ## Force axis labels
-overrideXAxisLabel = False
+overrideXAxisLabel = True
 overrideYAxisLabel = False
-xLabel = "Time (min)"
+xLabel = "Time (sec)"
 yLabel = ""
 
 ## Force legend
@@ -134,7 +134,7 @@ legendOn  = True
 legendLoc = 'best' # default = 'best'; lower right''
 
 ## List of plot types that use the time axis
-tAxisList = [" - pressure", " - area", " - psi Time", " - delta Time", " - gammaL", " - gammaP", " - TR DLS countRate", " - TR DLS radius"]
+tAxisList = [" - pressure", " - area", " - psi Time", " - delta Time", " - gammaL", " - gammaP", " - TR DLS countRate", " - TR DLS radius"]#, " - TR DLS RR"]
 
 ## Colours
 colourDict = {
@@ -183,8 +183,11 @@ colourDict = {
 
     # three panel combination of 11-13; must be list of lists where each sublist is a subplot
 	"14": [["#CCE6FF", "#99CCFF", "#66B3FF", "#3399FF"], ["#CCCCFF", "#9999FF", "#6666FF", "#3333FF"], ["#FFE5CC", "#FFCC99", "#FFB266", "#FF9933"]],
+
+    # persian pink, light blue, dark blue, light orange, dark orange, light green, dark green, red, dark red
+    "15": [['#F77FBE','#abdbe3', '#1e81b0', '#eab676', '#e28743', '#A3e19d', '#32BE25', '#FF0000', '#AB2330']],
     }
-c = colourDict.get("10")
+c = colourDict.get("15")
 
 ## Markers
 markerDict = {

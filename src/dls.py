@@ -136,7 +136,6 @@ def analyseRadius(nSamples, sampleInfoList):
     # for every sample specific file directory, list out ASC files and extract data
     for sampleNum in range(nSamples):
         time      = []
-        Dlist     = []
         Rlist     = []
         fileCount = 0
         chiCount = 0
@@ -186,34 +185,100 @@ def analyseRadius(nSamples, sampleInfoList):
             def calcChiSq(yModel, yExp, nPoints, nPar):
                 chisq = 0
                 for i in range(nPoints):
-                    chisq += (yModel[i] - yExp[i])**2
+                    chisq += (yExp[i] - yModel[i])**2
                 return chisq / (nPoints-nPar)
 
 
             # region extraction
             g1LimVal, g1LimIdx = closest_value(g1, 0.2*g1[0])
 
-            fitType = 'bi'
-            if fileCount < 40: # fitType.upper() == 'MONO' and
+
+        #if fileCount < 40: # fitType.upper() == 'MONO' and
+            initialparameters  = (0,0.4,1,0.1)
+            popt, pcov = curve_fit(objectiveMono, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
+            B, beta, Gamma, mu2 = popt
+
+            tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
+            g1Model  = objectiveMono(tauModel,*popt)
+            chisq_red1 = calcChiSq(g1Model, g1, g1LimIdx, len(popt))
+
+
+        #if fileCount >= 40: # fitType.upper() == 'BI' and
+            initialparameters  = (0,0.4,1,0.1,3)
+            popt, pcov = curve_fit(objectiveBi, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
+            B,beta,Gamma,beta2,Gamma2 = popt
+
+            tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
+            g1Model  = objectiveBi(tauModel,*popt)
+            chisq_red2 = calcChiSq(g1Model, g1, g1LimIdx, len(popt))
+
+        #if fitType.upper() == 'TRI':
+            # initialparameters  = (0,0.4,2,0.1,3,0.1,3)
+            # popt, pcov = curve_fit(objectiveTri, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
+            # B, beta, Gamma, beta2, Gamma2, beta3, Gamma3 = popt
+            #
+            # tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
+            # g1Model  = objectiveTri(tauModel,*popt)
+            chisq_red3 = 1000# calcChiSq(g1Model, g1, g1LimIdx, len(popt))
+
+            def calcRh(Gamma):
+
+                # calculate diffusion coefficient
+                lmbda = 632.8 # [nm]
+                q = 4*np.pi*np.sin(90/2)/lmbda # [1/nm]
+                D = 1E-15 * Gamma / q**2  # (1/ms) / (1/nm)**2 = nm**2 / ms = 1E-18 / 1E-3 [m2/s] = 1E-15 m^2/s
+
+                # calculate hydrodynamic radius from diffusion coefficient
+                k    = 1.380649e-23 #Boltzmann constant, [J/K]
+                T    = 293.15 # [K]
+                visc = 1.002 * 1E-3 # [cp] = 10−3 Pa⋅s ; @20 deg; source: Lide, David R. CRC Handbook of Chemistry and Physics. Boca Raton, FL: CRC Press, 2005. http://www.hbcpnetbase.com.
+
+                return k*T/(6*np.pi*visc*D) * (1/1E-9) # take out nm as a factor to get nice units
+
+
+            if fileCount < 40: # chisq_red1 < chisq_red2 and chisq_red1 < chisq_red3: #
+                #print("Fit = Mono")
                 initialparameters  = (0,0.4,1,0.1)
                 popt, pcov = curve_fit(objectiveMono, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
                 B, beta, Gamma, mu2 = popt
+                #print(popt)
 
-            if fileCount >= 40: # fitType.upper() == 'BI' and
-                initialparameters  = (0,0.4,1,0.1,1)
-                popt, pcov = curve_fit(objectiveBi, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
+                R = calcRh(Gamma)
+
+            elif fileCount >= 40:  # chisq_red2 < chisq_red1 and chisq_red2 < chisq_red3: #
+                initialparameters  = (0,0.4,1,0.1)
+                popt, pcov = curve_fit(objectiveMono, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
+                B, beta, gGamma, mu2 = popt
+
+                #print("Fit = Bi")
+                initialparameters  = (0,0.4,1,0.2,gGamma)
+                popt, pcov = curve_fit(objectiveBi, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters, bounds=([0,0,0,0,(gGamma-0.01)],[0.1,1,5,1,(gGamma+0.01)]))
                 B,beta,Gamma,beta2,Gamma2 = popt
+                # print(popt)
 
-            if fitType.upper() == 'TRI':
-                initialparameters  = (0,0.4,1,0.1,1,0.1,1)
-                popt, pcov = curve_fit(objectiveTri, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
-                B, beta, Gamma, beta2, Gamma2, beta3, Gamma3 = popt
+                R1 = calcRh(Gamma) # big species
+                R2 = calcRh(Gamma2) # small speices (does depend on how you setup the fits...)
+                R = R1
+
+            elif chisq_red3 < chisq_red1 and chisq_red3 < chisq_red2:
+                print("Fit = Tri")
+                sys.exit()
+
+            ##### try fitting triExp for everything
+            ##### take gamma from monoExp and use just use in everything
+            ##### maybe try contin to try and get another idea of size
+            #####
+
+            Rlist.append(R)
 
 
-            checkFit = True # set to true and choose which fit to analyse
-            if checkFit == True and fileCount == 40:
+
+            checkFit = False # set to true and choose which fit to analyse
+            if checkFit == True and fileCount == 80:
                 print("\nFile Number: %d" %fileCount)
-
+                print(pcov)
+                perr = np.sqrt(np.diag(pcov))
+                print(perr)
                 # generate model data for checking if fit is good
                 tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
                 g1Model  = objectiveBi(tauModel,*popt)
@@ -225,24 +290,11 @@ def analyseRadius(nSamples, sampleInfoList):
                 plotFit(tau, g1, g1LimVal, g1LimIdx, *popt)
 
 
-            # relate Gamma (decay time) to diffusion coefficient; account for refractive index?
-            lmbda = 632.8 # [nm]
-            q = 4*np.pi*np.sin(90/2)/lmbda # [1/nm]
-            D = 1E-15 * Gamma / q**2  # (1/ms) / (1/nm)**2 = nm**2 / ms = 1E-18 / 1E-3 [m2/s] = 1E-15 m^2/s
-            Dlist.append(D)
-
-            # calculate hydrodynamic radius from diffusion coefficient
-            k    = 1.380649e-23 #Boltzmann constant, [J/K]
-            T    = 293.15 # [K]
-            visc = 1.002 * 1E-3 # [cp] = 10−3 Pa⋅s ; @20 deg; source: Lide, David R. CRC Handbook of Chemistry and Physics. Boca Raton, FL: CRC Press, 2005. http://www.hbcpnetbase.com.
-            R = k*T/(6*np.pi*visc*D) * (1/1E-9) # take out nm as a factor to get nice units
-            Rlist.append(R)
-
         # store list of taus in x variables
         x[sampleNum] = time
         y[sampleNum] = Rlist
         label[sampleNum] = sampleInfoList[sampleNum].get("label")
-
+    #print(y)
     return x, y, label
 
 

@@ -64,7 +64,7 @@ def importData(instrumentName, equipParams, fname, inputDIR, plotDIR):
 
     if instrumentName == "CUSTOM":
         t = data[data.columns.values[0]]
-        A = None
+        A = data[data.columns.values[2]]  * (10**-6)
         P = data[data.columns.values[1]]
 
 
@@ -248,7 +248,9 @@ def checkGrad(x, y):
 def findCycles(x, y, l):
 
     # reduce number of x and y points to smooth data
-    redX, redY = reduceNpoints(x, y)
+    if len(x) > 2E3:
+        redX, redY = reduceNpoints(x, y)
+    else: redX, redY = x, y
 
     # differentiates and scans for dxdn=0,
     minRowNums, maxRowNums = checkGrad(redX, redY)
@@ -390,7 +392,6 @@ def main(instructionsFile, title, inputDIR, plotDIR):
 
         # import data from given file i, immediate store t (need A & P lists as well)
         t[i], A[i], P[i] = importData(equip.get(i).upper(), equipParams, fname, inputDIR, plotDIR)
-
 
         # calculate percentage area
         if analysisType == 'plotArea':

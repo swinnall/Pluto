@@ -12,7 +12,14 @@ import config
 
 
 def getFile(path,nSkip,delim):
-    return pd.read_csv(path, skiprows=nSkip, sep=delim, comment='#', na_values =' ', skip_blank_lines=True, encoding = "utf-8") # on_bad_lines='skip',
+
+    try:
+        file = pd.read_csv(path, skiprows=nSkip, sep=delim, comment='#', na_values =' ', skip_blank_lines=True, encoding = "utf8") # on_bad_lines='skip',
+    except UnicodeDecodeError:
+        print('\n\nFatal Error: UnicodeDecodeError.\n')
+        sys.exit()
+
+    return file
 
 
 def modSelection(analysisOptions):
