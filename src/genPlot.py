@@ -177,7 +177,10 @@ def plot(key, vars, suffix):
         for col in range(nCol):
 
             # unpack variables evertime to prevent overwriting within plot code
-            nFilesPerPlot, equip, LABELS, axLabels, title, plotDIR, X, Y = vars
+            if config.plotAvRR == True:
+                nFilesPerPlot, equip, LABELS, axLabels, title, plotDIR, X, Y, y_error = vars
+            else:
+                nFilesPerPlot, equip, LABELS, axLabels, title, plotDIR, X, Y = vars
 
             # iterate through files and check number of subplots, isolate files accordingly
             count, nFilesPerPlot, x, y, labels = isolateFiles(count, key, suffix, row, col, X, Y, LABELS)
@@ -214,8 +217,20 @@ def plot(key, vars, suffix):
             for i in range(nFilesPerPlot):
 
                 # plots scatter plot with empty circles
-                if plotWithScatter == True:
+                if plotWithScatter == True and config.plotWithScatterError == False:
                     ax.scatter(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), s=scatterSize, edgecolors=config.c[row][i], linewidth=lw, facecolors='none')
+
+                if plotWithScatter == True and config.plotWithScatterError == True:
+                    try:
+                        ax.errorbar(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], yerr = y_error.get(i)[n0[i]:nf[i]], color=config.c[row][i], ms=scatterSize, mec=config.c[row][i], mfc=config.c[row][i], ecolor=config.c[row][i], label = labels.get(i), linewidth=lw) # , s=scatterSize, edgecolors=config.c[row][i], facecolors='none'
+                    except ValueError:
+
+                        try:
+                            ax.errorbar(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], yerr = y_error, label = labels.get(i), s=scatterSize, edgecolors=config.c[row][i], linewidth=lw, facecolors='none')
+                            print("\n\ngenPlot Error: y_error was empty, plotting without error bars.\n\n")
+                        except ValueError:
+                            print("\n\ngenPlot Error: Unknown ValueError. System clsoing.\n\n")
+                            sys.exit()
 
                 # line plot with marker
                 elif plotLineWithMarker == True:

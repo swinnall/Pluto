@@ -88,7 +88,8 @@ def analyseCountRate(nSamples, sampleInfoList):
         y[sampleNum] = meanCR
         label[sampleNum] = sampleInfoList[sampleNum].get("label")
 
-    return x, y, label
+    y_error = []
+    return x, y, label, y_error
 
 
 def closest_value(input_list, input_value): # find the closest value in the model array
@@ -295,7 +296,8 @@ def analyseRadius(nSamples, sampleInfoList):
         y[sampleNum] = Rlist
         label[sampleNum] = sampleInfoList[sampleNum].get("label")
     #print(y)
-    return x, y, label
+    y_error = []
+    return x, y, label, y_error
 
 
 
@@ -305,8 +307,9 @@ def analyseRaleighRatio(nSamples, sampleInfoList):
     # initialise data structures (main part here is for initialising y)
     inputPaths, x, y, label = initDataStruct(nSamples, sampleInfoList)
 
+
     # get all count rate data in dict structure; x = time = t, y = meanCR0+meanCR1 = I_solution at each timestep
-    t, I_sol, label = analyseCountRate(nSamples, sampleInfoList)
+    t, I_sol, label, y_error = analyseCountRate(nSamples, sampleInfoList)
 
 
     for sampleNum in range(nSamples):
@@ -330,7 +333,59 @@ def analyseRaleighRatio(nSamples, sampleInfoList):
         y[sampleNum] = RR
         label[sampleNum] = sampleInfoList[sampleNum].get("label")
 
-    return t, y, label
+
+    if config.plotAvRR == True:
+        # average the y data and calculate the error bars
+        # find shortest list
+        sampleLengths = []
+        for sampleNum in range(nSamples):
+            sampleLengths.append( len(t.get(sampleNum)) )
+
+        nPoints = min(sampleLengths)
+        idxMin  =  min(range(len(sampleLengths)), key=sampleLengths.__getitem__)
+
+
+
+        # number of different samples which will be averaged
+        nAvSamples = 5
+
+        # how many repeats per sample
+        sampleRepeatsInfo = [0,1,1,1,1]
+
+        # which samples to read
+        sampleInfo = [0,1,3,5,7]
+
+        x       = {new_list: [] for new_list in range(nAvSamples)}
+        yAv     = {new_list: [] for new_list in range(nAvSamples)}
+        y_error = {new_list: [] for new_list in range(nAvSamples)}
+
+
+        # for each diffSampleNum, get the key-lists
+        for diffSampleNum in range(nAvSamples):
+            sampleNum = sampleInfo[diffSampleNum]
+            x[diffSampleNum] = t.get(sampleNum)
+            # print('diffSampleNum = %d' %diffSampleNum)
+            # print('sampleNum = %d' %sampleNum)
+
+            keyList  = []
+            nRepeats = sampleRepeatsInfo[diffSampleNum]
+            for repeatNum in range(nRepeats+1):
+                # print('repeatNum = %d' %repeatNum)
+                keyList.append(np.array(y.get(sampleNum+repeatNum)))
+
+            keyStack = np.stack(keyList)
+            if nRepeats > 0:
+
+                yAv[diffSampleNum] = np.mean(keyStack, axis=0)
+                y_error[diffSampleNum] = np.std(keyStack, axis=0)
+            else:
+                yAv[diffSampleNum] = np.mean(keyStack, axis=0)
+                y_error[diffSampleNum] = np.zeros(len(keyList))
+
+            label[diffSampleNum] = sampleInfoList[sampleNum].get("label")
+
+    return x, yAv, label, y_error
+
 
 
 
@@ -359,21 +414,20 @@ def main(instructionsFile, title, inputDIR, outputPath):
     if analysisType == 'plotCount':
         axLabels = {"x": "T", "y": "Mean Count Rate"}
         suffix   = " - TR DLS countRate"
-        x, y, label = analyseCountRate(nSamples, sampleInfoList)
+        x, y, label, y_error = analyseCountRate(nSamples, sampleInfoList)
 
     if analysisType == 'plotRadius':
         axLabels = {"x": "Time", "y": "R (nm)"}
         suffix   = " - TR DLS radius"
-        x, y, label = analyseRadius(nSamples, sampleInfoList)
+        x, y, label, y_error = analyseRadius(nSamples, sampleInfoList)
 
     if analysisType == 'plotRaleigh':
         axLabels = {"x": "Time", "y": "RR"}
         suffix   = " - TR DLS RR"
-        x, y, label = analyseRaleighRatio(nSamples, sampleInfoList)
-
+        x, y, label, y_error = analyseRaleighRatio(nSamples, sampleInfoList)
 
     # reduce plot parameters to list of variables for genPlot module
-    vars = [len(x), equip, label, axLabels, title, outputPath, [x,0], y]
+    vars = [len(x), equip, label, axLabels, title, outputPath, [x,0], y, y_error]
 
     return key, vars, suffix
 
