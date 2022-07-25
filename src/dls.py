@@ -88,8 +88,7 @@ def analyseCountRate(nSamples, sampleInfoList):
         y[sampleNum] = meanCR
         label[sampleNum] = sampleInfoList[sampleNum].get("label")
 
-    y_error = []
-    return x, y, label, y_error
+    return x, y, label
 
 
 def closest_value(input_list, input_value): # find the closest value in the model array
@@ -111,26 +110,85 @@ def objectiveTri(x,*popt):
     return B + beta*np.exp(-2*Gamma*x) + beta2*np.exp(-2*Gamma2*x) + beta3*np.exp(-2*Gamma3*x)
 
 
-def plotFit(tau, g1, g1LimVal, g1LimIdx, *popt):
+def plotFit(fileNumber, tau, g1, g1LimVal, g1LimIdx, *popt):
 
-    print('\ng1LimVal = %f; g1LimIdx = %d' %(g1LimVal,g1LimIdx))
+    #print('\ng1LimVal = %f; g1LimIdx = %d' %(g1LimVal,g1LimIdx))
 
     # plot input vs output
     pyplot.scatter(tau, g1)
 
     # define a sequence of inputs between the smallest and largest known inputs
-    x_line = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx*10)
+    x_line = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx*(10**4))
 
     # calculate the output for the range
-    y_line = objectiveBi(x_line,*popt)
+    if len(popt) == 4:
+        y_line = objectiveMono(x_line,*popt)
+
+    else:
+        y_line = objectiveBi(x_line,*popt)
+
+    Title = 'File Number: ' + str(fileNumber)
+    pyplot.title(Title)
     pyplot.plot(x_line, y_line, '--', color='red')
     pyplot.xscale('log')
-    pyplot.show()
+
+    if config.genPDF == True:
+        # force the correct ordering of pngs when merging with pdf
+        if fileNumber < 10:
+            numberString = '0'+str(fileNumber)
+        else:
+            numberString = str(fileNumber)
+
+        pyplot.savefig('dls_fit_'+numberString+'.png',
+            format='png',
+            dpi=400,
+            bbox_inches='tight')
+
+    pyplot.clf()
 
     return
 
 
-def analyseRadius(nSamples, sampleInfoList):
+def genPDF(sampleNum,label,outputPath):
+
+    print('\nGenerataing PDF...\n')
+
+    from fpdf import FPDF
+
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font('Arial', 'B', 16)
+    title = 'DLS Fit Report - Sample: ' + str(label)
+    pdf.cell(40, 10, title)
+
+    X = 10
+    Y = 20
+    dimensions = 75
+
+    fileCounter = 0
+    for filename in os.listdir():
+        if filename.endswith(".png"):
+
+            pdf.image(filename, x=X, y=Y, w=dimensions, h=dimensions, type='', link='')
+            Y += dimensions
+            fileCounter += 1
+
+            # every three files, create a new page and reset Y
+            if fileCounter % 3 == 0:
+                pdf.add_page()
+                Y = 20
+
+    outputPath = outputPath + '/DLS Correlation Function Report.pdf'
+    pdf.output(outputPath, 'F')
+
+    for file in os.listdir():
+        if file.endswith('.png'):
+            os.remove(file)
+
+    return
+
+
+def analyseRadius(nSamples, sampleInfoList, outputPath):
 
     inputPaths, x, y, label = initDataStruct(nSamples, sampleInfoList)
 
@@ -189,39 +247,6 @@ def analyseRadius(nSamples, sampleInfoList):
                     chisq += (yExp[i] - yModel[i])**2
                 return chisq / (nPoints-nPar)
 
-
-            # region extraction
-            g1LimVal, g1LimIdx = closest_value(g1, 0.2*g1[0])
-
-
-        #if fileCount < 40: # fitType.upper() == 'MONO' and
-            initialparameters  = (0,0.4,1,0.1)
-            popt, pcov = curve_fit(objectiveMono, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
-            B, beta, Gamma, mu2 = popt
-
-            tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
-            g1Model  = objectiveMono(tauModel,*popt)
-            chisq_red1 = calcChiSq(g1Model, g1, g1LimIdx, len(popt))
-
-
-        #if fileCount >= 40: # fitType.upper() == 'BI' and
-            initialparameters  = (0,0.4,1,0.1,3)
-            popt, pcov = curve_fit(objectiveBi, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
-            B,beta,Gamma,beta2,Gamma2 = popt
-
-            tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
-            g1Model  = objectiveBi(tauModel,*popt)
-            chisq_red2 = calcChiSq(g1Model, g1, g1LimIdx, len(popt))
-
-        #if fitType.upper() == 'TRI':
-            # initialparameters  = (0,0.4,2,0.1,3,0.1,3)
-            # popt, pcov = curve_fit(objectiveTri, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
-            # B, beta, Gamma, beta2, Gamma2, beta3, Gamma3 = popt
-            #
-            # tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
-            # g1Model  = objectiveTri(tauModel,*popt)
-            chisq_red3 = 1000# calcChiSq(g1Model, g1, g1LimIdx, len(popt))
-
             def calcRh(Gamma):
 
                 # calculate diffusion coefficient
@@ -237,7 +262,12 @@ def analyseRadius(nSamples, sampleInfoList):
                 return k*T/(6*np.pi*visc*D) * (1/1E-9) # take out nm as a factor to get nice units
 
 
-            if fileCount < 40: # chisq_red1 < chisq_red2 and chisq_red1 < chisq_red3: #
+            # region extraction
+            g1LimVal, g1LimIdx = closest_value(g1, 0.2*g1[0])
+
+
+            fnumber = 100
+            if fileCount < fnumber: # chisq_red1 < chisq_red2 and chisq_red1 < chisq_red3: #
                 #print("Fit = Mono")
                 initialparameters  = (0,0.4,1,0.1)
                 popt, pcov = curve_fit(objectiveMono, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
@@ -245,9 +275,10 @@ def analyseRadius(nSamples, sampleInfoList):
                 #print(popt)
 
                 R = calcRh(Gamma)
+                Rlist.append(R)
 
-            elif fileCount >= 40:  # chisq_red2 < chisq_red1 and chisq_red2 < chisq_red3: #
-                initialparameters  = (0,0.4,1,0.1)
+            elif fileCount >= fnumber:  # chisq_red2 < chisq_red1 and chisq_red2 < chisq_red3: #
+                initialparameters = (0,0.4,1,0.1)
                 popt, pcov = curve_fit(objectiveMono, tau[0:g1LimIdx], g1[0:g1LimIdx], p0=initialparameters)
                 B, beta, gGamma, mu2 = popt
 
@@ -259,45 +290,40 @@ def analyseRadius(nSamples, sampleInfoList):
 
                 R1 = calcRh(Gamma) # big species
                 R2 = calcRh(Gamma2) # small speices (does depend on how you setup the fits...)
-                R = R1
+                R = R2
 
-            elif chisq_red3 < chisq_red1 and chisq_red3 < chisq_red2:
-                print("Fit = Tri")
-                sys.exit()
+                Rlist.append(R)
 
-            ##### try fitting triExp for everything
-            ##### take gamma from monoExp and use just use in everything
-            ##### maybe try contin to try and get another idea of size
-            #####
-
-            Rlist.append(R)
-
-
-
-            checkFit = False # set to true and choose which fit to analyse
-            if checkFit == True and fileCount == 80:
-                print("\nFile Number: %d" %fileCount)
-                print(pcov)
+            checkFit = True # set to true and choose which fit to analyse
+            if checkFit == True and fileCount < 12:
+                #print("\nFile Number: %d" %fileCount)
+                #print(pcov)
                 perr = np.sqrt(np.diag(pcov))
-                print(perr)
+                #print(perr)
                 # generate model data for checking if fit is good
-                tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx)
-                g1Model  = objectiveBi(tauModel,*popt)
+                tauModel = np.linspace(start=min(tau[0:g1LimIdx]), stop=max(tau[0:g1LimIdx]), num=g1LimIdx*(10**4))
+
+                if len(popt) == 4:
+                    g1Model = objectiveMono(tauModel,*popt)
+                else:
+                    g1Model = objectiveBi(tauModel, *popt)
 
 
                 chisq_red = calcChiSq(g1Model, g1, g1LimIdx, len(popt))
-                print("\nChiSq: %.6f" %chisq_red)
+                #print("\nChiSq: %.6f" %chisq_red)
 
-                plotFit(tau, g1, g1LimVal, g1LimIdx, *popt)
+                plotFit(fileCount, tau, g1, g1LimVal, g1LimIdx, *popt)
 
 
         # store list of taus in x variables
         x[sampleNum] = time
         y[sampleNum] = Rlist
         label[sampleNum] = sampleInfoList[sampleNum].get("label")
-    #print(y)
-    y_error = []
-    return x, y, label, y_error
+
+        if config.genPDF == True:
+            genPDF(sampleNum,label[sampleNum], outputPath)
+
+    return x, y, label
 
 
 
@@ -309,7 +335,7 @@ def analyseRaleighRatio(nSamples, sampleInfoList):
 
 
     # get all count rate data in dict structure; x = time = t, y = meanCR0+meanCR1 = I_solution at each timestep
-    t, I_sol, label, y_error = analyseCountRate(nSamples, sampleInfoList)
+    t, I_sol, label = analyseCountRate(nSamples, sampleInfoList)
 
 
     for sampleNum in range(nSamples):
@@ -350,10 +376,10 @@ def analyseRaleighRatio(nSamples, sampleInfoList):
         nAvSamples = 5
 
         # how many repeats per sample
-        sampleRepeatsInfo = [0,1,1,1,1]
+        sampleRepeatsInfo = [0,1,1,1,1] # [1,1,1,1]
 
         # which samples to read
-        sampleInfo = [0,1,3,5,7]
+        sampleInfo = [0,1,3,5,7]  # [0,2,4,6]
 
         x       = {new_list: [] for new_list in range(nAvSamples)}
         yAv     = {new_list: [] for new_list in range(nAvSamples)}
@@ -414,20 +440,20 @@ def main(instructionsFile, title, inputDIR, outputPath):
     if analysisType == 'plotCount':
         axLabels = {"x": "T", "y": "Mean Count Rate"}
         suffix   = " - TR DLS countRate"
-        x, y, label, y_error = analyseCountRate(nSamples, sampleInfoList)
+        x, y, label = analyseCountRate(nSamples, sampleInfoList)
+        vars = [len(x), equip, label, axLabels, title, outputPath, [x,0], y]
 
     if analysisType == 'plotRadius':
         axLabels = {"x": "Time", "y": "R (nm)"}
         suffix   = " - TR DLS radius"
-        x, y, label, y_error = analyseRadius(nSamples, sampleInfoList)
+        x, y, label = analyseRadius(nSamples, sampleInfoList, outputPath)
+        vars = [len(x), equip, label, axLabels, title, outputPath, [x,0], y]
 
     if analysisType == 'plotRaleigh':
-        axLabels = {"x": "Time", "y": "RR"}
+        axLabels = {"x": "Time (min)", "y": "Rayleigh Ratio"}
         suffix   = " - TR DLS RR"
         x, y, label, y_error = analyseRaleighRatio(nSamples, sampleInfoList)
-
-    # reduce plot parameters to list of variables for genPlot module
-    vars = [len(x), equip, label, axLabels, title, outputPath, [x,0], y, y_error]
+        vars = [len(x), equip, label, axLabels, title, outputPath, [x,0], y, y_error]
 
     return key, vars, suffix
 

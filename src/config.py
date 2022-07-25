@@ -52,6 +52,7 @@ ellipsLipidRef  = False
 
 # choose whether to average the data points between samples
 plotAvRR = True
+genPDF = True
 
 ################
 # Smooth Data #
@@ -80,10 +81,10 @@ saveAsPNG = True
 saveAsPDF = True
 
 ## Choose data symbol / plot type
-defaultLw = 2
+defaultLw = 5
 
 plotWithScatterError = True
-plotWithScatter = True
+plotWithScatter = True # also has to be true when plotting errorbars
 scatterSize     = 5
 
 plotLineWithMarker = False
@@ -93,14 +94,14 @@ markEdgeWidth      = 4
 ## Axis range (False=Automatic)
 overrideAxisLim = True
 config_xmin     = 0
-config_xmax     = 3000 # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
-config_ymin     = -1E-5
-config_ymax     = 1.0E-3
+config_xmax     = 2700  # [80,50] (multiplot, [i]=col) # 1200 (20 min) # 7200 (2 hr) # 9000 (2.5 hr) # 10800 (3 hr) # 28800 (8hr)
+config_ymin     = 0
+config_ymax     = 1.1e-3
 
 ## Axis/tick intervals & number
-xTickInterval = 1
-yTickInterval = 1E-4
-n_xticks      = 20
+xTickInterval = 10
+yTickInterval = 0.2e-3
+n_xticks      = 1000
 
 ## axis type; linear = default (False)
 plotxLog10 = False
@@ -108,7 +109,7 @@ plotyLog10 = False
 
 ## Multi panel options
 plotMultiPanel = False   # split input data between subplots
-key = [[4],[4],[4]]  # [row0=[nFiles0,nFiles1],row1=[nFiles0,nFiles1]]
+key = [[2,2]]#,[2],[4]]  # [row0=[nFiles0,nFiles1],row1=[nFiles0,nFiles1]]
 
 ## Vertical line option
 plotVerticalLine = False
@@ -131,18 +132,22 @@ showMinorTicks = False
 minorTickSize  = 0
 minorTickWidth = 0
 
+## Change axis scale to scientific
+setSciX = False
+setSciY = True
+
 ## Force axis labels
 overrideXAxisLabel = False
 overrideYAxisLabel = False
-xLabel = "Time (sec)"
+xLabel = "Time (min)"
 yLabel = ""
 
 ## Force legend
 legendOn  = True
-legendLoc = 'upper left' # default = 'best'; lower right''
+legendLoc = 'upper left' # default = 'best'; upper lower left right''
 
 ## List of plot types that use the time axis
-tAxisList = [" - pressure", " - area", " - psi Time", " - delta Time", " - gammaL", " - gammaP", " - TR DLS countRate", " - TR DLS radius"]#, " - TR DLS RR"]
+tAxisList = [" - pressure", " - area", " - psi Time", " - delta Time", " - gammaL", " - gammaP", " - TR DLS countRate", " - TR DLS radius", " - TR DLS RR"]
 
 ## Colours
 colourDict = {
@@ -198,8 +203,17 @@ colourDict = {
     # persian pink, dark blue, dark orange, dark green, true red
     "16": [['#F77FBE', '#1e81b0', '#e28743', '#32BE25', '#E8282B']],
 
+    # light blue, dark blue, light orange, dark orange, light green, dark green, red, dark red
+    "17": [['#abdbe3', '#1e81b0', '#eab676', '#e28743', '#A3e19d', '#32BE25', '#FF0000', '#AB2330']],
+
+    # [light blue, dark blue], [light orange, dark orange]
+    "18": [['#abdbe3', '#1e81b0'], ['#eab676', '#e28743']],
+
+    # tufts blue, then shades of purple: light -> dark
+    "18": [['#2E96D1','#AC9AF6', '#9179F3','#775FDA', '#5E46C0']],
+
     }
-c = colourDict.get("16")
+c = colourDict.get("18")
 
 ## Markers
 markerDict = {

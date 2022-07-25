@@ -64,7 +64,8 @@ def importData(instrumentName, equipParams, fname, inputDIR, plotDIR):
 
     if instrumentName == "CUSTOM":
         t = data[data.columns.values[0]]
-        A = data[data.columns.values[2]]  * (10**-6)
+        #A = data[data.columns.values[2]]  * (10**-6)
+        A = 0
         P = data[data.columns.values[1]]
 
 

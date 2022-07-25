@@ -55,7 +55,7 @@ def plotParameters():
     setY_AxInt  = 0
     xAxisMinAdj = 0
     xAxisMaxAdj = 0
-    yAxisMaxAdj = 1
+    yAxisMaxAdj = 0
 
 
     if config.askUserPlotPar == True:
@@ -220,9 +220,9 @@ def plot(key, vars, suffix):
                 if plotWithScatter == True and config.plotWithScatterError == False:
                     ax.scatter(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), s=scatterSize, edgecolors=config.c[row][i], linewidth=lw, facecolors='none')
 
-                if plotWithScatter == True and config.plotWithScatterError == True:
+                elif plotWithScatter == True and config.plotWithScatterError == True:
                     try:
-                        ax.errorbar(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], yerr = y_error.get(i)[n0[i]:nf[i]], color=config.c[row][i], ms=scatterSize, mec=config.c[row][i], mfc=config.c[row][i], ecolor=config.c[row][i], label = labels.get(i), linewidth=lw) # , s=scatterSize, edgecolors=config.c[row][i], facecolors='none'
+                        ax.errorbar(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], yerr = y_error.get(i)[n0[i]:nf[i]], color=config.c[row][i], ms=scatterSize, mec=config.c[row][i], mfc=config.c[row][i], ecolor=config.c[row][i], label = labels.get(i), linewidth=lw, elinewidth=2) # , s=scatterSize, edgecolors=config.c[row][i], facecolors='none'
                     except ValueError:
 
                         try:
@@ -238,7 +238,7 @@ def plot(key, vars, suffix):
 
                 # default line plot
                 else:
-                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[row][i], linewidth=lw)
+                    ax.plot(x.get(i)[n0[i]:nf[i]], y.get(i)[n0[i]:nf[i]], label = labels.get(i), color=config.c[col][i], linewidth=lw)
 
 
                 # store minimum and maximum values of pre-processed data for axis scales
@@ -260,9 +260,15 @@ def plot(key, vars, suffix):
             ymax = int(round(max(max_y_vals),setY_AxInt)) + yAxisMaxAdj
 
             # override axis limits/region of interest via config/user
-            if overrideAxisLim == True:
+            if overrideAxisLim == True and config.plotMultiPanel == False:
                 xmin = config_xmin
                 xmax = config_xmax
+                ymin = config_ymin
+                ymax = config_ymax
+
+            if overrideAxisLim == True and config.plotMultiPanel == True:
+                xmin = config_xmin
+                xmax = config_xmax[col]
                 ymin = config_ymin
                 ymax = config_ymax
 
@@ -337,7 +343,10 @@ def plot(key, vars, suffix):
 
                 if row == 0 and col == 0:
                     plt.setp(ax.get_yticklabels(), visible=True)
+                    ax.set_xlabel(axLabels.get("x"), fontsize=fs-config.x0Axis_fs_reduction, fontweight='bold')
+                    ax.set_ylabel(axLabels.get("y"), fontsize=fs-config.y0Axis_fs_reduction, fontweight='bold')
                 elif row == 0 and col == 1:
+                    ax.set_xlabel(axLabels.get("x"), fontsize=fs-config.x0Axis_fs_reduction, fontweight='bold')
                     plt.setp(ax.get_yticklabels(), visible=False)
 
             elif config.plotMultiPanel == True and (nRow == 1 and nCol == 3):
@@ -391,10 +400,15 @@ def plot(key, vars, suffix):
                 ax.yaxis.set_tick_params(which='minor', size=config.minorTickSize, width=config.minorTickWidth, direction='in', right='on')
 
 
+            if config.setSciX == True:
+                plt.ticklabel_format(axis="x", style="sci", scilimits=(0,0))
+            if config.setSciY == True:
+                plt.ticklabel_format(axis="y", style="sci", scilimits=(0,0))
+
     ## Other
 
     # merge axis of multipanel isotherm plots
-    if config.plotMultiPanel == True and suffix == " - isotherm":
+    if config.plotMultiPanel == True and (suffix == " - isotherm"):# or suffix == " - pressure"):
         fig.text(0.5, -0.03, axLabels.get("x"), ha='center', fontsize=fs, fontweight='bold')
         fig.text(-0.03, 0.5, axLabels.get("y"), va='center', rotation='vertical', fontsize=fs, fontweight='bold')
 
@@ -422,13 +436,13 @@ def plot(key, vars, suffix):
     if config.saveAsPNG == True:
         fig.savefig( plotDIR + '/' + title + suffix + '.png',
             format='png',
-            dpi=400,
+            dpi=720,
             bbox_inches='tight')
 
     if config.saveAsPDF == True:
         fig.savefig( plotDIR + '/' + title + suffix + '.pdf',
             format='pdf',
-            dpi=400,
+            dpi=720,
             bbox_inches='tight')
 
     return
